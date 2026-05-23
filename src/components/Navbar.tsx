@@ -42,6 +42,19 @@ export function Navbar() {
       ],
     },
     {
+      key: "size",
+      label: t("size"),
+      dropdown: [
+        { label: "1285 sqft", href: "#properties" },
+        { label: "1300 sqft", href: "#properties" },
+        { label: "1000 sqft", href: "#properties" },
+        { label: "900 sqft", href: "#properties" },
+        { label: t("duplex"), href: "#properties" },
+        { label: t("commercial"), href: "#properties" },
+        { label: t("studioApartment"), href: "#properties" },
+      ],
+    },
+    {
       key: "profile",
       label: t("profile"),
       dropdown: [
@@ -66,7 +79,15 @@ export function Navbar() {
             >
               {t("company")}
             </span>
-            <span className="text-[10px] uppercase tracking-[2px] text-muted-foreground">
+            <span
+              className="text-[10px] font-semibold uppercase tracking-[2px]"
+              style={{
+                background: "linear-gradient(90deg, #d4a017, #f4cf5b, #b8860b)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
               {t("tagline")}
             </span>
           </div>
