@@ -159,10 +159,8 @@ function BoardOfDirectors() {
   const board = [
     { name: "Md. Rafiqul Islam", role: t("chairman"), initials: "RI" },
     { name: "Eng. Tanvir Ahmed", role: t("managingDirector"), initials: "TA" },
-    { name: "Ms. Nasreen Akter", role: t("executiveDirector"), initials: "NA" },
     { name: "Mr. Shahed Khan", role: t("director"), initials: "SK" },
     { name: "Ms. Farzana Rahman", role: t("director"), initials: "FR" },
-    { name: "Dr. Anwar Hossain", role: t("director"), initials: "AH" },
   ];
 
   return (
