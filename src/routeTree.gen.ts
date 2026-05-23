@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
 import { Route as DepartmentsSlugRouteImport } from './routes/departments.$slug'
+import { Route as PropertiesIdNewsNewsIdRouteImport } from './routes/properties.$id.news.$newsId'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
@@ -40,20 +41,27 @@ const DepartmentsSlugRoute = DepartmentsSlugRouteImport.update({
   path: '/departments/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PropertiesIdNewsNewsIdRoute = PropertiesIdNewsNewsIdRouteImport.update({
+  id: '/news/$newsId',
+  path: '/news/$newsId',
+  getParentRoute: () => PropertiesIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/profile': typeof ProfileRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
-  '/properties/$id': typeof PropertiesIdRoute
+  '/properties/$id': typeof PropertiesIdRouteWithChildren
+  '/properties/$id/news/$newsId': typeof PropertiesIdNewsNewsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/profile': typeof ProfileRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
-  '/properties/$id': typeof PropertiesIdRoute
+  '/properties/$id': typeof PropertiesIdRouteWithChildren
+  '/properties/$id/news/$newsId': typeof PropertiesIdNewsNewsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,7 +69,8 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/profile': typeof ProfileRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
-  '/properties/$id': typeof PropertiesIdRoute
+  '/properties/$id': typeof PropertiesIdRouteWithChildren
+  '/properties/$id/news/$newsId': typeof PropertiesIdNewsNewsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,8 +80,15 @@ export interface FileRouteTypes {
     | '/profile'
     | '/departments/$slug'
     | '/properties/$id'
+    | '/properties/$id/news/$newsId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/profile' | '/departments/$slug' | '/properties/$id'
+  to:
+    | '/'
+    | '/admin'
+    | '/profile'
+    | '/departments/$slug'
+    | '/properties/$id'
+    | '/properties/$id/news/$newsId'
   id:
     | '__root__'
     | '/'
@@ -80,6 +96,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/departments/$slug'
     | '/properties/$id'
+    | '/properties/$id/news/$newsId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -87,7 +104,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ProfileRoute: typeof ProfileRoute
   DepartmentsSlugRoute: typeof DepartmentsSlugRoute
-  PropertiesIdRoute: typeof PropertiesIdRoute
+  PropertiesIdRoute: typeof PropertiesIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -127,15 +144,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DepartmentsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/properties/$id/news/$newsId': {
+      id: '/properties/$id/news/$newsId'
+      path: '/news/$newsId'
+      fullPath: '/properties/$id/news/$newsId'
+      preLoaderRoute: typeof PropertiesIdNewsNewsIdRouteImport
+      parentRoute: typeof PropertiesIdRoute
+    }
   }
 }
+
+interface PropertiesIdRouteChildren {
+  PropertiesIdNewsNewsIdRoute: typeof PropertiesIdNewsNewsIdRoute
+}
+
+const PropertiesIdRouteChildren: PropertiesIdRouteChildren = {
+  PropertiesIdNewsNewsIdRoute: PropertiesIdNewsNewsIdRoute,
+}
+
+const PropertiesIdRouteWithChildren = PropertiesIdRoute._addFileChildren(
+  PropertiesIdRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   ProfileRoute: ProfileRoute,
   DepartmentsSlugRoute: DepartmentsSlugRoute,
-  PropertiesIdRoute: PropertiesIdRoute,
+  PropertiesIdRoute: PropertiesIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
