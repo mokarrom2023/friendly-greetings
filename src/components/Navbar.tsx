@@ -58,11 +58,11 @@ export function Navbar() {
       key: "profile",
       label: t("profile"),
       dropdown: [
-        { label: t("boardOfDirectors"), href: "#profile" },
-        { label: t("ourEmployees"), href: "#profile" },
-        { label: t("latestNews"), href: "#profile" },
-        { label: t("rehabMembership"), href: "#profile" },
-        { label: t("companyHistory"), href: "#about" },
+        { label: t("companyHistory"), href: "/profile#history" },
+        { label: t("boardOfDirectors"), href: "/profile#board" },
+        { label: t("ourEmployees"), href: "/profile#employees" },
+        { label: t("latestNews"), href: "/profile#news" },
+        { label: t("rehabMembership"), href: "/profile#rehab" },
       ],
     },
   ];
