@@ -274,13 +274,15 @@ function Employees() {
 /* ----- 4. Latest News ----- */
 function LatestNews() {
   const { t } = useLanguage();
-  const news = [
+
+  const staticNews = [
     {
       tag: "Project Launch",
       date: "May 18, 2026",
       title: "Starline Lake View – Purbachal handover ceremony",
       excerpt:
         "Our flagship Purbachal project welcomed 42 families this week with an elegant handover event.",
+      to: null as null | { propertyId: number; newsId: number },
     },
     {
       tag: "Award",
@@ -288,15 +290,19 @@ function LatestNews() {
       title: "REHAB Excellence Award 2026 — Quality Construction",
       excerpt:
         "Starline Builders has been recognized once again for outstanding construction quality.",
-    },
-    {
-      tag: "Update",
-      date: "March 12, 2026",
-      title: "Construction milestone reached at Starline Skyline – Uttara",
-      excerpt:
-        "Structural work on all 22 floors of Starline Skyline has been completed ahead of schedule.",
+      to: null,
     },
   ];
+
+  const propertyNews = getAllNews().map((n) => ({
+    tag: n.tag,
+    date: n.date,
+    title: `${n.propertyTitle} — ${n.title}`,
+    excerpt: n.excerpt,
+    to: { propertyId: n.propertyId, newsId: n.id },
+  }));
+
+  const news = [...staticNews, ...propertyNews];
 
   return (
     <section id="news" className="bg-secondary/40 border-b border-border py-20">
@@ -309,46 +315,64 @@ function LatestNews() {
         />
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {news.map((n) => (
-            <article
-              key={n.title}
-              className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-brand hover:shadow-lg"
-            >
-              <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-wider">
-                <span
-                  className="rounded-full px-2.5 py-1"
-                  style={{
-                    background: "color-mix(in oklab, var(--brand) 15%, transparent)",
-                    color: "var(--brand)",
-                  }}
+          {news.map((n) => {
+            const card = (
+              <>
+                <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-wider">
+                  <span
+                    className="rounded-full px-2.5 py-1"
+                    style={{
+                      background: "color-mix(in oklab, var(--brand) 15%, transparent)",
+                      color: "var(--brand)",
+                    }}
+                  >
+                    {n.tag}
+                  </span>
+                  <span className="flex items-center gap-1 text-muted-foreground">
+                    <Calendar className="h-3 w-3" />
+                    {n.date}
+                  </span>
+                </div>
+                <h3
+                  className="mt-4 text-lg font-bold leading-snug"
+                  style={{ fontFamily: "var(--font-heading)" }}
                 >
-                  {n.tag}
+                  {n.title}
+                </h3>
+                <p className="mt-2 flex-1 text-sm text-muted-foreground">{n.excerpt}</p>
+                <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-brand transition-all group-hover:gap-2.5">
+                  {t("readMore")} <ArrowRight className="h-3.5 w-3.5" />
                 </span>
-                <span className="flex items-center gap-1 text-muted-foreground">
-                  <Calendar className="h-3 w-3" />
-                  {n.date}
-                </span>
-              </div>
-              <h3
-                className="mt-4 text-lg font-bold leading-snug"
-                style={{ fontFamily: "var(--font-heading)" }}
+              </>
+            );
+
+            const cls =
+              "group flex flex-col rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-brand hover:shadow-lg";
+
+            return n.to ? (
+              <Link
+                key={n.title}
+                to="/properties/$id/news/$newsId"
+                params={{
+                  id: String(n.to.propertyId),
+                  newsId: String(n.to.newsId),
+                }}
+                className={cls}
               >
-                {n.title}
-              </h3>
-              <p className="mt-2 flex-1 text-sm text-muted-foreground">{n.excerpt}</p>
-              <a
-                href="#"
-                className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-brand transition-all group-hover:gap-2.5"
-              >
-                {t("readMore")} <ArrowRight className="h-3.5 w-3.5" />
-              </a>
-            </article>
-          ))}
+                {card}
+              </Link>
+            ) : (
+              <article key={n.title} className={cls}>
+                {card}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
+
 
 /* ----- 5. Credentials ----- */
 function Credentials() {
