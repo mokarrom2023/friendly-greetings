@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
 import { Route as DepartmentsSlugRouteImport } from './routes/departments.$slug'
 
 const ProfileRoute = ProfileRouteImport.update({
@@ -29,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PropertiesIdRoute = PropertiesIdRouteImport.update({
+  id: '/properties/$id',
+  path: '/properties/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DepartmentsSlugRoute = DepartmentsSlugRouteImport.update({
   id: '/departments/$slug',
   path: '/departments/$slug',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/profile': typeof ProfileRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
+  '/properties/$id': typeof PropertiesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/profile': typeof ProfileRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
+  '/properties/$id': typeof PropertiesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,25 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/profile': typeof ProfileRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
+  '/properties/$id': typeof PropertiesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/profile' | '/departments/$slug'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/profile'
+    | '/departments/$slug'
+    | '/properties/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/profile' | '/departments/$slug'
-  id: '__root__' | '/' | '/admin' | '/profile' | '/departments/$slug'
+  to: '/' | '/admin' | '/profile' | '/departments/$slug' | '/properties/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/profile'
+    | '/departments/$slug'
+    | '/properties/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +87,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ProfileRoute: typeof ProfileRoute
   DepartmentsSlugRoute: typeof DepartmentsSlugRoute
+  PropertiesIdRoute: typeof PropertiesIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -92,6 +113,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/properties/$id': {
+      id: '/properties/$id'
+      path: '/properties/$id'
+      fullPath: '/properties/$id'
+      preLoaderRoute: typeof PropertiesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/departments/$slug': {
       id: '/departments/$slug'
       path: '/departments/$slug'
@@ -107,7 +135,18 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ProfileRoute: ProfileRoute,
   DepartmentsSlugRoute: DepartmentsSlugRoute,
+  PropertiesIdRoute: PropertiesIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
