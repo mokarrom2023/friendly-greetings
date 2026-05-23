@@ -82,7 +82,7 @@ function NewsDetailPage() {
                 </div>
 
                 <div className="prose prose-lg mt-10 max-w-none text-foreground/85">
-                  {item.content.split("\n\n").map((para, i) => (
+                  {item.content.split("\n\n").map((para: string, i: number) => (
                     <p key={i} className="mb-5 text-base leading-relaxed sm:text-lg">
                       {para}
                     </p>
