@@ -481,9 +481,6 @@ function InfoRow({
     </div>
   );
 }
-    </>
-  );
-}
 
 function InfoCard({
   icon,
