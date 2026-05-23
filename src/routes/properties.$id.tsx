@@ -31,12 +31,11 @@ import {
   Linkedin,
   Youtube,
 } from "lucide-react";
-import { useLanguage } from "@/lib/language";
 import { TopBar } from "@/components/TopBar";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/lib/theme";
-import { LanguageProvider } from "@/lib/language";
+import { LanguageProvider, useLanguage } from "@/lib/language";
 import { getPropertyById, type Property } from "@/lib/properties-data";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
