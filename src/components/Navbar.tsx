@@ -42,6 +42,19 @@ export function Navbar() {
       ],
     },
     {
+      key: "size",
+      label: t("size"),
+      dropdown: [
+        { label: "1285 sqft", href: "#properties" },
+        { label: "1300 sqft", href: "#properties" },
+        { label: "1000 sqft", href: "#properties" },
+        { label: "900 sqft", href: "#properties" },
+        { label: t("duplex"), href: "#properties" },
+        { label: t("commercial"), href: "#properties" },
+        { label: t("studioApartment"), href: "#properties" },
+      ],
+    },
+    {
       key: "profile",
       label: t("profile"),
       dropdown: [
