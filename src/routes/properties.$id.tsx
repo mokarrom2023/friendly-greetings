@@ -87,7 +87,7 @@ function PropertyDetailPage() {
 }
 
 function Content() {
-  const { property: p } = Route.useLoaderData();
+  const { property: p } = Route.useLoaderData() as { property: Property };
   const allImages = [p.image, ...p.gallery];
   const [active, setActive] = useState(0);
 
