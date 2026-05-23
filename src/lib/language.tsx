@@ -102,6 +102,12 @@ export const translations = {
     contactCall: "Call Us",
     contactEmailUs: "Email Us",
     contactSent: "Message sent successfully!",
+    contactOfficeHours: "Office Hours",
+    contactOfficeHoursVal: "Sat – Thu: 10:00 AM – 6:00 PM",
+    contactLocation: "Live Location",
+    contactInterestedIn: "Interested Property",
+    contactSelectProperty: "Select a property",
+    propertyGeneral: "General Inquiry",
 
     // Footer
     footerTagline:
@@ -115,6 +121,11 @@ export const translations = {
     yourEmail: "Your email",
     rights: "All rights reserved.",
     designedBy: "Designed with care.",
+    privacyPolicy: "Privacy Policy",
+    termsConditions: "Terms & Conditions",
+    sitemap: "Sitemap",
+    careers: "Careers",
+    footerOfficeHours: "Sat – Thu: 10:00 AM – 6:00 PM",
   },
   bn: {
     company: "স্টারলাইন বিল্ডার্স লিঃ",
@@ -206,6 +217,12 @@ export const translations = {
     contactCall: "কল করুন",
     contactEmailUs: "ইমেইল করুন",
     contactSent: "বার্তা সফলভাবে পাঠানো হয়েছে!",
+    contactOfficeHours: "অফিস সময়",
+    contactOfficeHoursVal: "শনি – বৃহঃ: সকাল ১০টা – সন্ধ্যা ৬টা",
+    contactLocation: "লাইভ লোকেশন",
+    contactInterestedIn: "আগ্রহী প্রপার্টি",
+    contactSelectProperty: "প্রপার্টি নির্বাচন করুন",
+    propertyGeneral: "সাধারণ জিজ্ঞাসা",
 
     footerTagline:
       "বাংলাদেশের প্রিমিয়ার লাক্সারি রিয়েল এস্টেট ডেভেলপার — আজই আগামীর ল্যান্ডমার্ক তৈরি করছি।",
@@ -218,6 +235,11 @@ export const translations = {
     yourEmail: "আপনার ইমেইল",
     rights: "সর্বস্বত্ব সংরক্ষিত।",
     designedBy: "যত্ন সহকারে ডিজাইন করা।",
+    privacyPolicy: "প্রাইভেসি পলিসি",
+    termsConditions: "শর্তাবলী",
+    sitemap: "সাইটম্যাপ",
+    careers: "ক্যারিয়ার",
+    footerOfficeHours: "শনি – বৃহঃ: সকাল ১০টা – সন্ধ্যা ৬টা",
   },
 } as const;
 

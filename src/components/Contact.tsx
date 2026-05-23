@@ -1,6 +1,19 @@
 import { useState, type FormEvent } from "react";
-import { MapPin, Phone, Mail, Send, Check } from "lucide-react";
+import { MapPin, Phone, Mail, Send, Check, Clock, Navigation } from "lucide-react";
 import { useLanguage } from "@/lib/language";
+
+const PROPERTY_OPTIONS = [
+  "Starline Heights – Gulshan",
+  "Starline Crown – Banani",
+  "Starline Residency – Bashundhara",
+  "Starline Palace – Dhanmondi",
+  "Starline Skyline – Uttara",
+  "Starline Galaxy – Mirpur",
+  "Starline Lake View – Purbachal",
+  "Duplex / Penthouse",
+  "Commercial Space",
+  "Studio Apartment",
+];
 
 export function Contact() {
   const { t } = useLanguage();
@@ -14,14 +27,16 @@ export function Contact() {
   };
 
   const cards = [
-    {
-      icon: MapPin,
-      title: t("contactAddress"),
-      value: t("contactAddressVal"),
-    },
+    { icon: MapPin, title: t("contactAddress"), value: t("contactAddressVal") },
     { icon: Phone, title: t("contactCall"), value: "+880 1700-000000" },
     { icon: Mail, title: t("contactEmailUs"), value: "info@starlinebuilders.com" },
+    { icon: Clock, title: t("contactOfficeHours"), value: t("contactOfficeHoursVal") },
   ];
+
+  const mapsUrl =
+    "https://www.google.com/maps?q=Banani,+Dhaka-1213,+Bangladesh&output=embed";
+  const directionsUrl =
+    "https://www.google.com/maps/dir/?api=1&destination=Banani,+Dhaka-1213,+Bangladesh";
 
   return (
     <section id="contact" className="bg-secondary/40 py-24">
@@ -40,7 +55,7 @@ export function Contact() {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-5">
-          {/* Info cards */}
+          {/* Info cards + map */}
           <div className="space-y-4 lg:col-span-2">
             {cards.map((c) => (
               <div
@@ -64,6 +79,33 @@ export function Contact() {
                 </div>
               </div>
             ))}
+
+            {/* Live location map */}
+            <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+              <div className="flex items-center justify-between gap-3 px-5 py-3.5 border-b border-border">
+                <div className="flex items-center gap-2.5">
+                  <Navigation className="h-4 w-4" style={{ color: "var(--brand)" }} />
+                  <span className="text-xs font-semibold uppercase tracking-wider">
+                    {t("contactLocation")}
+                  </span>
+                </div>
+                <a
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs font-semibold uppercase tracking-wider text-brand hover:underline"
+                >
+                  {t("viewDetails")}
+                </a>
+              </div>
+              <iframe
+                title="Starline Builders location"
+                src={mapsUrl}
+                className="h-56 w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
 
           {/* Form */}
@@ -90,6 +132,26 @@ export function Contact() {
               placeholder={t("contactPhone")}
               className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-brand focus:ring-2 focus:ring-brand/20"
             />
+            <div>
+              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {t("contactInterestedIn")}
+              </label>
+              <select
+                required
+                defaultValue=""
+                className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-brand focus:ring-2 focus:ring-brand/20"
+              >
+                <option value="" disabled>
+                  {t("contactSelectProperty")}
+                </option>
+                <option value="general">{t("propertyGeneral")}</option>
+                {PROPERTY_OPTIONS.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </div>
             <textarea
               required
               rows={5}
