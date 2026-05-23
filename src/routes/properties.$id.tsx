@@ -259,9 +259,11 @@ function Content() {
           ) : (
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {p.news.map((n) => (
-                <article
+                <Link
                   key={n.id}
-                  className="group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-lg"
+                  to="/properties/$id/news/$newsId"
+                  params={{ id: String(p.id), newsId: String(n.id) }}
+                  className="group block overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-brand hover:shadow-lg"
                 >
                   <div className="aspect-[16/10] overflow-hidden">
                     <img
@@ -281,12 +283,15 @@ function Content() {
                     >
                       {n.title}
                     </h3>
-                    <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                      {n.excerpt}
+                    </p>
+                    <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5" />
                       {n.date}
                     </p>
                   </div>
-                </article>
+                </Link>
               ))}
             </div>
           )}
