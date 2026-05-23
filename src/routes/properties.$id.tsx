@@ -22,7 +22,16 @@ import {
   PlayCircle,
   Calendar,
   Phone,
+  Mail,
+  Clock,
+  Send,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Youtube,
 } from "lucide-react";
+import { useLanguage } from "@/lib/language";
 import { TopBar } from "@/components/TopBar";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
