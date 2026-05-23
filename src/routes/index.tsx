@@ -49,6 +49,7 @@ function Index() {
             <About />
             <WhyChoose />
             <Contact />
+            <Faq />
           </main>
           <Footer />
         </div>
