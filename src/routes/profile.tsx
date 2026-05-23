@@ -205,12 +205,12 @@ function BoardOfDirectors() {
 function Employees() {
   const { t } = useLanguage();
   const departments = [
-    { label: t("engineering"), count: 48 },
-    { label: t("architecture"), count: 22 },
-    { label: t("construction"), count: 86 },
-    { label: t("sales"), count: 24 },
-    { label: t("finance"), count: 12 },
-    { label: t("customerCare"), count: 18 },
+    { slug: "engineering", label: t("engineering"), count: 48 },
+    { slug: "architecture", label: t("architecture"), count: 22 },
+    { slug: "construction", label: t("construction"), count: 86 },
+    { slug: "sales", label: t("sales"), count: 24 },
+    { slug: "finance", label: t("finance"), count: 12 },
+    { slug: "customer-care", label: t("customerCare"), count: 18 },
   ];
 
   const stats = [
