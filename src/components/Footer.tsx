@@ -1,10 +1,27 @@
-import { Facebook, Instagram, Linkedin, Youtube, MapPin, Phone, Mail } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Youtube, MapPin, Phone, Mail, Clock } from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import logo from "@/assets/logo.png";
+
+// X (Twitter) icon — lucide doesn't ship a current X glyph, inline SVG
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2H21l-6.52 7.45L22 22h-6.79l-4.74-6.21L4.8 22H2l7-8L1.6 2h6.95l4.28 5.69L18.244 2Zm-1.19 18h1.55L7.04 4H5.4l11.654 16Z" />
+    </svg>
+  );
+}
 
 export function Footer() {
   const { t } = useLanguage();
   const year = new Date().getFullYear();
+
+  const socials = [
+    { Icon: Facebook, href: "#", label: "Facebook" },
+    { Icon: Instagram, href: "#", label: "Instagram" },
+    { Icon: Linkedin, href: "#", label: "LinkedIn" },
+    { Icon: XIcon, href: "#", label: "X" },
+    { Icon: Youtube, href: "#", label: "YouTube" },
+  ];
 
   return (
     <footer
@@ -36,12 +53,12 @@ export function Footer() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed text-white/75">{t("footerTagline")}</p>
-            <div className="mt-5 flex gap-2">
-              {[Facebook, Instagram, Linkedin, Youtube].map((Icon, i) => (
+            <div className="mt-5 flex flex-wrap gap-2">
+              {socials.map(({ Icon, href, label }) => (
                 <a
-                  key={i}
-                  href="#"
-                  aria-label="Social"
+                  key={label}
+                  href={href}
+                  aria-label={label}
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 transition-all hover:border-white hover:bg-white/10"
                 >
                   <Icon className="h-4 w-4" />
@@ -62,7 +79,13 @@ export function Footer() {
               <li><a href="#home" className="hover:text-white">{t("home")}</a></li>
               <li><a href="#about" className="hover:text-white">{t("about")}</a></li>
               <li><a href="#properties" className="hover:text-white">{t("property")}</a></li>
+              <li><a href="#properties" className="hover:text-white">{t("location")}</a></li>
+              <li><a href="#properties" className="hover:text-white">{t("size")}</a></li>
               <li><a href="#contact" className="hover:text-white">{t("contact")}</a></li>
+              <li><a href="#" className="hover:text-white">{t("careers")}</a></li>
+              <li><a href="#" className="hover:text-white">{t("privacyPolicy")}</a></li>
+              <li><a href="#" className="hover:text-white">{t("termsConditions")}</a></li>
+              <li><a href="#" className="hover:text-white">{t("sitemap")}</a></li>
             </ul>
           </div>
 
@@ -87,6 +110,10 @@ export function Footer() {
                 <Mail className="h-4 w-4 shrink-0" style={{ color: "#f4cf5b" }} />
                 <span>info@starlinebuilders.com</span>
               </li>
+              <li className="flex items-start gap-2.5">
+                <Clock className="mt-0.5 h-4 w-4 shrink-0" style={{ color: "#f4cf5b" }} />
+                <span>{t("footerOfficeHours")}</span>
+              </li>
             </ul>
           </div>
 
@@ -101,16 +128,16 @@ export function Footer() {
             <p className="mb-4 text-sm text-white/75">{t("newsletterDesc")}</p>
             <form
               onSubmit={(e) => e.preventDefault()}
-              className="flex flex-col gap-2 sm:flex-row"
+              className="flex flex-col gap-2"
             >
               <input
                 type="email"
                 placeholder={t("yourEmail")}
-                className="flex-1 rounded-md border border-white/20 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-white/50 outline-none focus:border-amber-300"
+                className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-white/50 outline-none focus:border-amber-300"
               />
               <button
                 type="submit"
-                className="rounded-md px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-primary transition-all hover:scale-[1.02]"
+                className="w-full rounded-md px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-primary transition-all hover:scale-[1.02]"
                 style={{ background: "#f4cf5b" }}
               >
                 {t("subscribe")}
