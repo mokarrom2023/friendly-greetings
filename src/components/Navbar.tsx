@@ -66,7 +66,15 @@ export function Navbar() {
             >
               {t("company")}
             </span>
-            <span className="text-[10px] uppercase tracking-[2px] text-muted-foreground">
+            <span
+              className="text-[10px] font-semibold uppercase tracking-[2px]"
+              style={{
+                background: "linear-gradient(90deg, #d4a017, #f4cf5b, #b8860b)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
               {t("tagline")}
             </span>
           </div>
