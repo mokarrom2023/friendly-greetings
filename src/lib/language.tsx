@@ -102,6 +102,12 @@ export const translations = {
     contactCall: "Call Us",
     contactEmailUs: "Email Us",
     contactSent: "Message sent successfully!",
+    contactOfficeHours: "Office Hours",
+    contactOfficeHoursVal: "Sat – Thu: 10:00 AM – 6:00 PM",
+    contactLocation: "Live Location",
+    contactInterestedIn: "Interested Property",
+    contactSelectProperty: "Select a property",
+    propertyGeneral: "General Inquiry",
 
     // Footer
     footerTagline:
