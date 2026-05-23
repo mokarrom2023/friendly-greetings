@@ -109,6 +109,31 @@ export const translations = {
     contactSelectProperty: "Select a property",
     propertyGeneral: "General Inquiry",
 
+    // FAQ
+    faqTag: "FAQs",
+    faqTitle1: "Question?",
+    faqTitleAccent: "Look here.",
+    faqSideTitle: "You have different questions?",
+    faqSideDesc:
+      "Can't find the answer you're looking for? Our team is ready to help with any questions about your project, our process, or getting started.",
+    faqContactBtn: "Contact Us",
+    faq247: "24/7 SERVICE",
+    faqPhone: "+8801334-563765",
+    faqQ1: "What services does your company provide?",
+    faqA1: "We deliver premium residential apartments, duplex homes, commercial spaces and studio apartments across Dhaka — from design to handover.",
+    faqQ2: "Are there any hidden costs?",
+    faqA2: "No. Every Starline project comes with fully transparent pricing — registration, utility and service charges are disclosed upfront.",
+    faqQ3: "How is the project cost determined?",
+    faqA3: "Cost depends on location, size (sqft), specifications, floor and view. Our sales team provides a full breakdown before booking.",
+    faqQ4: "How can I track the progress of my project?",
+    faqA4: "Booked clients get monthly progress updates, on-site visit access and a dedicated relationship manager.",
+    faqQ5: "Do you provide free consultations or quotes?",
+    faqA5: "Yes — free consultations and customized investment quotes are available at our Head Office or over a video call.",
+    faqQ6: "What types of projects do you specialize in?",
+    faqA6: "Luxury apartments, duplex residences, commercial floors and studio apartments in prime Dhaka neighborhoods.",
+
+
+
     // Footer
     footerTagline:
       "Bangladesh's premier luxury real estate developer — building tomorrow's landmarks today.",
