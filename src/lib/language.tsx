@@ -121,6 +121,11 @@ export const translations = {
     yourEmail: "Your email",
     rights: "All rights reserved.",
     designedBy: "Designed with care.",
+    privacyPolicy: "Privacy Policy",
+    termsConditions: "Terms & Conditions",
+    sitemap: "Sitemap",
+    careers: "Careers",
+    footerOfficeHours: "Sat – Thu: 10:00 AM – 6:00 PM",
   },
   bn: {
     company: "স্টারলাইন বিল্ডার্স লিঃ",
