@@ -304,30 +304,183 @@ function Content() {
             </div>
           )}
 
-          {/* CTA */}
-          <div className="mt-10 flex flex-col items-center justify-between gap-4 rounded-2xl border border-border bg-card p-8 sm:flex-row">
-            <div>
-              <h3
-                className="text-xl font-bold"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
-                Interested in {p.title}?
-              </h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Talk to our sales team for booking and site visit.
-              </p>
-            </div>
-            <Link
-              to="/"
-              hash="contact"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90"
-            >
-              <Phone className="h-4 w-4" />
-              Contact Sales
-            </Link>
-          </div>
         </div>
       </section>
+
+      {/* Have a Project Idea? Let's Talk! */}
+      <ProjectIdea propertyTitle={p.title} />
+    </>
+  );
+}
+
+function ProjectIdea({ propertyTitle }: { propertyTitle: string }) {
+  return (
+    <section className="bg-secondary/30 py-20">
+      <div className="container mx-auto max-w-7xl px-4">
+        <h2
+          className="text-center text-3xl font-bold sm:text-4xl md:text-5xl"
+          style={{ fontFamily: "var(--font-heading)" }}
+        >
+          Have a Project Idea?{" "}
+          <span style={{ color: "var(--brand)" }}>Let&apos;s Talk!</span>
+        </h2>
+
+        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          {/* Form */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              (e.currentTarget as HTMLFormElement).reset();
+            }}
+            className="space-y-4 rounded-2xl border border-border bg-card p-8 shadow-sm lg:col-span-2"
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              <FormField label="First Name" required>
+                <input
+                  required
+                  type="text"
+                  placeholder="John"
+                  className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+                />
+              </FormField>
+              <FormField label="Last Name" required>
+                <input
+                  required
+                  type="text"
+                  placeholder="Doe"
+                  className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+                />
+              </FormField>
+              <FormField label="Email" required>
+                <input
+                  required
+                  type="email"
+                  placeholder="john@example.com"
+                  className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+                />
+              </FormField>
+              <FormField label="Phone Number" required>
+                <input
+                  required
+                  type="tel"
+                  placeholder="+1 (555) 000-0000"
+                  className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+                />
+              </FormField>
+            </div>
+            <FormField label="Subject" required>
+              <input
+                required
+                type="text"
+                defaultValue={`Enquiry about ${propertyTitle}`}
+                className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              />
+            </FormField>
+            <FormField label="Your Message" required>
+              <textarea
+                required
+                rows={5}
+                placeholder="Tell us about your project..."
+                className="w-full resize-none rounded-md border border-border bg-background px-4 py-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              />
+            </FormField>
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground shadow-md transition-all hover:scale-[1.02]"
+              style={{ background: "var(--brand)" }}
+            >
+              Send Message <Send className="h-4 w-4" />
+            </button>
+          </form>
+
+          {/* Info card */}
+          <div
+            className="space-y-5 rounded-2xl p-8"
+            style={{ background: "#0f1c3a", color: "white" }}
+          >
+            <InfoRow icon={<MapPin className="h-5 w-5" />} label="Address">
+              House #43, Block #E, Niketon Road 11, Dhaka 1212, Bangladesh
+            </InfoRow>
+            <InfoRow icon={<Phone className="h-5 w-5" />} label="Contact">
+              Phone: +8801334-563765
+              <br />
+              Email: info@starlinebuilders.com
+            </InfoRow>
+            <InfoRow icon={<Clock className="h-5 w-5" />} label="Open Time">
+              Monday–Friday: 10:00–20:00
+              <br />
+              Saturday–Sunday: 10:00–18:00
+            </InfoRow>
+
+            <div className="border-t border-white/10 pt-5">
+              <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--brand)" }}>
+                Stay Connected
+              </div>
+              <div className="mt-3 flex gap-2.5">
+                {[Facebook, Twitter, Instagram, Linkedin, Youtube].map((Icon, i) => (
+                  <a
+                    key={i}
+                    href="#"
+                    aria-label="Social link"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all hover:bg-brand"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FormField({
+  label,
+  required,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="mb-1.5 block text-xs font-semibold text-foreground">
+        {label} {required && <span style={{ color: "var(--brand)" }}>*</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+function InfoRow({
+  icon,
+  label,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-4">
+      <div
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
+        style={{ background: "var(--brand)", color: "white" }}
+      >
+        {icon}
+      </div>
+      <div>
+        <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--brand)" }}>
+          {label}
+        </div>
+        <div className="mt-1 text-sm leading-relaxed text-white/85">{children}</div>
+      </div>
+    </div>
+  );
+}
     </>
   );
 }
