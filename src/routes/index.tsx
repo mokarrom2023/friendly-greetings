@@ -2,6 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { TopBar } from "@/components/TopBar";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
+import { Properties } from "@/components/Properties";
+import { About } from "@/components/About";
+import { WhyChoose } from "@/components/WhyChoose";
+import { Contact } from "@/components/Contact";
+import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/lib/theme";
 import { LanguageProvider } from "@/lib/language";
 
@@ -39,12 +44,12 @@ function Index() {
           <Navbar />
           <main>
             <Hero />
-            <section id="properties" className="container mx-auto px-4 py-24 text-center">
-              <p className="text-muted-foreground">
-                Next sections (Properties, About, Why Choose, Contact) coming next step…
-              </p>
-            </section>
+            <Properties />
+            <About />
+            <WhyChoose />
+            <Contact />
           </main>
+          <Footer />
         </div>
       </LanguageProvider>
     </ThemeProvider>
