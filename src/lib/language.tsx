@@ -235,6 +235,11 @@ export const translations = {
     yourEmail: "আপনার ইমেইল",
     rights: "সর্বস্বত্ব সংরক্ষিত।",
     designedBy: "যত্ন সহকারে ডিজাইন করা।",
+    privacyPolicy: "প্রাইভেসি পলিসি",
+    termsConditions: "শর্তাবলী",
+    sitemap: "সাইটম্যাপ",
+    careers: "ক্যারিয়ার",
+    footerOfficeHours: "শনি – বৃহঃ: সকাল ১০টা – সন্ধ্যা ৬টা",
   },
 } as const;
 
