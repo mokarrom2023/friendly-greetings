@@ -1,81 +1,9 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { MapPin, Bed, Maximize2, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import { cn } from "@/lib/utils";
-
-type Status = "ongoing" | "handover" | "upcoming" | "featured";
-
-const PROPERTIES: {
-  id: number;
-  title: string;
-  location: string;
-  size: string;
-  beds: number;
-  price: string;
-  status: Status;
-  image: string;
-}[] = [
-  {
-    id: 1,
-    title: "Starline Heights",
-    location: "Gulshan-2, Dhaka",
-    size: "1,285 sqft",
-    beds: 3,
-    price: "৳ 1.85 Cr",
-    status: "ongoing",
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=900&q=80",
-  },
-  {
-    id: 2,
-    title: "Royal Skyline Residence",
-    location: "Banani, Dhaka",
-    size: "1,800 sqft",
-    beds: 4,
-    price: "৳ 2.60 Cr",
-    status: "featured",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&q=80",
-  },
-  {
-    id: 3,
-    title: "Bashundhara Bliss",
-    location: "Bashundhara R/A",
-    size: "1,300 sqft",
-    beds: 3,
-    price: "৳ 1.55 Cr",
-    status: "ongoing",
-    image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=900&q=80",
-  },
-  {
-    id: 4,
-    title: "Dhanmondi Pearl",
-    location: "Dhanmondi, Dhaka",
-    size: "1,000 sqft",
-    beds: 2,
-    price: "৳ 1.10 Cr",
-    status: "handover",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=80",
-  },
-  {
-    id: 5,
-    title: "Purbachal Crown",
-    location: "Purbachal New Town",
-    size: "2,200 sqft",
-    beds: 4,
-    price: "৳ 3.20 Cr",
-    status: "upcoming",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&q=80",
-  },
-  {
-    id: 6,
-    title: "Uttara Vista",
-    location: "Uttara Sector 4",
-    size: "1,450 sqft",
-    beds: 3,
-    price: "৳ 1.70 Cr",
-    status: "featured",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&q=80",
-  },
-];
+import { PROPERTIES, type Status } from "@/lib/properties-data";
 
 const FILTERS: { key: "all" | Status; labelKey: "all" | Status }[] = [
   { key: "all", labelKey: "all" },
