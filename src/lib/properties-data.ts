@@ -8,6 +8,8 @@ export type PropertyNews = {
   date: string;
   tag: string;
   image: string;
+  excerpt: string;
+  content: string;
 };
 
 export type Property = {
@@ -26,6 +28,11 @@ export type Property = {
   videoUrl: string;
   news: PropertyNews[];
 };
+
+const defaultExcerpt =
+  "Latest update from our project team — read the full story for details, timeline and what comes next.";
+const defaultContent =
+  "Our team has shared this update as part of our commitment to keep buyers and well-wishers informed at every step of the project.\n\nThe project continues to progress on schedule with strict quality controls, on-site supervision and regular third-party inspections. We are working closely with our architects, engineers and contractors to ensure each milestone is delivered with the craftsmanship that Starline Builders is known for.\n\nFor any questions, site visit requests or booking enquiries, please reach out to our sales team. We will be happy to walk you through the project, share progress photos, and discuss available units and payment plans.";
 
 export const PROPERTIES: Property[] = [
   {
@@ -64,6 +71,10 @@ export const PROPERTIES: Property[] = [
         date: "Apr 12, 2026",
         tag: "Booking",
         image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&q=80",
+        excerpt:
+          "Only a handful of premium units remain at Starline Heights — early-bird pricing and flexible payment plans available now.",
+        content:
+          "We are pleased to announce that booking is officially open for the remaining apartments at Starline Heights, Gulshan-2.\n\nThis phase includes a limited number of corner units with extended balconies and unobstructed skyline views. Early-bird customers will enjoy preferred floor selection, complimentary interior consultation, and a flexible 24-month payment plan.\n\nOur sales team is conducting site visits daily between 10:00 AM and 6:00 PM. Please contact us to schedule a private tour of the show apartment and discuss financing options with our partner banks.",
       },
       {
         id: 2,
@@ -71,6 +82,10 @@ export const PROPERTIES: Property[] = [
         date: "Mar 03, 2026",
         tag: "Progress",
         image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=900&q=80",
+        excerpt:
+          "Structural work is progressing on schedule — 8th floor slab successfully cast this week.",
+        content:
+          "Construction at Starline Heights has reached a significant milestone with the successful casting of the 8th floor slab this week, keeping the project firmly on its delivery schedule.\n\nAll structural work has been independently verified by our consulting engineers, with concrete strength tests exceeding the required specifications. MEP rough-in is already underway on the completed floors below.\n\nWith the current pace, we anticipate completing the structural framework by Q3 2026, followed by finishing works and handover as per the buyer agreement.",
       },
     ],
   },
@@ -109,6 +124,10 @@ export const PROPERTIES: Property[] = [
         date: "Feb 18, 2026",
         tag: "Event",
         image: "https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=900&q=80",
+        excerpt:
+          "Royal Skyline Residence was showcased at the Bangladesh Property Expo 2026 with overwhelming visitor response.",
+        content:
+          "Royal Skyline Residence was proudly featured at the Bangladesh Property Expo 2026 held at ICCB, Dhaka. Our pavilion welcomed thousands of visitors over the three-day event.\n\nVisitors experienced a full-scale 3D walkthrough of the residence, explored the curated amenities, and consulted directly with our architects and sales advisors. Several units were booked on-site with the special expo offer.\n\nWe thank everyone who visited our pavilion and look forward to welcoming you to the project site for a more detailed tour.",
       },
     ],
   },
@@ -172,6 +191,10 @@ export const PROPERTIES: Property[] = [
         date: "Apr 02, 2026",
         tag: "Handover",
         image: "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=900&q=80",
+        excerpt:
+          "The official handover ceremony for Dhanmondi Pearl is scheduled — owners will receive keys and documents on the day.",
+        content:
+          "We are delighted to confirm that the official handover ceremony for Dhanmondi Pearl is scheduled for May 2026. All registered owners have been notified individually with the venue and time.\n\nOn the day of handover, owners will receive their apartment keys, full set of original documents, warranty packages, and a complimentary welcome kit. Our facility management team will also be present to walk new residents through building services and emergency contacts.\n\nWe look forward to celebrating this milestone with all our valued homeowners.",
       },
     ],
   },
@@ -210,6 +233,10 @@ export const PROPERTIES: Property[] = [
         date: "Apr 20, 2026",
         tag: "Pre-launch",
         image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&q=80",
+        excerpt:
+          "Pre-launch registration for Purbachal Crown opens soon — register interest for priority allocation and launch-day pricing.",
+        content:
+          "Pre-launch registration for our flagship Purbachal Crown project opens in June 2026. Registered customers will be invited to the exclusive launch event and offered priority unit allocation along with launch-day pricing.\n\nThe project features duplex-style residences with private gardens, double-height living rooms and a curated set of resort-style amenities including a swimming pool, sky garden and EV charging stations.\n\nTo register your interest, please contact our sales team or fill out the enquiry form on our website. A dedicated relationship manager will reach out to walk you through the master plan and unit options.",
       },
     ],
   },
@@ -244,6 +271,37 @@ export const PROPERTIES: Property[] = [
   },
 ];
 
+// Ensure every news item has excerpt + content (fallback to defaults)
+for (const p of PROPERTIES) {
+  for (const n of p.news) {
+    if (!n.excerpt) n.excerpt = defaultExcerpt;
+    if (!n.content) n.content = defaultContent;
+  }
+}
+
 export function getPropertyById(id: number): Property | undefined {
   return PROPERTIES.find((p) => p.id === id);
+}
+
+export function getNewsItem(propertyId: number, newsId: number) {
+  const property = getPropertyById(propertyId);
+  if (!property) return undefined;
+  const item = property.news.find((n) => n.id === newsId);
+  if (!item) return undefined;
+  return { property, item };
+}
+
+export type AggregatedNews = PropertyNews & {
+  propertyId: number;
+  propertyTitle: string;
+};
+
+export function getAllNews(): AggregatedNews[] {
+  const all: AggregatedNews[] = [];
+  for (const p of PROPERTIES) {
+    for (const n of p.news) {
+      all.push({ ...n, propertyId: p.id, propertyTitle: p.title });
+    }
+  }
+  return all;
 }
