@@ -6,6 +6,7 @@ import { Properties } from "@/components/Properties";
 import { About } from "@/components/About";
 import { WhyChoose } from "@/components/WhyChoose";
 import { Contact } from "@/components/Contact";
+import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/lib/theme";
 import { LanguageProvider } from "@/lib/language";
@@ -48,6 +49,7 @@ function Index() {
             <About />
             <WhyChoose />
             <Contact />
+            <Faq />
           </main>
           <Footer />
         </div>

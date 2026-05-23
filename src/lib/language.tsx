@@ -109,6 +109,31 @@ export const translations = {
     contactSelectProperty: "Select a property",
     propertyGeneral: "General Inquiry",
 
+    // FAQ
+    faqTag: "FAQs",
+    faqTitle1: "Question?",
+    faqTitleAccent: "Look here.",
+    faqSideTitle: "You have different questions?",
+    faqSideDesc:
+      "Can't find the answer you're looking for? Our team is ready to help with any questions about your project, our process, or getting started.",
+    faqContactBtn: "Contact Us",
+    faq247: "24/7 SERVICE",
+    faqPhone: "+8801334-563765",
+    faqQ1: "What services does your company provide?",
+    faqA1: "We deliver premium residential apartments, duplex homes, commercial spaces and studio apartments across Dhaka — from design to handover.",
+    faqQ2: "Are there any hidden costs?",
+    faqA2: "No. Every Starline project comes with fully transparent pricing — registration, utility and service charges are disclosed upfront.",
+    faqQ3: "How is the project cost determined?",
+    faqA3: "Cost depends on location, size (sqft), specifications, floor and view. Our sales team provides a full breakdown before booking.",
+    faqQ4: "How can I track the progress of my project?",
+    faqA4: "Booked clients get monthly progress updates, on-site visit access and a dedicated relationship manager.",
+    faqQ5: "Do you provide free consultations or quotes?",
+    faqA5: "Yes — free consultations and customized investment quotes are available at our Head Office or over a video call.",
+    faqQ6: "What types of projects do you specialize in?",
+    faqA6: "Luxury apartments, duplex residences, commercial floors and studio apartments in prime Dhaka neighborhoods.",
+
+
+
     // Footer
     footerTagline:
       "Bangladesh's premier luxury real estate developer — building tomorrow's landmarks today.",
@@ -270,6 +295,29 @@ export const translations = {
     contactInterestedIn: "আগ্রহী প্রপার্টি",
     contactSelectProperty: "প্রপার্টি নির্বাচন করুন",
     propertyGeneral: "সাধারণ জিজ্ঞাসা",
+
+    // FAQ
+    faqTag: "প্রশ্নোত্তর",
+    faqTitle1: "প্রশ্ন?",
+    faqTitleAccent: "এখানে দেখুন।",
+    faqSideTitle: "আপনার ভিন্ন প্রশ্ন আছে?",
+    faqSideDesc:
+      "উত্তর খুঁজে পাচ্ছেন না? আমাদের টিম আপনার প্রকল্প, প্রক্রিয়া বা শুরু করার বিষয়ে যেকোনো প্রশ্নে সাহায্য করতে প্রস্তুত।",
+    faqContactBtn: "যোগাযোগ করুন",
+    faq247: "২৪/৭ সেবা",
+    faqPhone: "+৮৮০১৩৩৪-৫৬৩৭৬৫",
+    faqQ1: "আপনার কোম্পানি কী কী সেবা প্রদান করে?",
+    faqA1: "আমরা ঢাকা জুড়ে প্রিমিয়াম আবাসিক অ্যাপার্টমেন্ট, ডুপ্লেক্স, কমার্শিয়াল স্পেস ও স্টুডিও অ্যাপার্টমেন্ট সরবরাহ করি — ডিজাইন থেকে হস্তান্তর পর্যন্ত।",
+    faqQ2: "কোনো লুকানো খরচ আছে কি?",
+    faqA2: "না। প্রতিটি স্টারলাইন প্রকল্পে সম্পূর্ণ স্বচ্ছ মূল্য — রেজিস্ট্রেশন, ইউটিলিটি ও সার্ভিস চার্জ আগেই জানানো হয়।",
+    faqQ3: "প্রকল্পের খরচ কীভাবে নির্ধারিত হয়?",
+    faqA3: "খরচ নির্ভর করে লোকেশন, সাইজ, স্পেসিফিকেশন, ফ্লোর ও ভিউ-এর উপর। বুকিংয়ের আগে সম্পূর্ণ ব্রেকডাউন দেওয়া হয়।",
+    faqQ4: "আমার প্রকল্পের অগ্রগতি কীভাবে ট্র্যাক করবো?",
+    faqA4: "বুকিং করা ক্লায়েন্টরা মাসিক প্রগ্রেস আপডেট, সাইট ভিজিট ও একজন নিবেদিত ম্যানেজার পান।",
+    faqQ5: "আপনারা কি বিনামূল্যে পরামর্শ বা কোটেশন দেন?",
+    faqA5: "হ্যাঁ — বিনামূল্যে পরামর্শ ও কাস্টম ইনভেস্টমেন্ট কোটেশন আমাদের অফিসে অথবা ভিডিও কলে পাওয়া যায়।",
+    faqQ6: "আপনারা কোন ধরনের প্রকল্পে বিশেষজ্ঞ?",
+    faqA6: "ঢাকার প্রাইম এলাকায় লাক্সারি অ্যাপার্টমেন্ট, ডুপ্লেক্স, কমার্শিয়াল ফ্লোর ও স্টুডিও অ্যাপার্টমেন্ট।",
 
     footerTagline:
       "বাংলাদেশের প্রিমিয়ার লাক্সারি রিয়েল এস্টেট ডেভেলপার — আজই আগামীর ল্যান্ডমার্ক তৈরি করছি।",
