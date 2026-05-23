@@ -9,8 +9,7 @@ type NavItem =
   | { key: string; label: string; dropdown: { label: string; href: string }[] };
 
 export function Navbar() {
-  const { t, lang, setLang } = useLanguage();
-  const { theme, setTheme } = useTheme();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -56,23 +55,7 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
-      {/* Top Bar */}
-      <div className="hidden border-b border-border bg-muted/30 py-1.5 sm:block">
-        <div className="mx-auto flex max-w-[1400px] items-center justify-end gap-4 px-4 text-[11px] font-medium uppercase tracking-wider text-muted-foreground lg:px-8">
-          <div className="flex items-center gap-2">
-            <Globe className="h-3 w-3" />
-            <button onClick={() => setLang(lang === "en" ? "bn" : "en")} className="hover:text-primary">
-              {lang === "en" ? "EN" : "BN"}
-            </button>
-          </div>
-          <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="flex items-center gap-2 hover:text-primary">
-            {theme === "dark" ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
-            {theme === "dark" ? "Light" : "Dark"}
-          </button>
-        </div>
-      </div>
-
+    <nav className="fixed left-0 right-0 top-9 z-50 border-b border-border bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 lg:px-8">
         <a href="#home" className="flex items-center gap-3">
           <img src={logo} alt="Starline Builders" className="h-11 w-11 object-contain" />
@@ -191,18 +174,6 @@ export function Navbar() {
                 )}
               </li>
             ))}
-            <li className="flex items-center justify-between px-2 py-3 border-b border-border/50">
-              <span className="text-sm font-medium">Language</span>
-              <button onClick={() => setLang(lang === "en" ? "bn" : "en")} className="text-sm text-brand font-bold">
-                {lang === "en" ? "English" : "বাংলা"}
-              </button>
-            </li>
-            <li className="flex items-center justify-between px-2 py-3 border-b border-border/50">
-              <span className="text-sm font-medium">Theme</span>
-              <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="text-sm text-brand font-bold">
-                {theme === "dark" ? "Dark" : "Light"}
-              </button>
-            </li>
             <li className="pt-3">
               <button
                 type="button"
