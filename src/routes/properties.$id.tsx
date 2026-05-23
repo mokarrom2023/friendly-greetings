@@ -28,7 +28,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/lib/theme";
 import { LanguageProvider } from "@/lib/language";
-import { getPropertyById } from "@/lib/properties-data";
+import { getPropertyById, type Property } from "@/lib/properties-data";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Zap,
