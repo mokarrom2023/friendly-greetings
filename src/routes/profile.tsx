@@ -250,16 +250,19 @@ function Employees() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {departments.map((d) => (
-            <div
-              key={d.label}
-              className="flex items-center justify-between rounded-xl border border-border bg-card p-5 transition-all hover:border-brand"
+            <Link
+              key={d.slug}
+              to="/departments/$slug"
+              params={{ slug: d.slug }}
+              className="flex items-center justify-between rounded-xl border border-border bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-md"
             >
               <div className="text-sm font-semibold">{d.label}</div>
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-brand" />
                 <span className="text-lg font-bold text-brand">{d.count}</span>
+                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
