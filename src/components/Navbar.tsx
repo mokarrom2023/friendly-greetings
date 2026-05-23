@@ -74,13 +74,13 @@ export function Navbar() {
           <img src={logo} alt="Starline Builders" className="h-11 w-11 object-contain" />
           <div className="hidden flex-col leading-tight sm:flex">
             <span
-              className="text-base font-bold tracking-wide text-primary"
+              className="whitespace-nowrap text-base font-bold tracking-wide text-primary"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               {t("company")}
             </span>
             <span
-              className="text-[10px] font-semibold uppercase tracking-[2px]"
+              className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[2px] leading-tight"
               style={{
                 background: "linear-gradient(90deg, #d4a017, #f4cf5b, #b8860b)",
                 WebkitBackgroundClip: "text",
