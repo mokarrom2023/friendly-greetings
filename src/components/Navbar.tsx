@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { ChevronDown, Menu, X, User, Globe, Moon, Sun } from "lucide-react";
+import { ChevronDown, Menu, X, User } from "lucide-react";
 import { useLanguage } from "@/lib/language";
-import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.png";
 
