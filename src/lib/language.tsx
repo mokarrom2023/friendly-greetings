@@ -217,6 +217,12 @@ export const translations = {
     contactCall: "কল করুন",
     contactEmailUs: "ইমেইল করুন",
     contactSent: "বার্তা সফলভাবে পাঠানো হয়েছে!",
+    contactOfficeHours: "অফিস সময়",
+    contactOfficeHoursVal: "শনি – বৃহঃ: সকাল ১০টা – সন্ধ্যা ৬টা",
+    contactLocation: "লাইভ লোকেশন",
+    contactInterestedIn: "আগ্রহী প্রপার্টি",
+    contactSelectProperty: "প্রপার্টি নির্বাচন করুন",
+    propertyGeneral: "সাধারণ জিজ্ঞাসা",
 
     footerTagline:
       "বাংলাদেশের প্রিমিয়ার লাক্সারি রিয়েল এস্টেট ডেভেলপার — আজই আগামীর ল্যান্ডমার্ক তৈরি করছি।",
