@@ -18,6 +18,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/lib/theme";
 import { LanguageProvider, useLanguage } from "@/lib/language";
+import { getAllNews } from "@/lib/properties-data";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
