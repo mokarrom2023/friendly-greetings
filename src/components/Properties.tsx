@@ -56,9 +56,11 @@ export function Properties() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((p) => (
-            <article
+            <Link
               key={p.id}
-              className="group overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
+              to="/properties/$id"
+              params={{ id: String(p.id) }}
+              className="group block overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
@@ -97,16 +99,13 @@ export function Properties() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-bold text-brand">{p.price}</span>
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-primary hover:gap-2 transition-all"
-                  >
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-primary group-hover:gap-2 transition-all">
                     {t("viewDetails")}
                     <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
+                  </span>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
