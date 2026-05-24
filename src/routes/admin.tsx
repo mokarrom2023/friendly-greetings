@@ -1308,45 +1308,67 @@ function PropertiesPanel() {
         </button>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
+      <div className="mt-5 overflow-hidden rounded-xl border border-border bg-card">
+        {isLoading && <div className="p-6"><Loader2 className="h-5 w-5 animate-spin" /></div>}
         {!isLoading && (items?.length ?? 0) === 0 && (
-          <p className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground sm:col-span-2 lg:col-span-3">
+          <p className="p-6 text-center text-sm text-muted-foreground">
             No properties yet. Click <b>Add Property</b> to create the first one.
           </p>
         )}
-        {items?.map((p) => {
-          const ex = (p.extra ?? {}) as Record<string, string | number>;
-          return (
-            <div key={p.id} className="overflow-hidden rounded-xl border border-border bg-card">
-              {p.image_url ? (
-                <img src={p.image_url} alt="" className="h-32 w-full object-cover" />
-              ) : (
-                <div className="flex h-32 w-full items-center justify-center bg-muted">
-                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
-                </div>
-              )}
-              <div className="p-3">
-                <div className="text-sm font-bold">{p.title || "(untitled)"}</div>
-                <div className="text-xs text-muted-foreground">{p.subtitle || ex.location || "—"}</div>
-                <div className="mt-1 flex flex-wrap gap-1 text-[10px]">
-                  {ex.price && <span className="rounded bg-primary/10 px-1.5 py-0.5 text-primary">{ex.price}</span>}
-                  {ex.status && <span className="rounded bg-accent px-1.5 py-0.5">{ex.status}</span>}
-                  {ex.beds ? <span className="rounded bg-accent px-1.5 py-0.5">{ex.beds} bed</span> : null}
-                </div>
-                <div className="mt-3 flex gap-1">
-                  <button onClick={() => setEditing(p)} className="flex-1 rounded-md border border-border px-2 py-1 text-xs hover:bg-accent">
-                    <Pencil className="mx-auto h-3.5 w-3.5" />
-                  </button>
-                  <button onClick={() => handleDelete(p.id)} className="flex-1 rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10">
-                    <Trash2 className="mx-auto h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {!isLoading && (items?.length ?? 0) > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30 text-[11px] uppercase tracking-wider text-primary">
+                  <th className="px-3 py-3 text-left">Image</th>
+                  <th className="px-3 py-3 text-left">Name</th>
+                  <th className="px-3 py-3 text-left">Location</th>
+                  <th className="px-3 py-3 text-left">Status</th>
+                  <th className="px-3 py-3 text-left">Size</th>
+                  <th className="px-3 py-3 text-left">Price</th>
+                  <th className="px-3 py-3 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items?.map((p) => {
+                  const ex = (p.extra ?? {}) as Record<string, string | number>;
+                  return (
+                    <tr key={p.id} className="border-b border-border/60 last:border-0 hover:bg-accent/30">
+                      <td className="px-3 py-3">
+                        <RowImageCell
+                          src={p.image_url}
+                          folder="properties"
+                          onReplaced={async (url) => {
+                            await save({ data: { id: p.id, section_key: "properties", title: p.title, subtitle: p.subtitle, description: p.description, image_url: url, link_url: null, sort_order: p.sort_order, extra: p.extra ?? {} } });
+                            qc.invalidateQueries({ queryKey: ["properties-admin"] });
+                            qc.invalidateQueries({ queryKey: ["properties-db"] });
+                          }}
+                        />
+                      </td>
+                      <td className="px-3 py-3 font-semibold text-foreground">{p.title || "(untitled)"}</td>
+                      <td className="px-3 py-3 text-muted-foreground">{p.subtitle || ex.location || "—"}</td>
+                      <td className="px-3 py-3 text-muted-foreground">{ex.status || "—"}</td>
+                      <td className="px-3 py-3 text-muted-foreground">{ex.size || "—"}</td>
+                      <td className="px-3 py-3 text-primary">{ex.price || "—"}</td>
+                      <td className="px-3 py-3">
+                        <div className="flex gap-1">
+                          <button onClick={() => setEditing(p)} className="inline-flex items-center gap-1 rounded-md border border-primary/40 px-2 py-1 text-xs text-primary hover:bg-primary/10">
+                            <Pencil className="h-3.5 w-3.5" /> Edit
+                          </button>
+                          <button onClick={() => handleDelete(p.id)} className="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
+
 
       {editing && <PropertyModal item={editing} onClose={() => setEditing(null)} onSave={handleSave} />}
     </div>
