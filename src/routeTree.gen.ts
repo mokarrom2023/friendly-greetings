@@ -9,8 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
@@ -18,6 +20,11 @@ import { Route as ProjectsStatusRouteImport } from './routes/projects.$status'
 import { Route as DepartmentsSlugRouteImport } from './routes/departments.$slug'
 import { Route as PropertiesIdNewsNewsIdRouteImport } from './routes/properties.$id.news.$newsId'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -26,6 +33,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -62,8 +74,10 @@ const PropertiesIdNewsNewsIdRoute = PropertiesIdNewsNewsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
   '/gallery': typeof GalleryRoute
   '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
   '/projects/$status': typeof ProjectsStatusRoute
   '/properties/$id': typeof PropertiesIdRouteWithChildren
@@ -72,8 +86,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
   '/gallery': typeof GalleryRoute
   '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
   '/projects/$status': typeof ProjectsStatusRoute
   '/properties/$id': typeof PropertiesIdRouteWithChildren
@@ -83,8 +99,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/auth': typeof AuthRoute
   '/gallery': typeof GalleryRoute
   '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
   '/projects/$status': typeof ProjectsStatusRoute
   '/properties/$id': typeof PropertiesIdRouteWithChildren
@@ -95,8 +113,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/auth'
     | '/gallery'
     | '/profile'
+    | '/reset-password'
     | '/departments/$slug'
     | '/projects/$status'
     | '/properties/$id'
@@ -105,8 +125,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/auth'
     | '/gallery'
     | '/profile'
+    | '/reset-password'
     | '/departments/$slug'
     | '/projects/$status'
     | '/properties/$id'
@@ -115,8 +137,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/auth'
     | '/gallery'
     | '/profile'
+    | '/reset-password'
     | '/departments/$slug'
     | '/projects/$status'
     | '/properties/$id'
@@ -126,8 +150,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  AuthRoute: typeof AuthRoute
   GalleryRoute: typeof GalleryRoute
   ProfileRoute: typeof ProfileRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   DepartmentsSlugRoute: typeof DepartmentsSlugRoute
   ProjectsStatusRoute: typeof ProjectsStatusRoute
   PropertiesIdRoute: typeof PropertiesIdRouteWithChildren
@@ -135,6 +161,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -147,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/gallery'
       fullPath: '/gallery'
       preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -209,8 +249,10 @@ const PropertiesIdRouteWithChildren = PropertiesIdRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  AuthRoute: AuthRoute,
   GalleryRoute: GalleryRoute,
   ProfileRoute: ProfileRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   DepartmentsSlugRoute: DepartmentsSlugRoute,
   ProjectsStatusRoute: ProjectsStatusRoute,
   PropertiesIdRoute: PropertiesIdRouteWithChildren,

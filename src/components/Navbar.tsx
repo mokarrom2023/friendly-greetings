@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { ChevronDown, Menu, X, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronDown, Menu, X, User, LogOut } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useLanguage } from "@/lib/language";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 
 type NavItem =
@@ -12,6 +14,23 @@ export function Navbar() {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUserEmail(data.session?.user?.email ?? null);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setUserEmail(s?.user?.email ?? null);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    setUserMenuOpen(false);
+  }
 
   const items: NavItem[] = [
     { key: "home", label: t("home"), href: "/#home" },
@@ -143,13 +162,50 @@ export function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="hidden items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:opacity-90 sm:flex"
-          >
-            <User className="h-4 w-4" />
-            {t("login")}
-          </button>
+          {userEmail ? (
+            <div
+              className="relative hidden sm:block"
+              onMouseEnter={() => setUserMenuOpen(true)}
+              onMouseLeave={() => setUserMenuOpen(false)}
+            >
+              <button
+                type="button"
+                className="flex max-w-[180px] items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground transition hover:border-brand"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                  {userEmail.charAt(0).toUpperCase()}
+                </span>
+                <span className="truncate">{userEmail.split("@")[0]}</span>
+                <ChevronDown className="h-3.5 w-3.5" />
+              </button>
+              <div
+                className={cn(
+                  "absolute right-0 top-full min-w-[200px] rounded-lg border border-border bg-popover py-1.5 shadow-lg transition-all",
+                  userMenuOpen
+                    ? "visible opacity-100 translate-y-0"
+                    : "invisible opacity-0 -translate-y-1",
+                )}
+              >
+                <div className="border-b border-border px-3 py-2">
+                  <p className="truncate text-xs text-muted-foreground">{userEmail}</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-accent/30"
+                >
+                  <LogOut className="h-4 w-4" /> Sign out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="hidden items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:opacity-90 sm:flex"
+            >
+              <User className="h-4 w-4" />
+              {t("login")}
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -197,13 +253,29 @@ export function Navbar() {
               </li>
             ))}
             <li className="pt-3">
-              <button
-                type="button"
-                className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
-              >
-                <User className="h-4 w-4" />
-                {t("login")}
-              </button>
+              {userEmail ? (
+                <div className="space-y-2">
+                  <p className="px-2 text-xs text-muted-foreground">
+                    Signed in as <b className="text-foreground">{userEmail}</b>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex w-full items-center justify-center gap-2 rounded-md border border-destructive/40 px-4 py-2 text-sm font-semibold text-destructive"
+                  >
+                    <LogOut className="h-4 w-4" /> Sign out
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/auth"
+                  onClick={() => setOpen(false)}
+                  className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+                >
+                  <User className="h-4 w-4" />
+                  {t("login")}
+                </Link>
+              )}
             </li>
           </ul>
         </div>
