@@ -1698,3 +1698,202 @@ function AccountThemePanel({
   );
 }
 
+/* ---------------- Holidays Panel ---------------- */
+type HolidayRow = {
+  id: string;
+  title: string | null;
+  subtitle: string | null;
+  sort_order: number;
+  extra: { start_date?: string; end_date?: string } | null;
+};
+
+function HolidaysPanel() {
+  const qc = useQueryClient();
+  const save = useServerFn(saveSectionItem);
+  const remove = useServerFn(deleteSectionItem);
+
+  const { data: items, isLoading } = useQuery({
+    queryKey: ["section-items", "holidays"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("section_items")
+        .select("id, title, subtitle, sort_order, extra")
+        .eq("section_key", "holidays")
+        .order("sort_order");
+      if (error) throw error;
+      return (data ?? []) as HolidayRow[];
+    },
+  });
+
+  const empty = { id: "", title: "", subtitle: "", start_date: "", end_date: "" };
+  const [editing, setEditing] = useState<typeof empty | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  function openNew() { setEditing({ ...empty }); }
+  function openEdit(r: HolidayRow) {
+    setEditing({
+      id: r.id,
+      title: r.title ?? "",
+      subtitle: r.subtitle ?? "",
+      start_date: r.extra?.start_date ?? "",
+      end_date: r.extra?.end_date ?? "",
+    });
+  }
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editing) return;
+    setErr(null);
+    if (!editing.title.trim()) { setErr("Holiday name required"); return; }
+    if (!editing.start_date || !editing.end_date) { setErr("Start and end date required"); return; }
+    if (editing.end_date < editing.start_date) { setErr("End date must be after start date"); return; }
+    setBusy(true);
+    try {
+      await save({
+        data: {
+          id: editing.id || undefined,
+          section_key: "holidays",
+          title: editing.title.trim(),
+          subtitle: editing.subtitle.trim() || editing.title.trim(),
+          sort_order: 0,
+          extra: { start_date: editing.start_date, end_date: editing.end_date },
+        },
+      });
+      setEditing(null);
+      qc.invalidateQueries({ queryKey: ["section-items", "holidays"] });
+      qc.invalidateQueries({ queryKey: ["holidays"] });
+    } catch (e: unknown) {
+      setErr((e as Error).message);
+    } finally { setBusy(false); }
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Delete this holiday?")) return;
+    await remove({ data: { id } });
+    qc.invalidateQueries({ queryKey: ["section-items", "holidays"] });
+    qc.invalidateQueries({ queryKey: ["holidays"] });
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  return (
+    <div className="mx-auto max-w-3xl">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>
+            🎉 Holidays / Office Closures
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Add government holidays. The top bar will automatically show the holiday name and reopen date during the closure. Office returns to normal hours automatically when it ends.
+          </p>
+        </div>
+        <button
+          onClick={openNew}
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+        >
+          <Plus className="h-4 w-4" /> Add Holiday
+        </button>
+      </div>
+
+      <div className="mt-5 space-y-2">
+        {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
+        {!isLoading && (items?.length ?? 0) === 0 && (
+          <p className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+            No holidays yet. Click <b>Add Holiday</b> to create one.
+          </p>
+        )}
+        {items?.map((it) => {
+          const start = it.extra?.start_date ?? "";
+          const end = it.extra?.end_date ?? "";
+          const active = start && end && today >= start && today <= end;
+          const past = end && today > end;
+          return (
+            <div key={it.id} className={`flex items-center gap-3 rounded-xl border bg-card p-3 ${active ? "border-primary shadow-md shadow-primary/10" : past ? "border-border opacity-60" : "border-border"}`}>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold">{it.title || "(untitled)"}</span>
+                  {active && <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold uppercase text-primary-foreground">Active</span>}
+                  {past && !active && <span className="rounded-full bg-muted px-2 py-0.5 text-[9px] font-bold uppercase text-muted-foreground">Past</span>}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {start} → {end}
+                  {it.subtitle && it.subtitle !== it.title && <span className="ml-2">· {it.subtitle}</span>}
+                </div>
+              </div>
+              <button onClick={() => openEdit(it)} className="rounded-md p-1.5 hover:bg-accent">
+                <Pencil className="h-4 w-4" />
+              </button>
+              <button onClick={() => handleDelete(it.id)} className="rounded-md p-1.5 text-destructive hover:bg-destructive/10">
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {editing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setEditing(null)}>
+          <form
+            onClick={(e) => e.stopPropagation()}
+            onSubmit={handleSave}
+            className="w-full max-w-md space-y-3 rounded-2xl border border-border bg-card p-5"
+          >
+            <h3 className="text-lg font-bold" style={{ fontFamily: "var(--font-heading)" }}>
+              {editing.id ? "Edit Holiday" : "New Holiday"}
+            </h3>
+            <Field label="Holiday name (English)">
+              <input
+                value={editing.title}
+                onChange={(e) => setEditing({ ...editing, title: e.target.value })}
+                placeholder="Eid Holiday"
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <Field label="Holiday name (Bangla)">
+              <input
+                value={editing.subtitle}
+                onChange={(e) => setEditing({ ...editing, subtitle: e.target.value })}
+                placeholder="ঈদের ছুটি"
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+              />
+            </Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Start date">
+                <input
+                  type="date"
+                  value={editing.start_date}
+                  onChange={(e) => setEditing({ ...editing, start_date: e.target.value })}
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </Field>
+              <Field label="End date (last closed day)">
+                <input
+                  type="date"
+                  value={editing.end_date}
+                  onChange={(e) => setEditing({ ...editing, end_date: e.target.value })}
+                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+              </Field>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              Example: 25 May → 31 May = office closed 25–31 May, reopens 1 June at 10 AM.
+            </p>
+            {err && <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">{err}</p>}
+            <div className="flex justify-end gap-2 pt-2">
+              <button type="button" onClick={() => setEditing(null)} className="rounded-md border border-border px-3 py-2 text-sm">
+                Cancel
+              </button>
+              <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50">
+                {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
