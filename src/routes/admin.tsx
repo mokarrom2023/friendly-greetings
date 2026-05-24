@@ -838,35 +838,58 @@ function ListSectionEditor({ section }: { section: SectionConfig }) {
         </button>
       </div>
 
-      <div className="mt-5 space-y-2">
-        {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
+      <div className="mt-5 overflow-hidden rounded-xl border border-border bg-card">
+        {isLoading && <div className="p-6"><Loader2 className="h-5 w-5 animate-spin" /></div>}
         {items?.length === 0 && (
-          <p className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+          <p className="p-6 text-center text-sm text-muted-foreground">
             No items yet. Click <b>Add Item</b> to create the first one.
           </p>
         )}
-        {items?.map((it) => (
-          <div key={it.id} className="flex items-center gap-3 rounded-xl border border-border bg-card p-3">
-            {it.image_url ? (
-              <img src={it.image_url} alt="" className="h-14 w-14 rounded-md object-cover" />
-            ) : (
-              <div className="flex h-14 w-14 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground">
-                <ImageIcon className="h-5 w-5" />
-              </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-semibold">{it.title || "(untitled)"}</div>
-              {it.subtitle && <div className="truncate text-xs text-muted-foreground">{it.subtitle}</div>}
-            </div>
-            <button onClick={() => setEditing(it)} className="rounded-md p-1.5 hover:bg-accent">
-              <Pencil className="h-4 w-4" />
-            </button>
-            <button onClick={() => handleDelete(it.id)} className="rounded-md p-1.5 text-destructive hover:bg-destructive/10">
-              <Trash2 className="h-4 w-4" />
-            </button>
+        {(items?.length ?? 0) > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30 text-[11px] uppercase tracking-wider text-primary">
+                  <th className="px-3 py-3 text-left">Image</th>
+                  <th className="px-3 py-3 text-left">Title</th>
+                  <th className="px-3 py-3 text-left">Subtitle</th>
+                  <th className="px-3 py-3 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items?.map((it) => (
+                  <tr key={it.id} className="border-b border-border/60 last:border-0 hover:bg-accent/30">
+                    <td className="px-3 py-3">
+                      <RowImageCell
+                        src={it.image_url}
+                        folder={section.key}
+                        onReplaced={async (url) => {
+                          await save({ data: { id: it.id, section_key: section.key, title: it.title, subtitle: it.subtitle, description: it.description, image_url: url, link_url: it.link_url, sort_order: it.sort_order } });
+                          qc.invalidateQueries({ queryKey: ["section-items", section.key] });
+                          qc.invalidateQueries({ queryKey: ["hero-slides"] });
+                        }}
+                      />
+                    </td>
+                    <td className="px-3 py-3 font-semibold text-foreground">{it.title || "(untitled)"}</td>
+                    <td className="px-3 py-3 text-muted-foreground">{it.subtitle || "—"}</td>
+                    <td className="px-3 py-3">
+                      <div className="flex gap-1">
+                        <button onClick={() => setEditing(it)} className="inline-flex items-center gap-1 rounded-md border border-primary/40 px-2 py-1 text-xs text-primary hover:bg-primary/10">
+                          <Pencil className="h-3.5 w-3.5" /> Edit
+                        </button>
+                        <button onClick={() => handleDelete(it.id)} className="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10">
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        ))}
+        )}
       </div>
+
 
       {editing && (
         <ItemModal item={editing} onClose={() => setEditing(null)} onSave={handleSave} folder={section.key} />
