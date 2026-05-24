@@ -43,20 +43,21 @@ export const SECTIONS: SectionConfig[] = [
   { key: "why_choose", label: "Why Choose Us (header)", type: "single", group: "Main Sections", fields: ["title", "subtitle", "description"] },
   { key: "contact", label: "Contact Info", type: "single", group: "Main Sections", fields: ["title", "subtitle", "description"], hint: "Address, phone, email shown in Contact section." },
 
-  // Extra sections (13)
-  { key: "extra_stats", label: "1. Stats / Numbers", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_services", label: "2. Services", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_process", label: "3. Process Timeline", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_testimonials", label: "4. Testimonials", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_team", label: "5. Team Preview", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_awards", label: "6. Awards", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_partners", label: "7. Partners / Clients", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_blog", label: "8. Blog Preview", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_amenities", label: "9. Amenities", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_emi", label: "10. EMI Calculator", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_gallery_preview", label: "11. Gallery Preview", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_newsletter", label: "12. Newsletter CTA", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
-  { key: "extra_faq", label: "13. FAQ (header)", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"] },
+  // Extra sections (13) — each also supports multiple images/videos via the Media gallery panel rendered below the editor.
+  { key: "extra_stats", label: "1. Stats / Numbers", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_services", label: "2. Services", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_process", label: "3. Process Timeline", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_testimonials", label: "4. Testimonials", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_team", label: "5. Team Preview", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_awards", label: "6. Awards", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_partners", label: "7. Partners / Clients", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_blog", label: "8. Blog Preview", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_amenities", label: "9. Amenities", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_emi", label: "10. EMI Calculator", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_gallery_preview", label: "11. Gallery Preview", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_newsletter", label: "12. Newsletter CTA", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+  { key: "extra_faq", label: "13. FAQ (header)", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },
+
 
   // List content
   { key: "team_members", label: "Team Members (advanced)", type: "custom", group: "List Content", hint: "Manage employees grouped by department." },
