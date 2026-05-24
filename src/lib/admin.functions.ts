@@ -272,7 +272,9 @@ export const getAdminStats = createServerFn({ method: "POST" })
     return {
       totalMessages: msgCount ?? 0,
       unreadMessages: unreadCount ?? 0,
-      totalUsers: users.data?.total ?? users.data?.users?.length ?? 0,
+      totalUsers: (users.data as { total?: number; users?: unknown[] } | null)?.total
+        ?? (users.data as { users?: unknown[] } | null)?.users?.length
+        ?? 0,
     };
   });
 
