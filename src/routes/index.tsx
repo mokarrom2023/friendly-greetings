@@ -7,6 +7,7 @@ import { About } from "@/components/About";
 import { WhyChoose } from "@/components/WhyChoose";
 import { Contact } from "@/components/Contact";
 import { Faq } from "@/components/Faq";
+import { ExtraSections } from "@/components/ExtraSections";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/lib/theme";
 import { LanguageProvider } from "@/lib/language";
