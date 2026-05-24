@@ -46,6 +46,14 @@ export function TopBar() {
   const { theme, setTheme } = useTheme();
   const now = useNow();
 
+  const { data: holidays } = useQuery({
+    queryKey: ["holidays"],
+    queryFn: fetchHolidays,
+    staleTime: 60_000,
+    refetchInterval: 5 * 60_000,
+  });
+  const activeHoliday = now ? findActiveHoliday(holidays ?? [], now) : null;
+
   const dateLocale = lang === "bn" ? "bn-BD" : "en-US";
   const dateStr = now
     ? now.toLocaleDateString(dateLocale, {
