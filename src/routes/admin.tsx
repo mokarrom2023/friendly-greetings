@@ -173,7 +173,7 @@ function AdminAuthForm() {
 }
 
 /* ---------------- Admin Check Wrapper ---------------- */
-function Dashboard({ email }: { email: string }) {
+function Dashboard({ email, adminTheme, setAdminTheme }: { email: string; adminTheme: AdminThemeId; setAdminTheme: (t: AdminThemeId) => void }) {
   const claim = useServerFn(claimAdminIfFirst);
   const check = useServerFn(checkIsAdmin);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
@@ -206,11 +206,11 @@ function Dashboard({ email }: { email: string }) {
       </div>
     );
 
-  return <AdminConsole email={email} />;
+  return <AdminConsole email={email} adminTheme={adminTheme} setAdminTheme={setAdminTheme} />;
 }
 
 /* ---------------- Admin Console with Sidebar ---------------- */
-function AdminConsole({ email }: { email: string }) {
+function AdminConsole({ email, adminTheme, setAdminTheme }: { email: string; adminTheme: AdminThemeId; setAdminTheme: (t: AdminThemeId) => void }) {
   const [activeKey, setActiveKey] = useState<string>("dashboard");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
