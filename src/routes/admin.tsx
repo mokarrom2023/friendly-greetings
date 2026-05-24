@@ -259,9 +259,11 @@ function AdminConsole({ email }: { email: string }) {
         {/* Main */}
         <main className="min-h-[calc(100vh-57px)] flex-1 bg-background p-4 sm:p-6 lg:p-8">
           {activeKey === "dashboard" && <DashboardHome onSelect={setActiveKey} />}
+          {activeSection?.key === "messages" && <MessagesPanel />}
+          {activeSection?.key === "social_links" && <SocialLinksPanel />}
+          {activeSection?.key === "team_members" && <TeamMembersPanel />}
           {activeSection?.type === "single" && <SingleSectionEditor section={activeSection} />}
           {activeSection?.type === "list" && <ListSectionEditor section={activeSection} />}
-          {activeSection?.key === "team_members" && <TeamMembersPanel />}
         </main>
       </div>
     </div>
