@@ -80,7 +80,7 @@ export function TopBar() {
     : "";
 
   const status = now
-    ? getOfficeStatus(now)
+    ? getOfficeStatus(now, activeHoliday, lang)
     : { open: false, text: "", shortText: "" };
   const open = status.open;
 
