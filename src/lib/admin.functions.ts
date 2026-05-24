@@ -211,3 +211,99 @@ export const deleteSectionItem = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/* ---------- Contact Messages ---------- */
+
+export const listContactMessages = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userId);
+    const { data, error } = await supabaseAdmin
+      .from("contact_messages")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(500);
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
+
+export const markMessageRead = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ id: z.string().uuid(), is_read: z.boolean() }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const { error } = await supabaseAdmin
+      .from("contact_messages")
+      .update({ is_read: data.is_read })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const deleteContactMessage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const { error } = await supabaseAdmin
+      .from("contact_messages")
+      .delete()
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+/* ---------- Dashboard Stats ---------- */
+
+export const getAdminStats = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userId);
+    const [{ count: msgCount }, { count: unreadCount }, users] = await Promise.all([
+      supabaseAdmin.from("contact_messages").select("id", { count: "exact", head: true }),
+      supabaseAdmin
+        .from("contact_messages")
+        .select("id", { count: "exact", head: true })
+        .eq("is_read", false),
+      supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1 }),
+    ]);
+    return {
+      totalMessages: msgCount ?? 0,
+      unreadMessages: unreadCount ?? 0,
+      totalUsers: (users.data as { total?: number; users?: unknown[] } | null)?.total
+        ?? (users.data as { users?: unknown[] } | null)?.users?.length
+        ?? 0,
+    };
+  });
+
+/* ---------- Social Links ---------- */
+
+const socialSchema = z.object({
+  whatsapp: z.string().max(500).optional().default(""),
+  messenger: z.string().max(500).optional().default(""),
+  telegram: z.string().max(500).optional().default(""),
+  facebook: z.string().max(500).optional().default(""),
+  instagram: z.string().max(500).optional().default(""),
+  linkedin: z.string().max(500).optional().default(""),
+  twitter: z.string().max(500).optional().default(""),
+  youtube: z.string().max(500).optional().default(""),
+});
+
+export const saveSocialLinks = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => socialSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const { error } = await supabaseAdmin.from("site_sections").upsert(
+      {
+        section_key: "social_links",
+        extra: data as never,
+      },
+      { onConflict: "section_key" },
+    );
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+

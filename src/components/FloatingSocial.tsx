@@ -1,6 +1,6 @@
-import { MessageCircle, Send } from "lucide-react";
+import { MessageCircle } from "lucide-react";
+import { useSocialLinks } from "@/lib/social-links";
 
-// Inline WhatsApp & Messenger SVGs for accurate brand look
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" className={className} fill="currentColor" aria-hidden>
@@ -17,31 +17,25 @@ function TelegramIcon({ className }: { className?: string }) {
   );
 }
 
-const LINKS = [
-  {
-    name: "WhatsApp",
-    href: "https://wa.me/8801334563765",
-    bg: "#25D366",
-    Icon: WhatsAppIcon,
-  },
-  {
-    name: "Messenger",
-    href: "https://m.me/starlinebuilders",
-    bg: "linear-gradient(135deg,#0078FF 0%,#A033FF 50%,#FF0066 100%)",
-    Icon: MessageCircle,
-  },
-  {
-    name: "Telegram",
-    href: "https://t.me/starlinebuilders",
-    bg: "#229ED9",
-    Icon: TelegramIcon,
-  },
-];
-
 export function FloatingSocial() {
+  const { data: links } = useSocialLinks();
+
+  const items = [
+    { name: "WhatsApp", href: links?.whatsapp, bg: "#25D366", Icon: WhatsAppIcon },
+    {
+      name: "Messenger",
+      href: links?.messenger,
+      bg: "linear-gradient(135deg,#0078FF 0%,#A033FF 50%,#FF0066 100%)",
+      Icon: MessageCircle,
+    },
+    { name: "Telegram", href: links?.telegram, bg: "#229ED9", Icon: TelegramIcon },
+  ].filter((i) => i.href && i.href.trim().length > 0);
+
+  if (items.length === 0) return null;
+
   return (
     <div className="fixed bottom-4 right-3 z-[90] flex flex-col gap-2 sm:right-4 sm:gap-2.5">
-      {LINKS.map(({ name, href, bg, Icon }) => (
+      {items.map(({ name, href, bg, Icon }) => (
         <a
           key={name}
           href={href}

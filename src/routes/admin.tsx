@@ -5,12 +5,15 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Loader2, Plus, Pencil, Trash2, LogOut, Upload, Save, CheckCircle2,
   ArrowLeft, LayoutDashboard, Image as ImageIcon, Video, Shield, Eye, EyeOff,
+  Mail, MailOpen, Users, Inbox, Link as LinkIcon,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   claimAdminIfFirst, checkIsAdmin,
   saveTeamMember, deleteTeamMember,
   saveSiteSection, saveSectionItem, deleteSectionItem,
+  listContactMessages, markMessageRead, deleteContactMessage,
+  getAdminStats, saveSocialLinks,
 } from "@/lib/admin.functions";
 import { SECTIONS, SECTION_GROUPS, type SectionConfig } from "@/lib/admin-sections";
 import logo from "@/assets/logo.png";
@@ -256,9 +259,11 @@ function AdminConsole({ email }: { email: string }) {
         {/* Main */}
         <main className="min-h-[calc(100vh-57px)] flex-1 bg-background p-4 sm:p-6 lg:p-8">
           {activeKey === "dashboard" && <DashboardHome onSelect={setActiveKey} />}
+          {activeSection?.key === "messages" && <MessagesPanel />}
+          {activeSection?.key === "social_links" && <SocialLinksPanel />}
+          {activeSection?.key === "team_members" && <TeamMembersPanel />}
           {activeSection?.type === "single" && <SingleSectionEditor section={activeSection} />}
           {activeSection?.type === "list" && <ListSectionEditor section={activeSection} />}
-          {activeSection?.key === "team_members" && <TeamMembersPanel />}
         </main>
       </div>
     </div>
@@ -279,6 +284,13 @@ function SidebarItem({ active, onClick, children }: { active: boolean; onClick: 
 }
 
 function DashboardHome({ onSelect }: { onSelect: (k: string) => void }) {
+  const statsFn = useServerFn(getAdminStats);
+  const { data: stats } = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: () => statsFn(),
+    refetchInterval: 30_000,
+  });
+
   const totals = SECTIONS.reduce(
     (acc, s) => {
       acc[s.group] = (acc[s.group] ?? 0) + 1;
@@ -291,9 +303,46 @@ function DashboardHome({ onSelect }: { onSelect: (k: string) => void }) {
     <div className="mx-auto max-w-5xl">
       <h2 className="text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Welcome, Admin 👋</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Manage every section of your website from one place. Pick a section on the left or below to edit.
+        Manage every section of your website from one place.
       </p>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+
+      {/* Live stats */}
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <button
+          onClick={() => onSelect("messages")}
+          className="group relative overflow-hidden rounded-xl border border-primary/40 bg-card p-5 text-left transition hover:border-primary"
+        >
+          <div className="flex items-center justify-between">
+            <Inbox className="h-5 w-5 text-primary" />
+            {(stats?.unreadMessages ?? 0) > 0 && (
+              <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">
+                {stats!.unreadMessages} NEW
+              </span>
+            )}
+          </div>
+          <p className="mt-3 text-3xl font-bold text-primary">{stats?.totalMessages ?? "—"}</p>
+          <p className="text-xs text-muted-foreground">Contact messages</p>
+        </button>
+
+        <div className="rounded-xl border border-border bg-card p-5">
+          <Users className="h-5 w-5 text-primary" />
+          <p className="mt-3 text-3xl font-bold text-primary">{stats?.totalUsers ?? "—"}</p>
+          <p className="text-xs text-muted-foreground">Registered users</p>
+        </div>
+
+        <button
+          onClick={() => onSelect("social_links")}
+          className="rounded-xl border border-border bg-card p-5 text-left transition hover:border-primary"
+        >
+          <LinkIcon className="h-5 w-5 text-primary" />
+          <p className="mt-3 text-3xl font-bold text-primary">8</p>
+          <p className="text-xs text-muted-foreground">Social link slots</p>
+        </button>
+      </div>
+
+      {/* Section overview */}
+      <h3 className="mt-8 text-lg font-bold" style={{ fontFamily: "var(--font-heading)" }}>Editable sections</h3>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {SECTION_GROUPS.map((g) => (
           <div key={g} className="rounded-xl border border-border bg-card p-5">
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{g}</p>
@@ -301,7 +350,7 @@ function DashboardHome({ onSelect }: { onSelect: (k: string) => void }) {
             <p className="text-xs text-muted-foreground">editable sections</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               {SECTIONS.filter((s) => s.group === g).slice(0, 5).map((s) => (
-                <button key={s.key} onClick={() => onSelect(s.key)} className="rounded-full border border-border px-2 py-0.5 text-[11px] hover:border-brand hover:text-brand">
+                <button key={s.key} onClick={() => onSelect(s.key)} className="rounded-full border border-border px-2 py-0.5 text-[11px] hover:border-primary hover:text-primary">
                   {s.label}
                 </button>
               ))}
@@ -312,6 +361,220 @@ function DashboardHome({ onSelect }: { onSelect: (k: string) => void }) {
     </div>
   );
 }
+
+/* ---------------- Messages Panel ---------------- */
+type ContactMsg = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  property: string | null;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+};
+
+function MessagesPanel() {
+  const qc = useQueryClient();
+  const listFn = useServerFn(listContactMessages);
+  const markFn = useServerFn(markMessageRead);
+  const delFn = useServerFn(deleteContactMessage);
+  const [filter, setFilter] = useState<"all" | "unread">("all");
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["contact-messages"],
+    queryFn: () => listFn() as Promise<ContactMsg[]>,
+  });
+
+  const messages = (data ?? []).filter((m) => filter === "all" || !m.is_read);
+
+  async function toggleRead(m: ContactMsg) {
+    await markFn({ data: { id: m.id, is_read: !m.is_read } });
+    qc.invalidateQueries({ queryKey: ["contact-messages"] });
+    qc.invalidateQueries({ queryKey: ["admin-stats"] });
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Delete this message?")) return;
+    await delFn({ data: { id } });
+    qc.invalidateQueries({ queryKey: ["contact-messages"] });
+    qc.invalidateQueries({ queryKey: ["admin-stats"] });
+  }
+
+  return (
+    <div className="mx-auto max-w-4xl">
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Contact Messages</h2>
+          <p className="mt-1 text-xs text-muted-foreground">Messages from the website contact form.</p>
+        </div>
+        <div className="flex gap-1 rounded-md border border-border p-1 text-xs">
+          <button
+            onClick={() => setFilter("all")}
+            className={`rounded px-3 py-1 ${filter === "all" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+          >All</button>
+          <button
+            onClick={() => setFilter("unread")}
+            className={`rounded px-3 py-1 ${filter === "unread" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+          >Unread</button>
+        </div>
+      </div>
+
+      <div className="mt-5 space-y-3">
+        {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
+        {!isLoading && messages.length === 0 && (
+          <p className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+            No messages yet.
+          </p>
+        )}
+        {messages.map((m) => (
+          <div
+            key={m.id}
+            className={`rounded-xl border bg-card p-4 transition ${m.is_read ? "border-border" : "border-primary/50 shadow-md shadow-primary/10"}`}
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-foreground">{m.name}</span>
+                  {!m.is_read && (
+                    <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold uppercase text-primary-foreground">New</span>
+                  )}
+                </div>
+                <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                  <a href={`mailto:${m.email}`} className="hover:text-primary">✉ {m.email}</a>
+                  {m.phone && <a href={`tel:${m.phone}`} className="hover:text-primary">☎ {m.phone}</a>}
+                  {m.property && <span>🏠 {m.property}</span>}
+                  <span>{new Date(m.created_at).toLocaleString()}</span>
+                </div>
+              </div>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => toggleRead(m)}
+                  title={m.is_read ? "Mark unread" : "Mark read"}
+                  className="rounded-md p-1.5 text-foreground hover:bg-accent"
+                >
+                  {m.is_read ? <Mail className="h-4 w-4" /> : <MailOpen className="h-4 w-4" />}
+                </button>
+                <button
+                  onClick={() => handleDelete(m.id)}
+                  className="rounded-md p-1.5 text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+            <p className="mt-3 whitespace-pre-wrap rounded-md bg-background/60 p-3 text-sm leading-relaxed text-foreground/90">
+              {m.message}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Social Links Panel ---------------- */
+const SOCIAL_FIELDS: Array<{ key: keyof SocialForm; label: string; placeholder: string }> = [
+  { key: "whatsapp", label: "WhatsApp (floating icon)", placeholder: "https://wa.me/8801XXXXXXXXX" },
+  { key: "messenger", label: "Messenger (floating icon)", placeholder: "https://m.me/yourpage" },
+  { key: "telegram", label: "Telegram (floating icon)", placeholder: "https://t.me/yourchannel" },
+  { key: "facebook", label: "Facebook (footer)", placeholder: "https://facebook.com/yourpage" },
+  { key: "instagram", label: "Instagram (footer)", placeholder: "https://instagram.com/yourpage" },
+  { key: "linkedin", label: "LinkedIn (footer)", placeholder: "https://linkedin.com/company/..." },
+  { key: "twitter", label: "X / Twitter (footer)", placeholder: "https://x.com/yourpage" },
+  { key: "youtube", label: "YouTube (footer)", placeholder: "https://youtube.com/@yourchannel" },
+];
+
+type SocialForm = {
+  whatsapp: string; messenger: string; telegram: string;
+  facebook: string; instagram: string; linkedin: string; twitter: string; youtube: string;
+};
+
+function SocialLinksPanel() {
+  const qc = useQueryClient();
+  const saveFn = useServerFn(saveSocialLinks);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["social-links-admin"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("site_sections")
+        .select("extra")
+        .eq("section_key", "social_links")
+        .maybeSingle();
+      return (data?.extra ?? {}) as Partial<SocialForm>;
+    },
+  });
+
+  const [form, setForm] = useState<SocialForm>({
+    whatsapp: "", messenger: "", telegram: "",
+    facebook: "", instagram: "", linkedin: "", twitter: "", youtube: "",
+  });
+  const [busy, setBusy] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (data) setForm((f) => ({ ...f, ...data }));
+  }, [data]);
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true); setErr(null); setSaved(false);
+    try {
+      await saveFn({ data: form });
+      setSaved(true);
+      qc.invalidateQueries({ queryKey: ["social-links"] });
+      qc.invalidateQueries({ queryKey: ["social-links-admin"] });
+      setTimeout(() => setSaved(false), 2500);
+    } catch (e: unknown) {
+      setErr((e as Error).message);
+    } finally { setBusy(false); }
+  }
+
+  if (isLoading) return <Loader2 className="h-5 w-5 animate-spin" />;
+
+  return (
+    <div className="mx-auto max-w-3xl">
+      <h2 className="text-xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Social Links</h2>
+      <p className="mt-1 text-xs text-muted-foreground">
+        WhatsApp / Messenger / Telegram show as floating icons on the website.
+        Facebook / Instagram / LinkedIn / X / YouTube show in the footer. Leave empty to hide.
+      </p>
+
+      <form onSubmit={handleSave} className="mt-6 space-y-3 rounded-xl border border-border bg-card p-5 sm:p-6">
+        {SOCIAL_FIELDS.map((f) => (
+          <Field key={f.key} label={f.label}>
+            <input
+              type="url"
+              value={form[f.key]}
+              onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+              placeholder={f.placeholder}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+            />
+          </Field>
+        ))}
+
+        {err && <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">{err}</p>}
+        <div className="flex items-center gap-3 pt-2">
+          <button
+            type="submit" disabled={busy}
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+          >
+            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            Save Links
+          </button>
+          {saved && (
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-500">
+              <CheckCircle2 className="h-4 w-4" /> Saved!
+            </span>
+          )}
+        </div>
+      </form>
+    </div>
+  );
+}
+
 
 /* ---------------- Single Section Editor ---------------- */
 function SingleSectionEditor({ section }: { section: SectionConfig }) {
