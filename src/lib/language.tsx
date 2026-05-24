@@ -339,6 +339,11 @@ export const translations = {
     termsConditions: "শর্তাবলী",
     sitemap: "সাইটম্যাপ",
     careers: "ক্যারিয়ার",
+    legal: "আইনি",
+    gallery: "গ্যালারি",
+    galleryTag: "গ্যালারি",
+    galleryTitle: "স্টারলাইনের মুহূর্ত",
+    gallerySubtitle: "প্রকল্পের ঝলক, ইভেন্ট ও নেপথ্যের ছবি — আমাদের টিম দ্বারা সংগৃহীত।",
     footerOfficeHours: "শনি – বৃহঃ: সকাল ১০টা – সন্ধ্যা ৬টা",
 
     // Profile page
