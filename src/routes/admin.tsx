@@ -262,9 +262,20 @@ function AdminConsole({ email }: { email: string }) {
           {activeSection?.key === "messages" && <MessagesPanel />}
           {activeSection?.key === "social_links" && <SocialLinksPanel />}
           {activeSection?.key === "team_members" && <TeamMembersPanel />}
-          {activeSection?.type === "single" && <SingleSectionEditor section={activeSection} />}
+          {activeSection?.key === "properties" && <PropertiesPanel />}
+          {activeSection?.type === "single" && (
+            <>
+              <SingleSectionEditor section={activeSection} />
+              {activeSection.group === "Extra Sections" && (
+                <div className="mx-auto mt-8 max-w-3xl">
+                  <MediaGalleryPanel sectionKey={`${activeSection.key}_media`} title="Media (images & videos)" />
+                </div>
+              )}
+            </>
+          )}
           {activeSection?.type === "list" && <ListSectionEditor section={activeSection} />}
         </main>
+
       </div>
     </div>
   );
