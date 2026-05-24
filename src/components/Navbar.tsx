@@ -71,7 +71,7 @@ export function Navbar() {
   return (
     <nav className="fixed left-0 right-0 top-9 z-50 border-b border-border bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 lg:px-8">
-        <a href="#home" className="flex items-center gap-3">
+        <a href="/#home" className="flex items-center gap-3">
           <img src={logo} alt="Starline Builders" className="h-11 w-11 object-contain" />
           <div className="hidden flex-col leading-tight sm:flex">
             <span
