@@ -838,35 +838,58 @@ function ListSectionEditor({ section }: { section: SectionConfig }) {
         </button>
       </div>
 
-      <div className="mt-5 space-y-2">
-        {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
+      <div className="mt-5 overflow-hidden rounded-xl border border-border bg-card">
+        {isLoading && <div className="p-6"><Loader2 className="h-5 w-5 animate-spin" /></div>}
         {items?.length === 0 && (
-          <p className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+          <p className="p-6 text-center text-sm text-muted-foreground">
             No items yet. Click <b>Add Item</b> to create the first one.
           </p>
         )}
-        {items?.map((it) => (
-          <div key={it.id} className="flex items-center gap-3 rounded-xl border border-border bg-card p-3">
-            {it.image_url ? (
-              <img src={it.image_url} alt="" className="h-14 w-14 rounded-md object-cover" />
-            ) : (
-              <div className="flex h-14 w-14 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground">
-                <ImageIcon className="h-5 w-5" />
-              </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-semibold">{it.title || "(untitled)"}</div>
-              {it.subtitle && <div className="truncate text-xs text-muted-foreground">{it.subtitle}</div>}
-            </div>
-            <button onClick={() => setEditing(it)} className="rounded-md p-1.5 hover:bg-accent">
-              <Pencil className="h-4 w-4" />
-            </button>
-            <button onClick={() => handleDelete(it.id)} className="rounded-md p-1.5 text-destructive hover:bg-destructive/10">
-              <Trash2 className="h-4 w-4" />
-            </button>
+        {(items?.length ?? 0) > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30 text-[11px] uppercase tracking-wider text-primary">
+                  <th className="px-3 py-3 text-left">Image</th>
+                  <th className="px-3 py-3 text-left">Title</th>
+                  <th className="px-3 py-3 text-left">Subtitle</th>
+                  <th className="px-3 py-3 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items?.map((it) => (
+                  <tr key={it.id} className="border-b border-border/60 last:border-0 hover:bg-accent/30">
+                    <td className="px-3 py-3">
+                      <RowImageCell
+                        src={it.image_url}
+                        folder={section.key}
+                        onReplaced={async (url) => {
+                          await save({ data: { id: it.id, section_key: section.key, title: it.title, subtitle: it.subtitle, description: it.description, image_url: url, link_url: it.link_url, sort_order: it.sort_order } });
+                          qc.invalidateQueries({ queryKey: ["section-items", section.key] });
+                          qc.invalidateQueries({ queryKey: ["hero-slides"] });
+                        }}
+                      />
+                    </td>
+                    <td className="px-3 py-3 font-semibold text-foreground">{it.title || "(untitled)"}</td>
+                    <td className="px-3 py-3 text-muted-foreground">{it.subtitle || "—"}</td>
+                    <td className="px-3 py-3">
+                      <div className="flex gap-1">
+                        <button onClick={() => setEditing(it)} className="inline-flex items-center gap-1 rounded-md border border-primary/40 px-2 py-1 text-xs text-primary hover:bg-primary/10">
+                          <Pencil className="h-3.5 w-3.5" /> Edit
+                        </button>
+                        <button onClick={() => handleDelete(it.id)} className="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10">
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        ))}
+        )}
       </div>
+
 
       {editing && (
         <ItemModal item={editing} onClose={() => setEditing(null)} onSave={handleSave} folder={section.key} />
@@ -1182,6 +1205,50 @@ function MemberModal({ member, onClose, onSave }: { member: Member; onClose: () 
   );
 }
 
+/* ---------------- Row Image Cell (thumbnail + inline replace) ---------------- */
+function RowImageCell({
+  src, folder, onReplaced, isVideo = false,
+}: {
+  src: string | null;
+  folder: string;
+  onReplaced: (url: string) => void | Promise<void>;
+  isVideo?: boolean;
+}) {
+  const [busy, setBusy] = useState(false);
+  async function handleFile(file: File) {
+    setBusy(true);
+    try {
+      const ext = file.name.split(".").pop() || "bin";
+      const path = `${folder}/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from("site-media").upload(path, file, { upsert: false, contentType: file.type });
+      if (error) throw error;
+      const { data } = supabase.storage.from("site-media").getPublicUrl(path);
+      await onReplaced(data.publicUrl);
+    } catch (e) {
+      alert((e as Error).message);
+    } finally { setBusy(false); }
+  }
+  return (
+    <div className="group relative h-12 w-12 overflow-hidden rounded-md border border-border bg-muted">
+      {src ? (
+        isVideo ? <video src={src} className="h-full w-full object-cover" muted />
+                : <img src={src} alt="" className="h-full w-full object-cover" />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+          <ImageIcon className="h-4 w-4" />
+        </div>
+      )}
+      <label className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/60 opacity-0 transition group-hover:opacity-100" title="Replace image">
+        {busy ? <Loader2 className="h-4 w-4 animate-spin text-white" /> : <Upload className="h-4 w-4 text-white" />}
+        <input
+          type="file" accept={isVideo ? "video/*" : "image/*"} className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }}
+        />
+      </label>
+    </div>
+  );
+}
+
 /* ---------------- Properties Panel (custom structured list) ---------------- */
 type PropertyRow = {
   id: string;
@@ -1264,45 +1331,67 @@ function PropertiesPanel() {
         </button>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
+      <div className="mt-5 overflow-hidden rounded-xl border border-border bg-card">
+        {isLoading && <div className="p-6"><Loader2 className="h-5 w-5 animate-spin" /></div>}
         {!isLoading && (items?.length ?? 0) === 0 && (
-          <p className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground sm:col-span-2 lg:col-span-3">
+          <p className="p-6 text-center text-sm text-muted-foreground">
             No properties yet. Click <b>Add Property</b> to create the first one.
           </p>
         )}
-        {items?.map((p) => {
-          const ex = (p.extra ?? {}) as Record<string, string | number>;
-          return (
-            <div key={p.id} className="overflow-hidden rounded-xl border border-border bg-card">
-              {p.image_url ? (
-                <img src={p.image_url} alt="" className="h-32 w-full object-cover" />
-              ) : (
-                <div className="flex h-32 w-full items-center justify-center bg-muted">
-                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
-                </div>
-              )}
-              <div className="p-3">
-                <div className="text-sm font-bold">{p.title || "(untitled)"}</div>
-                <div className="text-xs text-muted-foreground">{p.subtitle || ex.location || "—"}</div>
-                <div className="mt-1 flex flex-wrap gap-1 text-[10px]">
-                  {ex.price && <span className="rounded bg-primary/10 px-1.5 py-0.5 text-primary">{ex.price}</span>}
-                  {ex.status && <span className="rounded bg-accent px-1.5 py-0.5">{ex.status}</span>}
-                  {ex.beds ? <span className="rounded bg-accent px-1.5 py-0.5">{ex.beds} bed</span> : null}
-                </div>
-                <div className="mt-3 flex gap-1">
-                  <button onClick={() => setEditing(p)} className="flex-1 rounded-md border border-border px-2 py-1 text-xs hover:bg-accent">
-                    <Pencil className="mx-auto h-3.5 w-3.5" />
-                  </button>
-                  <button onClick={() => handleDelete(p.id)} className="flex-1 rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10">
-                    <Trash2 className="mx-auto h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {!isLoading && (items?.length ?? 0) > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30 text-[11px] uppercase tracking-wider text-primary">
+                  <th className="px-3 py-3 text-left">Image</th>
+                  <th className="px-3 py-3 text-left">Name</th>
+                  <th className="px-3 py-3 text-left">Location</th>
+                  <th className="px-3 py-3 text-left">Status</th>
+                  <th className="px-3 py-3 text-left">Size</th>
+                  <th className="px-3 py-3 text-left">Price</th>
+                  <th className="px-3 py-3 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items?.map((p) => {
+                  const ex = (p.extra ?? {}) as Record<string, string | number>;
+                  return (
+                    <tr key={p.id} className="border-b border-border/60 last:border-0 hover:bg-accent/30">
+                      <td className="px-3 py-3">
+                        <RowImageCell
+                          src={p.image_url}
+                          folder="properties"
+                          onReplaced={async (url) => {
+                            await save({ data: { id: p.id, section_key: "properties", title: p.title, subtitle: p.subtitle, description: p.description, image_url: url, link_url: null, sort_order: p.sort_order, extra: p.extra ?? {} } });
+                            qc.invalidateQueries({ queryKey: ["properties-admin"] });
+                            qc.invalidateQueries({ queryKey: ["properties-db"] });
+                          }}
+                        />
+                      </td>
+                      <td className="px-3 py-3 font-semibold text-foreground">{p.title || "(untitled)"}</td>
+                      <td className="px-3 py-3 text-muted-foreground">{p.subtitle || ex.location || "—"}</td>
+                      <td className="px-3 py-3 text-muted-foreground">{ex.status || "—"}</td>
+                      <td className="px-3 py-3 text-muted-foreground">{ex.size || "—"}</td>
+                      <td className="px-3 py-3 text-primary">{ex.price || "—"}</td>
+                      <td className="px-3 py-3">
+                        <div className="flex gap-1">
+                          <button onClick={() => setEditing(p)} className="inline-flex items-center gap-1 rounded-md border border-primary/40 px-2 py-1 text-xs text-primary hover:bg-primary/10">
+                            <Pencil className="h-3.5 w-3.5" /> Edit
+                          </button>
+                          <button onClick={() => handleDelete(p.id)} className="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
+
 
       {editing && <PropertyModal item={editing} onClose={() => setEditing(null)} onSave={handleSave} />}
     </div>
@@ -1461,34 +1550,55 @@ function MediaGalleryPanel({ sectionKey, title }: { sectionKey: string; title: s
         </label>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
-        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+      <div className="mt-4 overflow-hidden rounded-lg border border-border">
+        {isLoading && <div className="p-4"><Loader2 className="h-4 w-4 animate-spin" /></div>}
         {!isLoading && (items?.length ?? 0) === 0 && (
-          <p className="col-span-full rounded-md border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
-            No media yet.
-          </p>
+          <p className="p-4 text-center text-xs text-muted-foreground">No media yet.</p>
         )}
-        {items?.map((it) => {
-          const isVideo = (it.extra as { kind?: string })?.kind === "video";
-          const src = isVideo ? it.link_url : it.image_url;
-          return (
-            <div key={it.id} className="group relative aspect-square overflow-hidden rounded-md border border-border bg-muted">
-              {isVideo && src ? (
-                <video src={src} className="h-full w-full object-cover" muted />
-              ) : src ? (
-                <img src={src} alt="" className="h-full w-full object-cover" />
-              ) : null}
-              <button
-                onClick={() => handleDelete(it.id)}
-                className="absolute right-1 top-1 rounded-md bg-black/60 p-1 text-destructive opacity-0 transition group-hover:opacity-100"
-                title="Delete"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          );
-        })}
+        {(items?.length ?? 0) > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30 text-[11px] uppercase tracking-wider text-primary">
+                  <th className="px-3 py-2 text-left">Preview</th>
+                  <th className="px-3 py-2 text-left">Name</th>
+                  <th className="px-3 py-2 text-left">Type</th>
+                  <th className="px-3 py-2 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items?.map((it) => {
+                  const isVideo = (it.extra as { kind?: string })?.kind === "video";
+                  const src = isVideo ? it.link_url : it.image_url;
+                  return (
+                    <tr key={it.id} className="border-b border-border/60 last:border-0 hover:bg-accent/30">
+                      <td className="px-3 py-2">
+                        <RowImageCell
+                          src={src}
+                          folder={sectionKey}
+                          isVideo={isVideo}
+                          onReplaced={async (url) => {
+                            await save({ data: { id: it.id, section_key: sectionKey, title: it.title, image_url: isVideo ? null : url, link_url: isVideo ? url : null, sort_order: it.sort_order, extra: (it.extra ?? { kind: isVideo ? "video" : "image" }) as Record<string, unknown> } });
+                            qc.invalidateQueries({ queryKey: ["media-gallery", sectionKey] });
+                          }}
+                        />
+                      </td>
+                      <td className="px-3 py-2 text-foreground truncate max-w-[260px]">{it.title || "(untitled)"}</td>
+                      <td className="px-3 py-2 text-muted-foreground">{isVideo ? "Video" : "Image"}</td>
+                      <td className="px-3 py-2">
+                        <button onClick={() => handleDelete(it.id)} className="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10">
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
+
     </div>
   );
 }
