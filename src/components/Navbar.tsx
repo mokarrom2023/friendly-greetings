@@ -94,7 +94,7 @@ export function Navbar() {
           <img
             src={logo}
             alt="Starline Builders"
-            className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11"
+            className="h-12 w-12 shrink-0 object-contain sm:h-16 sm:w-16"
           />
           <div className="flex min-w-0 flex-col leading-tight">
             <span
