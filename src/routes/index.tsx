@@ -42,6 +42,7 @@ function Index() {
   return (
     <ThemeProvider>
       <LanguageProvider>
+        <SplashLoader />
         <div className="min-h-screen bg-background text-foreground">
           <TopBar />
           <Navbar />
