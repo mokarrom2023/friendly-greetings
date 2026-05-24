@@ -15,11 +15,13 @@ export interface SectionConfig {
 export const SECTION_GROUPS = [
   "Inbox",
   "Header",
+  "Properties",
   "Main Sections",
   "Extra Sections",
   "List Content",
   "Footer",
 ] as const;
+
 
 export const SECTIONS: SectionConfig[] = [
   // Inbox group
