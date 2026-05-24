@@ -13,6 +13,7 @@ export interface SectionConfig {
 }
 
 export const SECTION_GROUPS = [
+  "Holidays",
   "Inbox",
   "Header",
   "Properties",
@@ -25,6 +26,9 @@ export const SECTION_GROUPS = [
 
 
 export const SECTIONS: SectionConfig[] = [
+  // Holidays (top section) — controls TopBar holiday banner
+  { key: "holidays", label: "🎉 Holidays / Office Closures", type: "custom", group: "Holidays", hint: "Add government holidays (Eid, etc). Top bar will auto-show the holiday and reopen date. Office auto-reopens with normal hours after the end date." },
+
   // Inbox group
   { key: "messages", label: "📨 Contact Messages", type: "custom", group: "Inbox", hint: "Messages submitted via the website contact form." },
 
