@@ -150,6 +150,11 @@ export const translations = {
     termsConditions: "Terms & Conditions",
     sitemap: "Sitemap",
     careers: "Careers",
+    legal: "Legal",
+    gallery: "Gallery",
+    galleryTag: "Gallery",
+    galleryTitle: "Moments from Starline",
+    gallerySubtitle: "Project highlights, events and behind-the-scenes — curated by our team.",
     footerOfficeHours: "Sat – Thu: 10:00 AM – 6:00 PM",
 
     // Profile page
@@ -334,6 +339,11 @@ export const translations = {
     termsConditions: "শর্তাবলী",
     sitemap: "সাইটম্যাপ",
     careers: "ক্যারিয়ার",
+    legal: "আইনি",
+    gallery: "গ্যালারি",
+    galleryTag: "গ্যালারি",
+    galleryTitle: "স্টারলাইনের মুহূর্ত",
+    gallerySubtitle: "প্রকল্পের ঝলক, ইভেন্ট ও নেপথ্যের ছবি — আমাদের টিম দ্বারা সংগৃহীত।",
     footerOfficeHours: "শনি – বৃহঃ: সকাল ১০টা – সন্ধ্যা ৬টা",
 
     // Profile page
