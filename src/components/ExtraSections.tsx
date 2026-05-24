@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Star, Play, Calculator, MapPin, Award, HardHat, BookOpen,
   Handshake, FileCheck, LayoutGrid, MessageCircle, Briefcase, TrendingUp,
   Quote, ChevronRight, Phone
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const SectionHeader = ({ tag, title, subtitle }: { tag: string; title: string; subtitle?: string }) => (
   <div className="mx-auto mb-8 md:mb-12 max-w-2xl text-center">
@@ -17,11 +19,31 @@ const SectionHeader = ({ tag, title, subtitle }: { tag: string; title: string; s
 
 /* 1. Testimonials */
 export function Testimonials() {
-  const reviews = [
+  const defaults = [
     { name: "Rahim Ahmed", role: "Homeowner, Gulshan", rating: 5, text: "Starline delivered exactly what they promised. Quality construction, on-time handover, and excellent after-sales service.", img: "https://i.pravatar.cc/100?img=12" },
     { name: "Fatema Begum", role: "Investor, Banani", rating: 5, text: "Best investment decision. My property value has appreciated significantly within just 2 years.", img: "https://i.pravatar.cc/100?img=45" },
     { name: "Karim Hossain", role: "CEO, TechBD", rating: 5, text: "Their commercial space in Bashundhara transformed our business. Premium location, premium build.", img: "https://i.pravatar.cc/100?img=33" },
   ];
+
+  const { data: dbReviews } = useQuery({
+    queryKey: ["testimonials-list"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("section_items")
+        .select("title,subtitle,description,image_url")
+        .eq("section_key", "testimonials_list")
+        .order("sort_order");
+      return (data ?? []).map((r) => ({
+        name: r.title || "Anonymous",
+        role: r.subtitle || "",
+        rating: 5,
+        text: r.description || "",
+        img: r.image_url || "https://i.pravatar.cc/100?img=1",
+      }));
+    },
+  });
+
+  const reviews = dbReviews && dbReviews.length > 0 ? dbReviews : defaults;
   return (
     <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-7xl px-4">
@@ -48,6 +70,7 @@ export function Testimonials() {
     </section>
   );
 }
+
 
 /* 2. Video / Virtual Tour */
 export function VideoTour() {
