@@ -86,14 +86,14 @@ function AdminAuthForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10 px-4 py-8 sm:py-12">
+    <div className="min-h-screen bg-background px-4 py-8 sm:py-12">
       <div className="mx-auto w-full max-w-md">
         <Link to="/" className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand">
           <ArrowLeft className="h-4 w-4" /> Back to Home
         </Link>
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-xl sm:p-8">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-2xl shadow-black/40 sm:p-8">
           <div className="flex flex-col items-center text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 ring-1 ring-primary/20">
               <Shield className="h-7 w-7 text-primary" />
             </div>
             <h1 className="mt-3 text-xl font-bold text-primary" style={{ fontFamily: "var(--font-heading)" }}>
@@ -108,22 +108,22 @@ function AdminAuthForm() {
             <input
               type="email" required placeholder="Admin email"
               value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-brand"
+              className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary/30"
             />
-            <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2.5 focus-within:border-brand">
+            <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2.5 transition focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/30">
               <input
                 type={show ? "text" : "password"} required minLength={6} placeholder="Password"
                 value={password} onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-transparent text-sm outline-none"
+                className="w-full bg-transparent text-sm text-foreground outline-none"
               />
-              <button type="button" onClick={() => setShow((v) => !v)} className="text-muted-foreground">
+              <button type="button" onClick={() => setShow((v) => !v)} className="text-muted-foreground hover:text-primary">
                 {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {err && <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">{err}</p>}
             <button
               type="submit" disabled={busy}
-              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 hover:opacity-90 disabled:opacity-50"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               {mode === "login" ? "Login as Admin" : "Create Admin Account"}
