@@ -197,6 +197,38 @@
   color: transparent;
 }
 
+/* ========= ADMIN DASHBOARD — BLACK + GOLD ========= */
+.admin-theme {
+  --background: oklch(0.06 0 0);
+  --foreground: oklch(0.94 0.01 90);
+  --card: oklch(0.11 1 0);
+  --card-foreground: oklch(0.94 0.01 90);
+  --popover: oklch(0.11 1 0);
+  --popover-foreground: oklch(0.94 0.01 90);
+  --primary: oklch(0.68 0.14 85);
+  --primary-foreground: oklch(0.06 0 0);
+  --secondary: oklch(0.16 0.01 0);
+  --secondary-foreground: oklch(0.94 0.01 90);
+  --muted: oklch(0.14 0.005 0);
+  --muted-foreground: oklch(0.6 0.02 90);
+  --accent: oklch(0.22 0.04 85);
+  --accent-foreground: oklch(0.94 0.01 90);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.2 0.01 0);
+  --input: oklch(0.18 0.01 0);
+  --ring: oklch(0.68 0.14 85);
+  --brand: oklch(0.68 0.14 85);
+  --brand-foreground: oklch(0.06 0 1);
+  color-scheme: dark;
+}
+
+/* Gold scrollbar for admin */
+.admin-theme ::-webkit-scrollbar { width: 6px; height: 6px; }
+.admin-theme ::-webkit-scrollbar-track { background: oklch(0.1 0 0); }
+.admin-theme ::-webkit-scrollbar-thumb { background: oklch(0.5 0.1 85); border-radius: 3px; }
+.admin-theme ::-webkit-scrollbar-thumb:hover { background: oklch(0.68 0.14 85); }
+
 /* Hide scrollbar on theme switcher */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }

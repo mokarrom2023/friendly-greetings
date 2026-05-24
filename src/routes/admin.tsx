@@ -43,9 +43,17 @@ function AdminPage() {
   }, []);
 
   if (loading)
-    return <div className="flex min-h-screen items-center justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
+    return (
+      <div className="admin-theme flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
 
-  return session ? <Dashboard email={session.email} /> : <AdminAuthForm />;
+  return (
+    <div className="admin-theme min-h-screen bg-background text-foreground">
+      {session ? <Dashboard email={session.email} /> : <AdminAuthForm />}
+    </div>
+  );
 }
 
 /* ---------------- Admin Auth ---------------- */
@@ -78,14 +86,14 @@ function AdminAuthForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/10 px-4 py-8 sm:py-12">
+    <div className="min-h-screen bg-background px-4 py-8 sm:py-12">
       <div className="mx-auto w-full max-w-md">
         <Link to="/" className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand">
           <ArrowLeft className="h-4 w-4" /> Back to Home
         </Link>
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-xl sm:p-8">
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-2xl shadow-black/40 sm:p-8">
           <div className="flex flex-col items-center text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 ring-1 ring-primary/20">
               <Shield className="h-7 w-7 text-primary" />
             </div>
             <h1 className="mt-3 text-xl font-bold text-primary" style={{ fontFamily: "var(--font-heading)" }}>
@@ -100,22 +108,22 @@ function AdminAuthForm() {
             <input
               type="email" required placeholder="Admin email"
               value={email} onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-brand"
+              className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary/30"
             />
-            <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2.5 focus-within:border-brand">
+            <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2.5 transition focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/30">
               <input
                 type={show ? "text" : "password"} required minLength={6} placeholder="Password"
                 value={password} onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-transparent text-sm outline-none"
+                className="w-full bg-transparent text-sm text-foreground outline-none"
               />
-              <button type="button" onClick={() => setShow((v) => !v)} className="text-muted-foreground">
+              <button type="button" onClick={() => setShow((v) => !v)} className="text-muted-foreground hover:text-primary">
                 {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {err && <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">{err}</p>}
             <button
               type="submit" disabled={busy}
-              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 hover:opacity-90 disabled:opacity-50"
             >
               {busy && <Loader2 className="h-4 w-4 animate-spin" />}
               {mode === "login" ? "Login as Admin" : "Create Admin Account"}
@@ -148,16 +156,20 @@ function Dashboard({ email }: { email: string }) {
   }, [claim, check]);
 
   if (isAdmin === null)
-    return <div className="flex min-h-screen items-center justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
 
   if (!isAdmin)
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-4">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-4">
         <Shield className="h-12 w-12 text-muted-foreground" />
         <p className="text-center text-sm text-muted-foreground">
-          You are signed in as <b>{email}</b> but do not have admin access.
+          You are signed in as <b className="text-foreground">{email}</b> but do not have admin access.
         </p>
-        <button onClick={() => supabase.auth.signOut()} className="rounded-md border border-border px-4 py-2 text-sm">
+        <button onClick={() => supabase.auth.signOut()} className="rounded-md border border-border bg-card px-4 py-2 text-sm text-foreground hover:bg-accent">
           Sign out
         </button>
       </div>
@@ -177,33 +189,33 @@ function AdminConsole({ email }: { email: string }) {
   );
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-border bg-card">
+      <header className="sticky top-0 z-30 border-b border-border/60 bg-card/80 backdrop-blur">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileNavOpen((v) => !v)}
-              className="rounded-md p-2 hover:bg-accent lg:hidden"
+              className="rounded-md p-2 text-foreground hover:bg-accent/60 lg:hidden"
               aria-label="Menu"
             >
               <LayoutDashboard className="h-5 w-5" />
             </button>
             <img src={logo} alt="" className="h-9 w-9" />
             <div>
-              <h1 className="text-base font-bold leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+              <h1 className="text-base font-bold leading-tight text-foreground" style={{ fontFamily: "var(--font-heading)" }}>
                 Admin Dashboard
               </h1>
               <p className="text-[11px] text-muted-foreground">{email}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Link to="/" className="hidden rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent sm:inline-flex">
+            <Link to="/" className="hidden items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs text-foreground hover:bg-accent/60 hover:text-primary sm:inline-flex">
               View Site
             </Link>
             <button
               onClick={() => supabase.auth.signOut()}
-              className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-xs text-foreground hover:bg-accent/60 hover:text-primary"
             >
               <LogOut className="h-3.5 w-3.5" /> Sign out
             </button>
@@ -213,7 +225,7 @@ function AdminConsole({ email }: { email: string }) {
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className={`${mobileNavOpen ? "block" : "hidden"} fixed inset-x-0 top-[57px] z-20 max-h-[calc(100vh-57px)] overflow-y-auto border-b border-border bg-card lg:sticky lg:top-[57px] lg:block lg:max-h-[calc(100vh-57px)] lg:w-64 lg:flex-shrink-0 lg:border-b-0 lg:border-r`}>
+        <aside className={`${mobileNavOpen ? "block" : "hidden"} fixed inset-x-0 top-[57px] z-20 max-h-[calc(100vh-57px)] overflow-y-auto border-b border-border/60 bg-card lg:sticky lg:top-[57px] lg:block lg:max-h-[calc(100vh-57px)] lg:w-64 lg:flex-shrink-0 lg:border-b-1 lg:border-r lg:border-border/60`}>
           <nav className="p-3 text-sm">
             <SidebarItem
               active={activeKey === "dashboard"}
@@ -224,7 +236,7 @@ function AdminConsole({ email }: { email: string }) {
 
             {SECTION_GROUPS.map((group) => (
               <div key={group} className="mt-4">
-                <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-primary/80">
                   {group}
                 </p>
                 {SECTIONS.filter((s) => s.group === group).map((s) => (
@@ -242,7 +254,7 @@ function AdminConsole({ email }: { email: string }) {
         </aside>
 
         {/* Main */}
-        <main className="min-h-[calc(100vh-57px)] flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="min-h-[calc(100vh-57px)] flex-1 bg-background p-4 sm:p-6 lg:p-8">
           {activeKey === "dashboard" && <DashboardHome onSelect={setActiveKey} />}
           {activeSection?.type === "single" && <SingleSectionEditor section={activeSection} />}
           {activeSection?.type === "list" && <ListSectionEditor section={activeSection} />}
@@ -258,7 +270,7 @@ function SidebarItem({ active, onClick, children }: { active: boolean; onClick: 
     <button
       onClick={onClick}
       className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition ${
-        active ? "bg-primary/10 font-semibold text-primary" : "text-foreground/80 hover:bg-accent"
+        active ? "bg-primary/15 font-semibold text-primary ring-1 ring-primary/20" : "text-foreground/80 hover:bg-accent/60 hover:text-foreground"
       }`}
     >
       {children}
