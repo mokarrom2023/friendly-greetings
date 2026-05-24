@@ -138,18 +138,21 @@ export function Contact() {
             <div className="grid gap-4 sm:grid-cols-2">
               <input
                 required
+                name="name"
                 type="text"
                 placeholder={t("contactName")}
                 className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-brand focus:ring-2 focus:ring-brand/20"
               />
               <input
                 required
+                name="email"
                 type="email"
                 placeholder={t("contactEmail")}
                 className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-brand focus:ring-2 focus:ring-brand/20"
               />
             </div>
             <input
+              name="phone"
               type="tel"
               placeholder={t("contactPhone")}
               className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-brand focus:ring-2 focus:ring-brand/20"
@@ -160,6 +163,7 @@ export function Contact() {
               </label>
               <select
                 required
+                name="property"
                 defaultValue=""
                 className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-brand focus:ring-2 focus:ring-brand/20"
               >
@@ -176,17 +180,26 @@ export function Contact() {
             </div>
             <textarea
               required
+              name="message"
               rows={5}
               placeholder={t("contactMessage")}
               className="w-full resize-none rounded-md border border-border bg-background px-4 py-3 text-sm outline-none transition-all focus:border-brand focus:ring-2 focus:ring-brand/20"
             />
+            {err && (
+              <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">{err}</p>
+            )}
             <button
               type="submit"
-              disabled={sent}
+              disabled={busy || sent}
               className="inline-flex w-full items-center justify-center gap-2 rounded-md px-6 py-3.5 text-sm font-semibold uppercase tracking-wider shadow-md transition-all hover:scale-[1.01] disabled:opacity-70 sm:w-auto"
               style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
             >
-              {sent ? (
+              {busy ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  {t("contactSend")}
+                </>
+              ) : sent ? (
                 <>
                   <Check className="h-4 w-4" />
                   {t("contactSent")}
@@ -198,6 +211,7 @@ export function Contact() {
                 </>
               )}
             </button>
+
           </form>
         </div>
       </div>
