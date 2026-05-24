@@ -41,7 +41,19 @@ function ymd(d: Date): string {
 
 export function findActiveHoliday(holidays: Holiday[], now: Date): Holiday | null {
   const today = ymd(now);
-  return holidays.find((h) => today >= h.start_date && today <= h.end_date) ?? null;
+  const hour = now.getHours();
+
+  return holidays.find((h) => {
+    if (today >= h.start_date && today <= h.end_date) return true;
+
+    const reopen = ymd(reopenDate(h.end_date));
+    if (today === reopen && hour < 10) return true;
+
+    const [y, m, d] = h.start_date.split("-").map(Number);
+    const dayBeforeStart = new Date(y, (m ?? 1) - 1, d ?? 1);
+    dayBeforeStart.setDate(dayBeforeStart.getDate() - 1);
+    return today === ymd(dayBeforeStart);
+  }) ?? null;
 }
 
 // Returns the next day after `endDate` (YYYY-MM-DD) as a Date.

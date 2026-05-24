@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { FloatingSocial } from "@/components/FloatingSocial";
+import { SplashLoader } from "@/components/SplashLoader";
 
 function NotFoundComponent() {
   return (
@@ -121,6 +122,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <SplashLoader />
       <Outlet />
       {!hideSocial && <FloatingSocial />}
     </QueryClientProvider>
