@@ -32,7 +32,7 @@ export function Footer() {
       }}
     >
       <div className="container mx-auto max-w-7xl px-4 py-16">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3">
@@ -76,12 +76,25 @@ export function Footer() {
               {t("quickLinks")}
             </h4>
             <ul className="space-y-2.5 text-sm text-white/75">
-              <li><a href="#home" className="hover:text-white">{t("home")}</a></li>
-              <li><a href="#about" className="hover:text-white">{t("about")}</a></li>
-              <li><a href="#properties" className="hover:text-white">{t("property")}</a></li>
-              <li><a href="#properties" className="hover:text-white">{t("location")}</a></li>
-              <li><a href="#properties" className="hover:text-white">{t("size")}</a></li>
-              <li><a href="#contact" className="hover:text-white">{t("contact")}</a></li>
+              <li><a href="/#home" className="hover:text-white">{t("home")}</a></li>
+              <li><a href="/#about" className="hover:text-white">{t("about")}</a></li>
+              <li><a href="/#properties" className="hover:text-white">{t("property")}</a></li>
+              <li><a href="/#properties" className="hover:text-white">{t("location")}</a></li>
+              <li><a href="/#properties" className="hover:text-white">{t("size")}</a></li>
+              <li><a href="/#contact" className="hover:text-white">{t("contact")}</a></li>
+              <li><a href="/gallery" className="hover:text-white">{t("gallery")}</a></li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4
+              className="mb-5 text-sm font-bold uppercase tracking-[2px]"
+              style={{ color: "#f4cf5b" }}
+            >
+              {t("legal")}
+            </h4>
+            <ul className="space-y-2.5 text-sm text-white/75">
               <li><a href="#" className="hover:text-white">{t("careers")}</a></li>
               <li><a href="#" className="hover:text-white">{t("privacyPolicy")}</a></li>
               <li><a href="#" className="hover:text-white">{t("termsConditions")}</a></li>

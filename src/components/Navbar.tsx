@@ -61,6 +61,7 @@ export function Navbar() {
         { label: t("companyHistory"), href: "/profile#history" },
         { label: t("boardOfDirectors"), href: "/profile#board" },
         { label: t("ourEmployees"), href: "/profile#employees" },
+        { label: t("gallery"), href: "/gallery" },
         { label: t("latestNews"), href: "/profile#news" },
         { label: t("rehabMembership"), href: "/profile#rehab" },
       ],
