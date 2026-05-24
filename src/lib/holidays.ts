@@ -50,9 +50,9 @@ export function findActiveHoliday(holidays: Holiday[], now: Date): Holiday | nul
     if (today === reopen && hour < 10) return true;
 
     const [y, m, d] = h.start_date.split("-").map(Number);
-    const eveningBeforeStart = new Date(y, (m ?? 1) - 1, d ?? 1);
-    eveningBeforeStart.setDate(eveningBeforeStart.getDate() - 1);
-    return today === ymd(eveningBeforeStart) && hour >= 18;
+    const dayBeforeStart = new Date(y, (m ?? 1) - 1, d ?? 1);
+    dayBeforeStart.setDate(dayBeforeStart.getDate() - 1);
+    return today === ymd(dayBeforeStart);
   }) ?? null;
 }
 
