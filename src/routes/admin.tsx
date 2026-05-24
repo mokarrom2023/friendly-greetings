@@ -256,7 +256,7 @@ function AdminConsole({ email, adminTheme, setAdminTheme }: { email: string; adm
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className={`${mobileNavOpen ? "block" : "hidden"} fixed inset-x-0 top-[57px] z-20 max-h-[calc(100vh-57px)] overflow-y-auto border-b border-border/60 bg-card lg:sticky lg:top-[57px] lg:block lg:max-h-[calc(100vh-57px)] lg:w-64 lg:flex-shrink-0 lg:border-b-1 lg:border-r lg:border-border/60`}>
+        <aside className={`${mobileNavOpen ? "block" : "hidden"} fixed inset-x-0 top-[57px] z-20 max-h-[calc(100vh-57px)] overflow-y-auto border-b border-border/60 bg-card lg:sticky lg:top-[57px] lg:block lg:h-[calc(100vh-57px)] lg:max-h-[calc(100vh-57px)] lg:w-64 lg:flex-shrink-0 lg:border-b-0 lg:border-r lg:border-border/60`}>
           <nav className="p-3 text-sm">
             <SidebarItem
               active={activeKey === "dashboard"}
