@@ -91,8 +91,8 @@ export function TopBar() {
                 open ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" : "bg-red-400",
               )}
             />
-            <span className="text-white/85" suppressHydrationWarning>
-              {now ? (open ? t("officeOpen") : t("officeClosed")) : "\u00A0"}
+            <span className="font-medium text-white/90" suppressHydrationWarning>
+              {now ? status.text : "\u00A0"}
             </span>
           </div>
           <div className="hidden h-3 w-px bg-white/20 lg:block" />
