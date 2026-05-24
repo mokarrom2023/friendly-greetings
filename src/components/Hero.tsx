@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/lib/language";
+import { supabase } from "@/integrations/supabase/client";
 
-const SLIDES = [
+const DEFAULT_SLIDES = [
   "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80",
   "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1920&q=80",
   "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1920&q=80",
@@ -17,10 +19,25 @@ export function Hero() {
   const { t } = useLanguage();
   const [idx, setIdx] = useState(0);
 
+  const { data: dbSlides } = useQuery({
+    queryKey: ["hero-slides"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("section_items")
+        .select("image_url")
+        .eq("section_key", "hero_slides")
+        .order("sort_order");
+      return (data ?? []).map((r) => r.image_url).filter(Boolean) as string[];
+    },
+  });
+
+  const SLIDES = dbSlides && dbSlides.length > 0 ? dbSlides : DEFAULT_SLIDES;
+
   useEffect(() => {
     const id = setInterval(() => setIdx((i) => (i + 1) % SLIDES.length), 4500);
     return () => clearInterval(id);
-  }, []);
+  }, [SLIDES.length]);
+
 
   return (
     <section
