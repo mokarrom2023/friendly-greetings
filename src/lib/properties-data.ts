@@ -2,6 +2,16 @@ export type Status = "ongoing" | "handover" | "upcoming" | "featured";
 
 export type Facility = { label: string; icon: string };
 
+export type BookingDetails = {
+  apartmentImage: string;
+  perSft: string;
+  totalSize: string;
+  totalPrice: string;
+  advance: string;
+  paymentDeadline: string;
+  schedule: { milestone: string; due: string; amount: string }[];
+};
+
 export type PropertyNews = {
   id: number;
   title: string;
@@ -10,6 +20,7 @@ export type PropertyNews = {
   image: string;
   excerpt: string;
   content: string;
+  booking?: BookingDetails;
 };
 
 export type Property = {
