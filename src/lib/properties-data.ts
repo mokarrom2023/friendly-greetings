@@ -86,6 +86,23 @@ export const PROPERTIES: Property[] = [
           "Only a handful of premium units remain at Starline Heights — early-bird pricing and flexible payment plans available now.",
         content:
           "We are pleased to announce that booking is officially open for the remaining apartments at Starline Heights, Gulshan-2.\n\nThis phase includes a limited number of corner units with extended balconies and unobstructed skyline views. Early-bird customers will enjoy preferred floor selection, complimentary interior consultation, and a flexible 24-month payment plan.\n\nOur sales team is conducting site visits daily between 10:00 AM and 6:00 PM. Please contact us to schedule a private tour of the show apartment and discuss financing options with our partner banks.",
+        booking: {
+          apartmentImage:
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=80",
+          perSft: "৳ 14,500 / sqft",
+          totalSize: "1,285 sqft",
+          totalPrice: "৳ 1,86,32,500",
+          advance: "৳ 25,00,000 (Booking Money)",
+          paymentDeadline: "Full payment within 24 months from booking date",
+          schedule: [
+            { milestone: "Booking Money", due: "At signing", amount: "৳ 25,00,000" },
+            { milestone: "Down Payment", due: "Within 30 days", amount: "৳ 35,00,000" },
+            { milestone: "Installment 1 — 6 months", due: "Month 6", amount: "৳ 30,00,000" },
+            { milestone: "Installment 2 — 12 months", due: "Month 12", amount: "৳ 30,00,000" },
+            { milestone: "Installment 3 — 18 months", due: "Month 18", amount: "৳ 30,00,000" },
+            { milestone: "Final Payment — at Handover", due: "Month 24", amount: "৳ 36,32,500" },
+          ],
+        },
       },
       {
         id: 2,
