@@ -156,16 +156,20 @@ function Dashboard({ email }: { email: string }) {
   }, [claim, check]);
 
   if (isAdmin === null)
-    return <div className="flex min-h-screen items-center justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
 
   if (!isAdmin)
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-4">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-4">
         <Shield className="h-12 w-12 text-muted-foreground" />
         <p className="text-center text-sm text-muted-foreground">
-          You are signed in as <b>{email}</b> but do not have admin access.
+          You are signed in as <b className="text-foreground">{email}</b> but do not have admin access.
         </p>
-        <button onClick={() => supabase.auth.signOut()} className="rounded-md border border-border px-4 py-2 text-sm">
+        <button onClick={() => supabase.auth.signOut()} className="rounded-md border border-border bg-card px-4 py-2 text-sm text-foreground hover:bg-accent">
           Sign out
         </button>
       </div>
