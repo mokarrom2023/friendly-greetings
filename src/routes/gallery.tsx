@@ -3,7 +3,8 @@ import { ArrowLeft, Image as ImageIcon } from "lucide-react";
 import { TopBar } from "@/components/TopBar";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { useLanguage } from "@/lib/language";
+import { ThemeProvider } from "@/lib/theme";
+import { LanguageProvider, useLanguage } from "@/lib/language";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -22,10 +23,9 @@ export const Route = createFileRoute("/gallery")({
       },
     ],
   }),
-  component: GalleryPage,
+  component: GalleryRoute,
 });
 
-// Placeholder images — admin upload UI will populate this later.
 const PLACEHOLDER_IMAGES = [
   "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80",
   "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80",
@@ -40,6 +40,16 @@ const PLACEHOLDER_IMAGES = [
   "https://images.unsplash.com/photo-1448630360428-65456885c650?w=1200&q=80",
   "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1200&q=80",
 ];
+
+function GalleryRoute() {
+  return (
+    <ThemeProvider>
+      <LanguageProvider>
+        <GalleryPage />
+      </LanguageProvider>
+    </ThemeProvider>
+  );
+}
 
 function GalleryPage() {
   const { t } = useLanguage();

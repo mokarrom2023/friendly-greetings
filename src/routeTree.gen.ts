@@ -14,6 +14,7 @@ import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
+import { Route as ProjectsStatusRouteImport } from './routes/projects.$status'
 import { Route as DepartmentsSlugRouteImport } from './routes/departments.$slug'
 import { Route as PropertiesIdNewsNewsIdRouteImport } from './routes/properties.$id.news.$newsId'
 
@@ -42,6 +43,11 @@ const PropertiesIdRoute = PropertiesIdRouteImport.update({
   path: '/properties/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsStatusRoute = ProjectsStatusRouteImport.update({
+  id: '/projects/$status',
+  path: '/projects/$status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DepartmentsSlugRoute = DepartmentsSlugRouteImport.update({
   id: '/departments/$slug',
   path: '/departments/$slug',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/profile': typeof ProfileRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
+  '/projects/$status': typeof ProjectsStatusRoute
   '/properties/$id': typeof PropertiesIdRouteWithChildren
   '/properties/$id/news/$newsId': typeof PropertiesIdNewsNewsIdRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/profile': typeof ProfileRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
+  '/projects/$status': typeof ProjectsStatusRoute
   '/properties/$id': typeof PropertiesIdRouteWithChildren
   '/properties/$id/news/$newsId': typeof PropertiesIdNewsNewsIdRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/profile': typeof ProfileRoute
   '/departments/$slug': typeof DepartmentsSlugRoute
+  '/projects/$status': typeof ProjectsStatusRoute
   '/properties/$id': typeof PropertiesIdRouteWithChildren
   '/properties/$id/news/$newsId': typeof PropertiesIdNewsNewsIdRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/profile'
     | '/departments/$slug'
+    | '/projects/$status'
     | '/properties/$id'
     | '/properties/$id/news/$newsId'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/profile'
     | '/departments/$slug'
+    | '/projects/$status'
     | '/properties/$id'
     | '/properties/$id/news/$newsId'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/profile'
     | '/departments/$slug'
+    | '/projects/$status'
     | '/properties/$id'
     | '/properties/$id/news/$newsId'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   GalleryRoute: typeof GalleryRoute
   ProfileRoute: typeof ProfileRoute
   DepartmentsSlugRoute: typeof DepartmentsSlugRoute
+  ProjectsStatusRoute: typeof ProjectsStatusRoute
   PropertiesIdRoute: typeof PropertiesIdRouteWithChildren
 }
 
@@ -157,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PropertiesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/$status': {
+      id: '/projects/$status'
+      path: '/projects/$status'
+      fullPath: '/projects/$status'
+      preLoaderRoute: typeof ProjectsStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/departments/$slug': {
       id: '/departments/$slug'
       path: '/departments/$slug'
@@ -192,6 +212,7 @@ const rootRouteChildren: RootRouteChildren = {
   GalleryRoute: GalleryRoute,
   ProfileRoute: ProfileRoute,
   DepartmentsSlugRoute: DepartmentsSlugRoute,
+  ProjectsStatusRoute: ProjectsStatusRoute,
   PropertiesIdRoute: PropertiesIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
