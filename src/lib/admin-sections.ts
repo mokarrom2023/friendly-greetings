@@ -20,6 +20,7 @@ export const SECTION_GROUPS = [
   "Extra Sections",
   "List Content",
   "Footer",
+  "Settings",
 ] as const;
 
 
