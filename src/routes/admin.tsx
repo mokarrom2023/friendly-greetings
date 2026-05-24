@@ -28,9 +28,32 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
+export type AdminThemeId = "gold" | "light" | "gray" | "ocean" | "midnight";
+export const ADMIN_THEMES: { id: AdminThemeId; label: string; swatch: string; bg: string }[] = [
+  { id: "gold", label: "Black + Gold (default)", swatch: "#c9a84c", bg: "#0d0d0d" },
+  { id: "light", label: "Clean Light", swatch: "#4f46e5", bg: "#ffffff" },
+  { id: "gray", label: "Soft Gray", swatch: "#475569", bg: "#f1f5f9" },
+  { id: "ocean", label: "Ocean Blue", swatch: "#2563eb", bg: "#eff6ff" },
+  { id: "midnight", label: "Midnight Cyan", swatch: "#22d3ee", bg: "#1e1b4b" },
+];
+
+function getInitialAdminTheme(): AdminThemeId {
+  if (typeof window === "undefined") return "gold";
+  const v = localStorage.getItem("admin_theme") as AdminThemeId | null;
+  return v && ADMIN_THEMES.some((t) => t.id === v) ? v : "gold";
+}
+
 function AdminPage() {
   const [session, setSession] = useState<null | { userId: string; email: string }>(null);
   const [loading, setLoading] = useState(true);
+  const [adminTheme, setAdminThemeState] = useState<AdminThemeId>("gold");
+
+  useEffect(() => { setAdminThemeState(getInitialAdminTheme()); }, []);
+
+  const setAdminTheme = (t: AdminThemeId) => {
+    setAdminThemeState(t);
+    try { localStorage.setItem("admin_theme", t); } catch { /* ignore */ }
+  };
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
@@ -45,16 +68,21 @@ function AdminPage() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
+  // Default attribute is "gold" (which equals the base .admin-theme palette).
+  const themeAttr = adminTheme === "gold" ? undefined : adminTheme;
+
   if (loading)
     return (
-      <div className="admin-theme flex min-h-screen items-center justify-center bg-background">
+      <div className="admin-theme flex min-h-screen items-center justify-center bg-background" data-admin-theme={themeAttr}>
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
 
   return (
-    <div className="admin-theme min-h-screen bg-background text-foreground">
-      {session ? <Dashboard email={session.email} /> : <AdminAuthForm />}
+    <div className="admin-theme min-h-screen bg-background text-foreground" data-admin-theme={themeAttr}>
+      {session
+        ? <Dashboard email={session.email} adminTheme={adminTheme} setAdminTheme={setAdminTheme} />
+        : <AdminAuthForm />}
     </div>
   );
 }
