@@ -32,14 +32,16 @@ const STATUS_LABEL: Record<(typeof STATUS_VALUES)[number], string> = {
   featured: "Featured",
 };
 
-const searchSchema = z.object({
-  q: fallback(z.string().optional(), undefined),
-  type: fallback(z.string().optional(), undefined),
-  location: fallback(z.string().optional(), undefined),
-});
+type SearchParams = { q?: string; type?: string; location?: string };
+
+function validateSearch(input: Record<string, unknown>): SearchParams {
+  const s = (v: unknown) => (typeof v === "string" && v.length > 0 ? v : undefined);
+  return { q: s(input.q), type: s(input.type), location: s(input.location) };
+}
 
 export const Route = createFileRoute("/projects/$status")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch,
+
   head: ({ params }) => ({
     meta: [
       {
