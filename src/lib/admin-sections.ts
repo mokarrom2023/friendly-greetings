@@ -33,6 +33,9 @@ export const SECTIONS: SectionConfig[] = [
   { key: "navbar", label: "Navbar / Logo", type: "single", group: "Header", fields: ["title", "subtitle", "image"], hint: "Logo image, company name, tagline." },
   { key: "hero_slides", label: "🖼️ Hero Slideshow Images", type: "list", group: "Header", hint: "Big homepage background slideshow. Add, replace or delete slide images here." },
 
+  // Properties group
+  { key: "properties", label: "🏢 Manage Properties", type: "custom", group: "Properties", hint: "Add, edit or delete property listings shown on the website. Upload cover image + gallery, set price, location, beds, size and status." },
+
 
   // Main sections
   { key: "hero", label: "Hero Banner", type: "single", group: "Main Sections", fields: ["title", "subtitle", "description", "image", "video"], hint: "Big homepage banner with title and CTAs." },
