@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
-import { MapPin, Phone, Mail, Send, Check, Clock, Navigation } from "lucide-react";
+import { MapPin, Phone, Mail, Send, Check, Clock, Navigation, Loader2 } from "lucide-react";
 import { useLanguage } from "@/lib/language";
+import { supabase } from "@/integrations/supabase/client";
 
 const PROPERTY_OPTIONS = [
   "Starline Heights – Gulshan",
@@ -18,13 +19,34 @@ const PROPERTY_OPTIONS = [
 export function Contact() {
   const { t } = useLanguage();
   const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 3500);
-    (e.currentTarget as HTMLFormElement).reset();
+    setErr(null);
+    setBusy(true);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    try {
+      const { error } = await supabase.from("contact_messages").insert({
+        name: String(fd.get("name") ?? ""),
+        email: String(fd.get("email") ?? ""),
+        phone: String(fd.get("phone") ?? "") || null,
+        property: String(fd.get("property") ?? "") || null,
+        message: String(fd.get("message") ?? ""),
+      });
+      if (error) throw error;
+      setSent(true);
+      form.reset();
+      setTimeout(() => setSent(false), 3500);
+    } catch (e: unknown) {
+      setErr((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
   };
+
 
   const cards = [
     { icon: MapPin, title: t("contactAddress"), value: t("contactAddressVal") },
