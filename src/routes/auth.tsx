@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Eye, EyeOff, Loader2, Mail, Lock, User, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, Lock, User, ArrowLeft, CheckCircle2, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 
@@ -88,12 +88,24 @@ function AuthPage() {
           </div>
         </div>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          Admin?{" "}
-          <Link to="/admin" className="font-semibold text-brand hover:underline">
-            Admin Login
-          </Link>
-        </p>
+        {/* Admin Login — separate prominent option */}
+        <div className="mt-4 rounded-2xl border border-border bg-card/60 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
+              <Shield className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold">Are you an Admin?</p>
+              <p className="text-xs text-muted-foreground">Manage website content & settings</p>
+            </div>
+            <Link
+              to="/admin"
+              className="inline-flex items-center gap-1.5 rounded-md border border-primary px-3 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary hover:text-primary-foreground"
+            >
+              Admin Login
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

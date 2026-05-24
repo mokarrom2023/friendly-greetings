@@ -41,6 +41,87 @@ export type Database = {
         }
         Relationships: []
       }
+      section_items: {
+        Row: {
+          created_at: string
+          description: string | null
+          extra: Json
+          id: string
+          image_url: string | null
+          link_url: string | null
+          section_key: string
+          sort_order: number
+          subtitle: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          extra?: Json
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          section_key: string
+          sort_order?: number
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          extra?: Json
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          section_key?: string
+          sort_order?: number
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_sections: {
+        Row: {
+          created_at: string
+          description: string | null
+          extra: Json
+          id: string
+          image_url: string | null
+          section_key: string
+          subtitle: string | null
+          title: string | null
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          extra?: Json
+          id?: string
+          image_url?: string | null
+          section_key: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          extra?: Json
+          id?: string
+          image_url?: string | null
+          section_key?: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           created_at: string
