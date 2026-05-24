@@ -291,6 +291,9 @@ function AdminConsole({ email, adminTheme, setAdminTheme }: { email: string; adm
           {activeSection?.key === "social_links" && <SocialLinksPanel />}
           {activeSection?.key === "team_members" && <TeamMembersPanel />}
           {activeSection?.key === "properties" && <PropertiesPanel />}
+          {activeSection?.key === "account_settings" && (
+            <AccountThemePanel email={email} adminTheme={adminTheme} setAdminTheme={setAdminTheme} />
+          )}
           {activeSection?.type === "single" && (
             <>
               <SingleSectionEditor section={activeSection} />
