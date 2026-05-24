@@ -49,6 +49,7 @@ function Index() {
             <Properties />
             <About />
             <WhyChoose />
+            <ExtraSections />
             <Contact />
             <Faq />
           </main>
