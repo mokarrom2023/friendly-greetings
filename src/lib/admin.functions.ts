@@ -166,6 +166,7 @@ const itemSchema = z.object({
   image_url: z.string().url().max(2000).nullable().optional(),
   link_url: z.string().url().max(2000).nullable().optional(),
   sort_order: z.number().int().min(0).max(9999).default(0),
+  extra: z.record(z.string(), z.any()).optional(),
 });
 
 export const saveSectionItem = createServerFn({ method: "POST" })
@@ -181,7 +182,9 @@ export const saveSectionItem = createServerFn({ method: "POST" })
       image_url: data.image_url ?? null,
       link_url: data.link_url ?? null,
       sort_order: data.sort_order,
+      extra: data.extra ?? {},
     };
+
     if (data.id) {
       const { error } = await supabaseAdmin
         .from("section_items")

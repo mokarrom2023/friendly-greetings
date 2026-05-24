@@ -1,12 +1,12 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { MapPin, Bed, Maximize2, ArrowRight, Search, Home, Tag } from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import { cn } from "@/lib/utils";
-import { PROPERTIES, type Status } from "@/lib/properties-data";
+import { PROPERTIES, type Status, type Property } from "@/lib/properties-data";
+import { supabase } from "@/integrations/supabase/client";
 
-const LOCATIONS = Array.from(new Set(PROPERTIES.map((p) => p.location))).sort();
-const TYPES = ["Apartment", "Duplex", "Commercial", "Plot", "Penthouse"];
 const STATUSES: { value: "all" | Status; label: string }[] = [
   { value: "all", label: "Any Status" },
   { value: "ongoing", label: "Ongoing" },
@@ -15,7 +15,39 @@ const STATUSES: { value: "all" | Status; label: string }[] = [
   { value: "featured", label: "Featured" },
 ];
 
+const TYPES = ["Apartment", "Duplex", "Commercial", "Plot", "Penthouse"];
+
 type Tab = "all" | "buy" | "rent";
+
+type DbPropRow = {
+  id: string;
+  title: string | null;
+  subtitle: string | null;
+  description: string | null;
+  image_url: string | null;
+  extra: Record<string, unknown> | null;
+};
+
+function dbRowToProperty(r: DbPropRow, idx: number): Property {
+  const ex = (r.extra ?? {}) as Record<string, string | number>;
+  const statusRaw = String(ex.status ?? "ongoing") as Status;
+  return {
+    id: 10000 + idx, // synthetic numeric id; routes use string anyway
+    title: r.title || "Untitled Property",
+    location: r.subtitle || String(ex.location ?? ""),
+    size: String(ex.size ?? ""),
+    beds: Number(ex.beds ?? 0),
+    parking: String(ex.parking ?? ""),
+    price: String(ex.price ?? ""),
+    status: (["ongoing", "handover", "upcoming", "featured"].includes(statusRaw) ? statusRaw : "ongoing") as Status,
+    image: r.image_url || "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80",
+    gallery: [],
+    description: r.description || "",
+    facilities: [],
+    videoUrl: "",
+    news: [],
+  };
+}
 
 export function Properties() {
   const { t } = useLanguage();
@@ -26,8 +58,28 @@ export function Properties() {
   const [location, setLocation] = useState("");
   const [status, setStatus] = useState<"all" | Status>("all");
 
-  const filtered = PROPERTIES.filter((p) => {
+  const { data: dbProps } = useQuery({
+    queryKey: ["properties-db"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("section_items")
+        .select("id,title,subtitle,description,image_url,extra")
+        .eq("section_key", "properties")
+        .order("sort_order");
+      return (data ?? []) as DbPropRow[];
+    },
+  });
+
+  const allProperties: Property[] =
+    dbProps && dbProps.length > 0
+      ? dbProps.map(dbRowToProperty)
+      : PROPERTIES;
+
+  const LOCATIONS = Array.from(new Set(allProperties.map((p) => p.location).filter(Boolean))).sort();
+
+  const filtered = allProperties.filter((p) => {
     if (query && !`${p.title} ${p.location}`.toLowerCase().includes(query.toLowerCase())) return false;
+
     if (location && p.location !== location) return false;
     if (status !== "all" && p.status !== status) return false;
     return true;

@@ -262,9 +262,20 @@ function AdminConsole({ email }: { email: string }) {
           {activeSection?.key === "messages" && <MessagesPanel />}
           {activeSection?.key === "social_links" && <SocialLinksPanel />}
           {activeSection?.key === "team_members" && <TeamMembersPanel />}
-          {activeSection?.type === "single" && <SingleSectionEditor section={activeSection} />}
+          {activeSection?.key === "properties" && <PropertiesPanel />}
+          {activeSection?.type === "single" && (
+            <>
+              <SingleSectionEditor section={activeSection} />
+              {activeSection.group === "Extra Sections" && (
+                <div className="mx-auto mt-8 max-w-3xl">
+                  <MediaGalleryPanel sectionKey={`${activeSection.key}_media`} title="Media (images & videos)" />
+                </div>
+              )}
+            </>
+          )}
           {activeSection?.type === "list" && <ListSectionEditor section={activeSection} />}
         </main>
+
       </div>
     </div>
   );
@@ -1138,3 +1149,315 @@ function MemberModal({ member, onClose, onSave }: { member: Member; onClose: () 
     </div>
   );
 }
+
+/* ---------------- Properties Panel (custom structured list) ---------------- */
+type PropertyRow = {
+  id: string;
+  title: string | null;
+  subtitle: string | null;
+  description: string | null;
+  image_url: string | null;
+  sort_order: number;
+  extra: Record<string, string | number> | null;
+};
+
+const PROPERTY_STATUSES = ["ongoing", "handover", "upcoming", "featured"] as const;
+
+function PropertiesPanel() {
+  const qc = useQueryClient();
+  const save = useServerFn(saveSectionItem);
+  const remove = useServerFn(deleteSectionItem);
+
+  const { data: items, isLoading } = useQuery({
+    queryKey: ["properties-admin"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("section_items")
+        .select("*")
+        .eq("section_key", "properties")
+        .order("sort_order");
+      if (error) throw error;
+      return data as PropertyRow[];
+    },
+  });
+
+  const [editing, setEditing] = useState<PropertyRow | null>(null);
+
+  function openNew() {
+    setEditing({
+      id: "", title: "", subtitle: "", description: "", image_url: null,
+      sort_order: items?.length ?? 0,
+      extra: { price: "", size: "", beds: 0, parking: "", status: "ongoing", location: "" },
+    });
+  }
+
+  async function handleSave(it: PropertyRow) {
+    await save({
+      data: {
+        id: it.id || undefined,
+        section_key: "properties",
+        title: it.title || null,
+        subtitle: it.subtitle || null,
+        description: it.description || null,
+        image_url: it.image_url || null,
+        link_url: null,
+        sort_order: it.sort_order,
+        extra: it.extra ?? {},
+      },
+    });
+    setEditing(null);
+    qc.invalidateQueries({ queryKey: ["properties-admin"] });
+    qc.invalidateQueries({ queryKey: ["properties-db"] });
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Delete this property?")) return;
+    await remove({ data: { id } });
+    qc.invalidateQueries({ queryKey: ["properties-admin"] });
+    qc.invalidateQueries({ queryKey: ["properties-db"] });
+  }
+
+  return (
+    <div className="mx-auto max-w-5xl">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Manage Properties</h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Add a property from your device — name, location, price, beds, size, status & cover image.
+            When you add even one property here, the website will show YOUR properties instead of the default demo set.
+          </p>
+        </div>
+        <button onClick={openNew} className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90">
+          <Plus className="h-4 w-4" /> Add Property
+        </button>
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
+        {!isLoading && (items?.length ?? 0) === 0 && (
+          <p className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground sm:col-span-2 lg:col-span-3">
+            No properties yet. Click <b>Add Property</b> to create the first one.
+          </p>
+        )}
+        {items?.map((p) => {
+          const ex = (p.extra ?? {}) as Record<string, string | number>;
+          return (
+            <div key={p.id} className="overflow-hidden rounded-xl border border-border bg-card">
+              {p.image_url ? (
+                <img src={p.image_url} alt="" className="h-32 w-full object-cover" />
+              ) : (
+                <div className="flex h-32 w-full items-center justify-center bg-muted">
+                  <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                </div>
+              )}
+              <div className="p-3">
+                <div className="text-sm font-bold">{p.title || "(untitled)"}</div>
+                <div className="text-xs text-muted-foreground">{p.subtitle || ex.location || "—"}</div>
+                <div className="mt-1 flex flex-wrap gap-1 text-[10px]">
+                  {ex.price && <span className="rounded bg-primary/10 px-1.5 py-0.5 text-primary">{ex.price}</span>}
+                  {ex.status && <span className="rounded bg-accent px-1.5 py-0.5">{ex.status}</span>}
+                  {ex.beds ? <span className="rounded bg-accent px-1.5 py-0.5">{ex.beds} bed</span> : null}
+                </div>
+                <div className="mt-3 flex gap-1">
+                  <button onClick={() => setEditing(p)} className="flex-1 rounded-md border border-border px-2 py-1 text-xs hover:bg-accent">
+                    <Pencil className="mx-auto h-3.5 w-3.5" />
+                  </button>
+                  <button onClick={() => handleDelete(p.id)} className="flex-1 rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10">
+                    <Trash2 className="mx-auto h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {editing && <PropertyModal item={editing} onClose={() => setEditing(null)} onSave={handleSave} />}
+    </div>
+  );
+}
+
+function PropertyModal({
+  item, onClose, onSave,
+}: {
+  item: PropertyRow;
+  onClose: () => void;
+  onSave: (p: PropertyRow) => Promise<void>;
+}) {
+  const [p, setP] = useState<PropertyRow>(item);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  const ex = (p.extra ?? {}) as Record<string, string | number>;
+  function setEx(key: string, val: string | number) {
+    setP({ ...p, extra: { ...(p.extra ?? {}), [key]: val } });
+  }
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true); setErr(null);
+    try { await onSave(p); }
+    catch (e: unknown) { setErr((e as Error).message); }
+    finally { setBusy(false); }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+      <form onSubmit={submit} className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-2xl">
+        <h3 className="text-lg font-bold">{p.id ? "Edit property" : "New property"}</h3>
+        <div className="mt-4 space-y-3">
+          <Field label="Cover Image (upload from device)">
+            <MediaUpload value={p.image_url ?? ""} onChange={(u) => setP({ ...p, image_url: u || null })} folder="properties" accept="image/*" icon={<ImageIcon className="h-4 w-4" />} />
+          </Field>
+          <Field label="Property Name">
+            <input required value={p.title ?? ""} onChange={(e) => setP({ ...p, title: e.target.value })}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" placeholder="e.g. Starline Heights" />
+          </Field>
+          <Field label="Location">
+            <input value={p.subtitle ?? ""} onChange={(e) => setP({ ...p, subtitle: e.target.value })}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" placeholder="e.g. Gulshan-2, Dhaka" />
+          </Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Price">
+              <input value={String(ex.price ?? "")} onChange={(e) => setEx("price", e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" placeholder="৳ 1.85 Cr" />
+            </Field>
+            <Field label="Status">
+              <select value={String(ex.status ?? "ongoing")} onChange={(e) => setEx("status", e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm">
+                {PROPERTY_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </Field>
+            <Field label="Size">
+              <input value={String(ex.size ?? "")} onChange={(e) => setEx("size", e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" placeholder="1,285 sqft" />
+            </Field>
+            <Field label="Beds">
+              <input type="number" min={0} value={Number(ex.beds ?? 0)} onChange={(e) => setEx("beds", parseInt(e.target.value) || 0)}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
+            </Field>
+            <Field label="Parking">
+              <input value={String(ex.parking ?? "")} onChange={(e) => setEx("parking", e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" placeholder="1 Car" />
+            </Field>
+            <Field label="Sort order">
+              <input type="number" min={0} value={p.sort_order} onChange={(e) => setP({ ...p, sort_order: parseInt(e.target.value) || 0 })}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
+            </Field>
+          </div>
+          <Field label="Description / Details">
+            <textarea rows={4} value={p.description ?? ""} onChange={(e) => setP({ ...p, description: e.target.value })}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" placeholder="Full property details, amenities, location highlights..." />
+          </Field>
+          {err && <p className="text-xs text-destructive">{err}</p>}
+        </div>
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={onClose} className="rounded-md border border-border px-4 py-2 text-sm">Cancel</button>
+          <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50">
+            {busy && <Loader2 className="h-4 w-4 animate-spin" />} Save
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+/* ---------------- Media Gallery Panel (multi image/video per extra section) ---------------- */
+function MediaGalleryPanel({ sectionKey, title }: { sectionKey: string; title: string }) {
+  const qc = useQueryClient();
+  const save = useServerFn(saveSectionItem);
+  const remove = useServerFn(deleteSectionItem);
+
+  const { data: items, isLoading } = useQuery({
+    queryKey: ["media-gallery", sectionKey],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("section_items")
+        .select("id,image_url,link_url,title,sort_order,extra")
+        .eq("section_key", sectionKey)
+        .order("sort_order");
+      if (error) throw error;
+      return data as Array<{ id: string; image_url: string | null; link_url: string | null; title: string | null; sort_order: number; extra: Record<string, unknown> | null }>;
+    },
+  });
+
+  async function handleUpload(file: File) {
+    const ext = file.name.split(".").pop() || "bin";
+    const path = `${sectionKey}/${crypto.randomUUID()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("site-media").upload(path, file, { upsert: false, contentType: file.type });
+    if (upErr) { alert(upErr.message); return; }
+    const { data: pub } = supabase.storage.from("site-media").getPublicUrl(path);
+    const isVideo = file.type.startsWith("video/");
+    await save({
+      data: {
+        section_key: sectionKey,
+        title: file.name,
+        subtitle: null,
+        description: null,
+        image_url: isVideo ? null : pub.publicUrl,
+        link_url: isVideo ? pub.publicUrl : null,
+        sort_order: items?.length ?? 0,
+        extra: { kind: isVideo ? "video" : "image" },
+      },
+    });
+    qc.invalidateQueries({ queryKey: ["media-gallery", sectionKey] });
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Delete this media?")) return;
+    await remove({ data: { id } });
+    qc.invalidateQueries({ queryKey: ["media-gallery", sectionKey] });
+  }
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-bold">{title}</h3>
+          <p className="text-[11px] text-muted-foreground">Upload multiple images or videos from your device.</p>
+        </div>
+        <label className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90">
+          <Upload className="h-3.5 w-3.5" /> Upload
+          <input
+            type="file" accept="image/*,video/*" multiple className="hidden"
+            onChange={async (e) => {
+              const files = Array.from(e.target.files ?? []);
+              for (const f of files) await handleUpload(f);
+              e.target.value = "";
+            }}
+          />
+        </label>
+      </div>
+
+      <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
+        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+        {!isLoading && (items?.length ?? 0) === 0 && (
+          <p className="col-span-full rounded-md border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
+            No media yet.
+          </p>
+        )}
+        {items?.map((it) => {
+          const isVideo = (it.extra as { kind?: string })?.kind === "video";
+          const src = isVideo ? it.link_url : it.image_url;
+          return (
+            <div key={it.id} className="group relative aspect-square overflow-hidden rounded-md border border-border bg-muted">
+              {isVideo && src ? (
+                <video src={src} className="h-full w-full object-cover" muted />
+              ) : src ? (
+                <img src={src} alt="" className="h-full w-full object-cover" />
+              ) : null}
+              <button
+                onClick={() => handleDelete(it.id)}
+                className="absolute right-1 top-1 rounded-md bg-black/60 p-1 text-destructive opacity-0 transition group-hover:opacity-100"
+                title="Delete"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
