@@ -47,15 +47,11 @@ export function FloatingSocial() {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          title={name}
           aria-label={name}
           className="group relative flex h-12 w-12 items-center justify-center rounded-full text-white shadow-[0_8px_24px_rgba(0,0,0,0.25)] ring-2 ring-white/70 transition-all hover:scale-110 hover:shadow-[0_12px_32px_rgba(0,0,0,0.35)]"
           style={{ background: bg }}
         >
           <Icon className="h-6 w-6" />
-          <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-md bg-black/80 px-2 py-1 text-[11px] font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100 sm:block">
-            {name}
-          </span>
         </a>
       ))}
     </div>
