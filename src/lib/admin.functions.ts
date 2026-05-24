@@ -149,7 +149,7 @@ export const saveSiteSection = createServerFn({ method: "POST" })
           description: data.description ?? null,
           image_url: data.image_url ?? null,
           video_url: data.video_url ?? null,
-          extra: data.extra ?? {},
+          extra: (data.extra ?? {}) as never,
         },
         { onConflict: "section_key" },
       );
