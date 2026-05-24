@@ -150,6 +150,11 @@ export const translations = {
     termsConditions: "Terms & Conditions",
     sitemap: "Sitemap",
     careers: "Careers",
+    legal: "Legal",
+    gallery: "Gallery",
+    galleryTag: "Gallery",
+    galleryTitle: "Moments from Starline",
+    gallerySubtitle: "Project highlights, events and behind-the-scenes — curated by our team.",
     footerOfficeHours: "Sat – Thu: 10:00 AM – 6:00 PM",
 
     // Profile page
