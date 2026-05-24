@@ -45,7 +45,8 @@ export function TopBar() {
       })
     : "";
 
-  const open = now ? isOfficeOpen(now) : false;
+  const status = now ? getOfficeStatus(now) : { open: false, text: "" };
+  const open = status.open;
 
   return (
     <div
