@@ -111,3 +111,103 @@ export const deleteTeamMember = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/* ---------- Generic site_sections + section_items CRUD ---------- */
+
+async function assertAdmin(userId: string) {
+  const { data: roleRow } = await supabaseAdmin
+    .from("user_roles")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("role", "admin")
+    .maybeSingle();
+  if (!roleRow) throw new Error("Forbidden: admin only");
+}
+
+const sectionSchema = z.object({
+  section_key: z.string().min(1).max(100),
+  title: z.string().max(500).nullable().optional(),
+  subtitle: z.string().max(500).nullable().optional(),
+  description: z.string().max(5000).nullable().optional(),
+  image_url: z.string().url().max(2000).nullable().optional(),
+  video_url: z.string().url().max(2000).nullable().optional(),
+  extra: z.record(z.string(), z.unknown()).optional(),
+});
+
+export const saveSiteSection = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => sectionSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const { error } = await supabaseAdmin
+      .from("site_sections")
+      .upsert(
+        {
+          section_key: data.section_key,
+          title: data.title ?? null,
+          subtitle: data.subtitle ?? null,
+          description: data.description ?? null,
+          image_url: data.image_url ?? null,
+          video_url: data.video_url ?? null,
+          extra: data.extra ?? {},
+        },
+        { onConflict: "section_key" },
+      );
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+const itemSchema = z.object({
+  id: z.string().uuid().optional(),
+  section_key: z.string().min(1).max(100),
+  title: z.string().max(500).nullable().optional(),
+  subtitle: z.string().max(500).nullable().optional(),
+  description: z.string().max(5000).nullable().optional(),
+  image_url: z.string().url().max(2000).nullable().optional(),
+  link_url: z.string().url().max(2000).nullable().optional(),
+  sort_order: z.number().int().min(0).max(9999).default(0),
+});
+
+export const saveSectionItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => itemSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const payload = {
+      section_key: data.section_key,
+      title: data.title ?? null,
+      subtitle: data.subtitle ?? null,
+      description: data.description ?? null,
+      image_url: data.image_url ?? null,
+      link_url: data.link_url ?? null,
+      sort_order: data.sort_order,
+    };
+    if (data.id) {
+      const { error } = await supabaseAdmin
+        .from("section_items")
+        .update(payload)
+        .eq("id", data.id);
+      if (error) throw new Error(error.message);
+      return { id: data.id };
+    }
+    const { data: row, error } = await supabaseAdmin
+      .from("section_items")
+      .insert(payload)
+      .select("id")
+      .single();
+    if (error) throw new Error(error.message);
+    return { id: row.id };
+  });
+
+export const deleteSectionItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const { error } = await supabaseAdmin
+      .from("section_items")
+      .delete()
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
