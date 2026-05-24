@@ -200,3 +200,13 @@
 /* Hide scrollbar on theme switcher */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
+/* Global responsive safeguards — prevent any horizontal overflow on small screens */
+html, body { overflow-x: hidden; max-width: 100vw; }
+img, video, iframe { max-width: 100%; height: auto; }
+iframe { display: block; }
+
+/* Slightly tighter hero on small phones */
+@media (max-width: 640px) {
+  section { padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+}
