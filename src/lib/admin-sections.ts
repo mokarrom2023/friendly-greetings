@@ -20,6 +20,7 @@ export const SECTION_GROUPS = [
   "Extra Sections",
   "List Content",
   "Footer",
+  "Settings",
 ] as const;
 
 
@@ -74,5 +75,8 @@ export const SECTIONS: SectionConfig[] = [
   // Footer
   { key: "footer", label: "Footer", type: "single", group: "Footer", fields: ["title", "subtitle", "description"], hint: "Footer text, copyright." },
   { key: "social_links", label: "🔗 Social Links", type: "custom", group: "Footer", hint: "WhatsApp, Messenger, Telegram (floating icons) + Facebook/Instagram/etc (footer icons)." },
+
+  // Settings
+  { key: "account_settings", label: "⚙️ Account & Theme", type: "custom", group: "Settings", hint: "Change admin email, password and dashboard theme." },
 ];
 

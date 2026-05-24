@@ -197,7 +197,10 @@
   color: transparent;
 }
 
-/* ========= ADMIN DASHBOARD — BLACK + GOLD ========= */
+/* ========= ADMIN DASHBOARD THEMES =========
+ * Apply on .admin-theme. Switch palette with data-admin-theme="...".
+ * Default = Black + Gold.
+ */
 .admin-theme {
   --background: oklch(0.06 0 0);
   --foreground: oklch(0.94 0.01 90);
@@ -223,11 +226,102 @@
   color-scheme: dark;
 }
 
-/* Gold scrollbar for admin */
+.admin-theme[data-admin-theme="light"] {
+  --background: oklch(0.99 0.003 260);
+  --foreground: oklch(0.2 0.03 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.03 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.03 260);
+  --primary: oklch(0.5 0.18 265);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.96 0.01 260);
+  --secondary-foreground: oklch(0.25 0.05 265);
+  --muted: oklch(0.96 0.008 260);
+  --muted-foreground: oklch(0.5 0.03 260);
+  --accent: oklch(0.94 0.04 265);
+  --accent-foreground: oklch(0.25 0.08 265);
+  --border: oklch(0.9 0.01 260);
+  --input: oklch(0.93 0.01 260);
+  --ring: oklch(0.5 0.18 265);
+  --brand: oklch(0.5 0.18 265);
+  --brand-foreground: oklch(0.99 0 0);
+  color-scheme: light;
+}
+
+.admin-theme[data-admin-theme="gray"] {
+  --background: oklch(0.96 0.005 250);
+  --foreground: oklch(0.22 0.02 250);
+  --card: oklch(0.99 0.003 250);
+  --card-foreground: oklch(0.22 0.02 250);
+  --popover: oklch(0.99 0.003 250);
+  --popover-foreground: oklch(0.22 0.02 250);
+  --primary: oklch(0.35 0.03 250);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.92 0.008 250);
+  --secondary-foreground: oklch(0.3 0.02 250);
+  --muted: oklch(0.93 0.006 250);
+  --muted-foreground: oklch(0.5 0.02 250);
+  --accent: oklch(0.88 0.02 250);
+  --accent-foreground: oklch(0.25 0.03 250);
+  --border: oklch(0.86 0.008 250);
+  --input: oklch(0.9 0.008 250);
+  --ring: oklch(0.55 0.05 250);
+  --brand: oklch(0.4 0.04 250);
+  --brand-foreground: oklch(0.98 0 0);
+  color-scheme: light;
+}
+
+.admin-theme[data-admin-theme="ocean"] {
+  --background: oklch(0.98 0.01 230);
+  --foreground: oklch(0.2 0.05 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.05 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.05 240);
+  --primary: oklch(0.45 0.13 230);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.94 0.02 230);
+  --secondary-foreground: oklch(0.3 0.08 230);
+  --muted: oklch(0.95 0.015 230);
+  --muted-foreground: oklch(0.5 0.04 230);
+  --accent: oklch(0.9 0.05 200);
+  --accent-foreground: oklch(0.25 0.08 230);
+  --border: oklch(0.88 0.02 230);
+  --input: oklch(0.91 0.02 230);
+  --ring: oklch(0.55 0.13 220);
+  --brand: oklch(0.5 0.14 220);
+  --brand-foreground: oklch(0.99 0 0);
+  color-scheme: light;
+}
+
+.admin-theme[data-admin-theme="midnight"] {
+  --background: oklch(0.13 0.03 260);
+  --foreground: oklch(0.95 0.01 230);
+  --card: oklch(0.18 0.04 260);
+  --card-foreground: oklch(0.95 0.01 230);
+  --popover: oklch(0.18 0.04 260);
+  --popover-foreground: oklch(0.95 0.01 230);
+  --primary: oklch(0.7 0.15 210);
+  --primary-foreground: oklch(0.13 0.03 260);
+  --secondary: oklch(0.22 0.04 260);
+  --secondary-foreground: oklch(0.95 0.01 230);
+  --muted: oklch(0.2 0.03 260);
+  --muted-foreground: oklch(0.65 0.03 230);
+  --accent: oklch(0.3 0.08 220);
+  --accent-foreground: oklch(0.95 0.01 230);
+  --border: oklch(0.27 0.04 260);
+  --input: oklch(0.24 0.04 260);
+  --ring: oklch(0.7 0.15 210);
+  --brand: oklch(0.7 0.15 210);
+  --brand-foreground: oklch(0.13 0.03 260);
+  color-scheme: dark;
+}
+
 .admin-theme ::-webkit-scrollbar { width: 6px; height: 6px; }
-.admin-theme ::-webkit-scrollbar-track { background: oklch(0.1 0 0); }
-.admin-theme ::-webkit-scrollbar-thumb { background: oklch(0.5 0.1 85); border-radius: 3px; }
-.admin-theme ::-webkit-scrollbar-thumb:hover { background: oklch(0.68 0.14 85); }
+.admin-theme ::-webkit-scrollbar-track { background: var(--muted); }
+.admin-theme ::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--primary) 60%, transparent); border-radius: 3px; }
+.admin-theme ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
 /* Hide scrollbar on theme switcher */
 .no-scrollbar::-webkit-scrollbar { display: none; }
