@@ -1,5 +1,6 @@
 import { Facebook, Instagram, Linkedin, Youtube, MapPin, Phone, Mail, Clock } from "lucide-react";
 import { useLanguage } from "@/lib/language";
+import { useSocialLinks } from "@/lib/social-links";
 import logo from "@/assets/logo.png";
 
 // X (Twitter) icon — lucide doesn't ship a current X glyph, inline SVG
@@ -13,15 +14,17 @@ function XIcon({ className }: { className?: string }) {
 
 export function Footer() {
   const { t } = useLanguage();
+  const { data: links } = useSocialLinks();
   const year = new Date().getFullYear();
 
   const socials = [
-    { Icon: Facebook, href: "#", label: "Facebook" },
-    { Icon: Instagram, href: "#", label: "Instagram" },
-    { Icon: Linkedin, href: "#", label: "LinkedIn" },
-    { Icon: XIcon, href: "#", label: "X" },
-    { Icon: Youtube, href: "#", label: "YouTube" },
-  ];
+    { Icon: Facebook, href: links?.facebook, label: "Facebook" },
+    { Icon: Instagram, href: links?.instagram, label: "Instagram" },
+    { Icon: Linkedin, href: links?.linkedin, label: "LinkedIn" },
+    { Icon: XIcon, href: links?.twitter, label: "X" },
+    { Icon: Youtube, href: links?.youtube, label: "YouTube" },
+  ].filter((s) => s.href && s.href.trim().length > 0);
+
 
   return (
     <footer
@@ -58,6 +61,8 @@ export function Footer() {
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 transition-all hover:border-white hover:bg-white/10"
                 >
@@ -66,6 +71,7 @@ export function Footer() {
               ))}
             </div>
           </div>
+
 
           {/* Quick links */}
           <div>
