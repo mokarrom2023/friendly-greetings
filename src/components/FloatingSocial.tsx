@@ -40,7 +40,7 @@ const LINKS = [
 
 export function FloatingSocial() {
   return (
-    <div className="fixed bottom-6 right-4 z-[90] flex flex-col gap-3 sm:right-6">
+    <div className="fixed bottom-4 right-3 z-[90] flex flex-col gap-2 sm:right-4 sm:gap-2.5">
       {LINKS.map(({ name, href, bg, Icon }) => (
         <a
           key={name}
@@ -48,10 +48,10 @@ export function FloatingSocial() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={name}
-          className="group relative flex h-12 w-12 items-center justify-center rounded-full text-white shadow-[0_8px_24px_rgba(0,0,0,0.25)] ring-2 ring-white/70 transition-all hover:scale-110 hover:shadow-[0_12px_32px_rgba(0,0,0,0.35)]"
+          className="group relative flex h-9 w-9 items-center justify-center rounded-full text-white shadow-[0_6px_18px_rgba(0,0,0,0.25)] ring-2 ring-white/70 transition-all hover:scale-110 hover:shadow-[0_10px_24px_rgba(0,0,0,0.35)] sm:h-10 sm:w-10"
           style={{ background: bg }}
         >
-          <Icon className="h-6 w-6" />
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </a>
       ))}
     </div>

@@ -31,7 +31,7 @@ export function Footer() {
           "linear-gradient(180deg, var(--primary) 0%, color-mix(in oklab, var(--primary) 80%, black) 100%)",
       }}
     >
-      <div className="container mx-auto max-w-7xl px-4 py-16">
+      <div className="container mx-auto max-w-7xl px-4 py-10 md:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div>

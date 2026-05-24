@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 
 const SectionHeader = ({ tag, title, subtitle }: { tag: string; title: string; subtitle?: string }) => (
-  <div className="mx-auto mb-12 max-w-2xl text-center">
+  <div className="mx-auto mb-8 md:mb-12 max-w-2xl text-center">
     <span className="text-xs font-semibold uppercase tracking-[4px] text-brand">{tag}</span>
     <h2 className="mt-3 text-3xl font-bold sm:text-4xl md:text-5xl" style={{ fontFamily: "var(--font-heading)" }}>
       {title}
@@ -23,7 +23,7 @@ export function Testimonials() {
     { name: "Karim Hossain", role: "CEO, TechBD", rating: 5, text: "Their commercial space in Bashundhara transformed our business. Premium location, premium build.", img: "https://i.pravatar.cc/100?img=33" },
   ];
   return (
-    <section className="py-24 bg-card/30">
+    <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Testimonials" title="What Our Clients Say" subtitle="Trusted by 5000+ happy families across Bangladesh" />
         <div className="grid gap-6 md:grid-cols-3">
@@ -52,7 +52,7 @@ export function Testimonials() {
 /* 2. Video / Virtual Tour */
 export function VideoTour() {
   return (
-    <section className="py-24">
+    <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Virtual Tour" title="Experience Our Projects in 360°" subtitle="Drone footage, walkthroughs, and immersive virtual tours" />
         <div className="grid gap-6 md:grid-cols-3">
@@ -105,11 +105,11 @@ export function EmiCalculator() {
   ];
 
   return (
-    <section className="py-24 bg-card/30">
+    <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-6xl px-4">
         <SectionHeader tag="EMI Calculator" title="Plan Your Investment" subtitle="Calculate your monthly installment instantly" />
         <div
-          className="grid gap-8 lg:grid-cols-2 rounded-2xl border bg-card p-8"
+          className="grid gap-8 lg:grid-cols-2 rounded-2xl border bg-card p-5 sm:p-8"
           style={{ borderColor: `${GREEN}33` }}
         >
           <div className="space-y-6">
@@ -137,7 +137,7 @@ export function EmiCalculator() {
             ))}
           </div>
           <div
-            className="flex flex-col justify-center rounded-xl p-8 text-center"
+            className="flex flex-col justify-center rounded-xl p-6 sm:p-8 text-center"
             style={{ background: `linear-gradient(135deg, ${GREEN}22, ${GREEN}08)` }}
           >
             <Calculator className="mx-auto h-10 w-10 mb-3" style={{ color: GREEN }} />
@@ -165,7 +165,7 @@ export function EmiCalculator() {
 /* 4. Project Location Map */
 export function LocationMap() {
   return (
-    <section className="py-24">
+    <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Locations" title="Find Our Projects" subtitle="Strategic locations across Dhaka's most prestigious neighborhoods" />
         <div className="grid gap-6 lg:grid-cols-3">
@@ -199,7 +199,7 @@ export function Awards() {
     { t: "Green Building Award", d: "Sustainable Design", icon: Award },
   ];
   return (
-    <section className="py-24 bg-card/30">
+    <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Recognition" title="Awards & Certifications" />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -226,7 +226,7 @@ export function Progress() {
     { t: "Starline Tower", p: 90, img: "https://images.unsplash.com/photo-1590725140246-20acdee442be?w=600" },
   ];
   return (
-    <section className="py-24">
+    <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Live Updates" title="Construction Progress" subtitle="Real-time updates from our ongoing project sites" />
         <div className="grid gap-6 md:grid-cols-3">
@@ -263,7 +263,7 @@ export function Blog() {
     { t: "Bangladesh Real Estate Market Trends", c: "Market Report", img: "https://images.unsplash.com/photo-1554469384-e58fac16e23a?w=600" },
   ];
   return (
-    <section className="py-24 bg-card/30">
+    <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Blog" title="Real Estate Insights" subtitle="Expert advice, market trends, and buying guides" />
         <div className="grid gap-6 md:grid-cols-3">
@@ -291,7 +291,7 @@ export function Blog() {
 export function Partners() {
   const partners = ["DBBL", "BRAC Bank", "City Bank", "IDLC", "EBL", "HSBC", "Standard Chartered", "Prime Bank"];
   return (
-    <section className="py-20">
+    <section className="py-12 md:py-20">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Partners" title="Our Trusted Partners" subtitle="Leading banks, architects & contractors who work with us" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -318,7 +318,7 @@ export function LegalDocs() {
     { t: "Fire Safety Cert.", d: "Bangladesh Fire Service" },
   ];
   return (
-    <section className="py-24 bg-card/30">
+    <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Transparency" title="Legal & Compliance" subtitle="Full transparency — all our documents are publicly verifiable" />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -344,7 +344,7 @@ export function FloorPlan() {
     { t: "2200 sqft - Duplex", img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900" },
   ];
   return (
-    <section className="py-24">
+    <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Floor Plans" title="Interactive Floor Plans" subtitle="Explore detailed 2D & 3D layouts of our apartments" />
         <div className="rounded-2xl border border-border bg-card overflow-hidden">
@@ -368,7 +368,7 @@ export function FloorPlan() {
 /* 11. Live Chat / WhatsApp */
 export function LiveChat() {
   return (
-    <section className="py-24 bg-card/30">
+    <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-5xl px-4">
         <div className="rounded-2xl border border-border bg-gradient-to-br from-brand/15 to-brand/5 p-10 text-center">
           <MessageCircle className="mx-auto h-12 w-12 text-brand mb-4" />
@@ -396,7 +396,7 @@ export function Careers() {
     { t: "Marketing Executive", l: "Dhaka", type: "Full-time" },
   ];
   return (
-    <section className="py-24">
+    <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <SectionHeader tag="Careers" title="Join Our Team" subtitle="Build your career with Bangladesh's leading real estate developer" />
         <div className="grid gap-4 md:grid-cols-3">
@@ -427,10 +427,10 @@ export function RoiCalculator() {
   const future = Math.round(invest * Math.pow(1 + rate / 100, years));
   const profit = future - invest;
   return (
-    <section className="py-24 bg-card/30">
+    <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-6xl px-4">
         <SectionHeader tag="Investment" title="ROI Calculator" subtitle="Estimate your return on commercial property investment" />
-        <div className="grid gap-8 lg:grid-cols-2 rounded-2xl border border-border bg-card p-8">
+        <div className="grid gap-8 lg:grid-cols-2 rounded-2xl border border-border bg-card p-5 sm:p-8">
           <div className="space-y-6">
             {[
               { label: "Investment Amount (৳)", val: invest, set: setInvest, min: 500000, max: 100000000, step: 100000 },
@@ -447,7 +447,7 @@ export function RoiCalculator() {
               </div>
             ))}
           </div>
-          <div className="flex flex-col justify-center rounded-xl bg-gradient-to-br from-brand/20 to-brand/5 p-8 text-center">
+          <div className="flex flex-col justify-center rounded-xl bg-gradient-to-br from-brand/20 to-brand/5 p-6 sm:p-8 text-center">
             <TrendingUp className="mx-auto h-10 w-10 text-brand mb-3" />
             <div className="text-sm text-muted-foreground">Estimated Future Value</div>
             <div className="text-4xl font-bold text-brand my-2">৳ {future.toLocaleString()}</div>

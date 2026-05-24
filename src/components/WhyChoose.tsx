@@ -14,7 +14,7 @@ export function WhyChoose() {
   ] as const;
 
   return (
-    <section className="py-24">
+    <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mx-auto mb-14 max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[4px] text-brand">

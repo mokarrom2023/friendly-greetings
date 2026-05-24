@@ -16,7 +16,7 @@ export function Faq() {
   ];
 
   return (
-    <section id="faq" className="bg-secondary/40 py-24">
+    <section id="faq" className="bg-secondary/40 py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-12">
           <div className="flex items-center gap-3">

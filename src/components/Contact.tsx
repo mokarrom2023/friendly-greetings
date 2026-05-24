@@ -39,7 +39,7 @@ export function Contact() {
     "https://www.google.com/maps/dir/?api=1&destination=Banani,+Dhaka-1213,+Bangladesh";
 
   return (
-    <section id="contact" className="bg-secondary/40 py-24">
+    <section id="contact" className="bg-secondary/40 py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[4px] text-brand">
