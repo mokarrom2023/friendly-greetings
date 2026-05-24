@@ -14,12 +14,14 @@ function useNow() {
   return now;
 }
 
-function getOfficeStatus(d: Date): { open: boolean; text: string } {
+function getOfficeStatus(d: Date): { open: boolean; text: string; shortText: string } {
   const day = d.getDay(); // 0 = Sun ... 5 = Fri
-  if (day === 5) return { open: false, text: "Friday Office Closed" };
+  if (day === 5)
+    return { open: false, text: "Friday Office Closed", shortText: "Closed" };
   const h = d.getHours();
-  if (h >= 10 && h < 18) return { open: true, text: "Office Open · 10:00 AM – 6:00 PM" };
-  return { open: false, text: "Office Open Next Day 10 AM" };
+  if (h >= 10 && h < 18)
+    return { open: true, text: "Office Open · 10:00 AM – 6:00 PM", shortText: "Open" };
+  return { open: false, text: "Office Open Next Day 10 AM", shortText: "Closed" };
 }
 
 export function TopBar() {
@@ -29,6 +31,13 @@ export function TopBar() {
 
   const dateLocale = lang === "bn" ? "bn-BD" : "en-US";
   const dateStr = now
+    ? now.toLocaleDateString(dateLocale, {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    : "";
+  const dateStrFull = now
     ? now.toLocaleDateString(dateLocale, {
         weekday: "short",
         day: "numeric",
@@ -45,7 +54,9 @@ export function TopBar() {
       })
     : "";
 
-  const status = now ? getOfficeStatus(now) : { open: false, text: "" };
+  const status = now
+    ? getOfficeStatus(now)
+    : { open: false, text: "", shortText: "" };
   const open = status.open;
 
   return (
@@ -58,50 +69,70 @@ export function TopBar() {
         borderBottom: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between gap-3 px-4">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] text-amber-300">★</span>
+      <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between gap-1.5 px-2 sm:px-4">
+        {/* LEFT: calendar (mobile shows date, desktop shows company name + date inline) */}
+        <div className="flex min-w-0 items-center gap-1.5">
+          <span className="hidden text-[10px] text-amber-300 sm:inline">★</span>
           <span
             className="hidden font-semibold uppercase tracking-[2px] sm:inline"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             {t("company")}
           </span>
+          {/* Mobile-only calendar (mark 1) */}
+          <div className="flex items-center gap-1 text-white/90 sm:hidden">
+            <Calendar className="h-3 w-3 shrink-0 text-amber-300" />
+            <span className="text-[10px]" suppressHydrationWarning>
+              {dateStr || "\u00A0"}
+            </span>
+          </div>
         </div>
 
-        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-3 md:flex">
-          <div className="flex items-center gap-1.5 text-white/85">
+        {/* CENTER: time always visible (mark 2). Date inline on desktop. */}
+        <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2 md:gap-3">
+          <div className="hidden items-center gap-1.5 text-white/85 md:flex">
             <Calendar className="h-3 w-3 text-amber-300" />
-            <span suppressHydrationWarning>{dateStr || "\u00A0"}</span>
+            <span suppressHydrationWarning>{dateStrFull || "\u00A0"}</span>
           </div>
-          <div className="h-3 w-px bg-white/20" />
-          <div className="flex items-center gap-1.5 text-white/85">
-            <Clock className="h-3 w-3 text-amber-300" />
-            <span className="tabular-nums" suppressHydrationWarning>
+          <div className="hidden h-3 w-px bg-white/20 md:block" />
+          <div className="flex items-center gap-1 text-white/90 sm:gap-1.5 sm:text-white/85">
+            <Clock className="h-3 w-3 shrink-0 text-amber-300" />
+            <span className="tabular-nums text-[10px] sm:text-[11px]" suppressHydrationWarning>
               {timeStr || "\u00A0"}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden items-center gap-1.5 lg:flex">
+        {/* RIGHT: status + lang + theme */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Status: short on mobile (mark 3), full on desktop */}
+          <div className="flex items-center gap-1 sm:gap-1.5">
             <span
               className={cn(
                 "h-2 w-2 rounded-full",
                 open ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" : "bg-red-400",
               )}
             />
-            <span className="font-medium text-white/90" suppressHydrationWarning>
+            <span
+              className="font-semibold text-white/90 lg:hidden"
+              suppressHydrationWarning
+            >
+              {now ? status.shortText : "\u00A0"}
+            </span>
+            <span
+              className="hidden font-medium text-white/90 lg:inline"
+              suppressHydrationWarning
+            >
               {now ? status.text : "\u00A0"}
             </span>
           </div>
-          <div className="hidden h-3 w-px bg-white/20 lg:block" />
+          <div className="hidden h-3 w-px bg-white/20 sm:block" />
 
           <button
             type="button"
             onClick={toggle}
             title={t("langTitle")}
-            className="flex items-center gap-1 rounded border border-amber-300/40 bg-amber-300/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-200 transition-all hover:bg-amber-300/20"
+            className="flex items-center gap-1 rounded border border-amber-300/40 bg-amber-300/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-200 transition-all hover:bg-amber-300/20 sm:px-2"
           >
             <Languages className="h-3 w-3" />
             <span className={lang === "en" ? "text-amber-200" : "text-white/50"}>EN</span>
@@ -114,11 +145,11 @@ export function TopBar() {
             </span>
           </button>
 
-          <div className="h-3 w-px bg-white/20" />
+          <div className="hidden h-3 w-px bg-white/20 sm:block" />
 
-          {/* Theme picker — direct click swatches */}
+          {/* Theme picker */}
           <div
-            className="flex items-center gap-1.5 rounded border border-white/20 bg-white/5 px-2 py-1"
+            className="hidden items-center gap-1.5 rounded border border-white/20 bg-white/5 px-2 py-1 sm:flex"
             title={t("themeTitle")}
           >
             {THEMES.map((th) => {
