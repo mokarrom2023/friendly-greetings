@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Calendar, Clock, Languages } from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import { useTheme, THEMES, type ThemeName } from "@/lib/theme";
+import { fetchHolidays, findActiveHoliday, reopenDate, type Holiday } from "@/lib/holidays";
 import { cn } from "@/lib/utils";
 
 function useNow() {
@@ -14,8 +16,23 @@ function useNow() {
   return now;
 }
 
-function getOfficeStatus(d: Date): { open: boolean; text: string; shortText: string } {
-  const day = d.getDay(); // 0 = Sun ... 5 = Fri
+function getOfficeStatus(
+  d: Date,
+  holiday: Holiday | null,
+  lang: "en" | "bn",
+): { open: boolean; text: string; shortText: string } {
+  if (holiday) {
+    const reopen = reopenDate(holiday.end_date);
+    const locale = lang === "bn" ? "bn-BD" : "en-US";
+    const reopenStr = reopen.toLocaleDateString(locale, { day: "numeric", month: "short" });
+    const label = lang === "bn" ? holiday.label_bn : holiday.label_en;
+    return {
+      open: false,
+      text: `${label} · ${lang === "bn" ? "অফিস খুলবে" : "Reopens"} ${reopenStr} 10 AM`,
+      shortText: lang === "bn" ? "ছুটি" : "Holiday",
+    };
+  }
+  const day = d.getDay();
   if (day === 5)
     return { open: false, text: "Friday Office Closed", shortText: "Closed" };
   const h = d.getHours();
