@@ -1550,34 +1550,55 @@ function MediaGalleryPanel({ sectionKey, title }: { sectionKey: string; title: s
         </label>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
-        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+      <div className="mt-4 overflow-hidden rounded-lg border border-border">
+        {isLoading && <div className="p-4"><Loader2 className="h-4 w-4 animate-spin" /></div>}
         {!isLoading && (items?.length ?? 0) === 0 && (
-          <p className="col-span-full rounded-md border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
-            No media yet.
-          </p>
+          <p className="p-4 text-center text-xs text-muted-foreground">No media yet.</p>
         )}
-        {items?.map((it) => {
-          const isVideo = (it.extra as { kind?: string })?.kind === "video";
-          const src = isVideo ? it.link_url : it.image_url;
-          return (
-            <div key={it.id} className="group relative aspect-square overflow-hidden rounded-md border border-border bg-muted">
-              {isVideo && src ? (
-                <video src={src} className="h-full w-full object-cover" muted />
-              ) : src ? (
-                <img src={src} alt="" className="h-full w-full object-cover" />
-              ) : null}
-              <button
-                onClick={() => handleDelete(it.id)}
-                className="absolute right-1 top-1 rounded-md bg-black/60 p-1 text-destructive opacity-0 transition group-hover:opacity-100"
-                title="Delete"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          );
-        })}
+        {(items?.length ?? 0) > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30 text-[11px] uppercase tracking-wider text-primary">
+                  <th className="px-3 py-2 text-left">Preview</th>
+                  <th className="px-3 py-2 text-left">Name</th>
+                  <th className="px-3 py-2 text-left">Type</th>
+                  <th className="px-3 py-2 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items?.map((it) => {
+                  const isVideo = (it.extra as { kind?: string })?.kind === "video";
+                  const src = isVideo ? it.link_url : it.image_url;
+                  return (
+                    <tr key={it.id} className="border-b border-border/60 last:border-0 hover:bg-accent/30">
+                      <td className="px-3 py-2">
+                        <RowImageCell
+                          src={src}
+                          folder={sectionKey}
+                          isVideo={isVideo}
+                          onReplaced={async (url) => {
+                            await save({ data: { id: it.id, section_key: sectionKey, title: it.title, image_url: isVideo ? null : url, link_url: isVideo ? url : null, sort_order: it.sort_order, extra: (it.extra ?? { kind: isVideo ? "video" : "image" }) as Record<string, unknown> } });
+                            qc.invalidateQueries({ queryKey: ["media-gallery", sectionKey] });
+                          }}
+                        />
+                      </td>
+                      <td className="px-3 py-2 text-foreground truncate max-w-[260px]">{it.title || "(untitled)"}</td>
+                      <td className="px-3 py-2 text-muted-foreground">{isVideo ? "Video" : "Image"}</td>
+                      <td className="px-3 py-2">
+                        <button onClick={() => handleDelete(it.id)} className="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10">
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
+
     </div>
   );
 }
