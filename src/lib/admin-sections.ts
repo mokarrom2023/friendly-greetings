@@ -64,5 +64,7 @@ export const SECTIONS: SectionConfig[] = [
   { key: "blog_list", label: "Blog Posts", type: "list", group: "List Content" },
 
   // Footer
-  { key: "footer", label: "Footer", type: "single", group: "Footer", fields: ["title", "subtitle", "description"], hint: "Footer text, copyright, social links." },
+  { key: "footer", label: "Footer", type: "single", group: "Footer", fields: ["title", "subtitle", "description"], hint: "Footer text, copyright." },
+  { key: "social_links", label: "🔗 Social Links", type: "custom", group: "Footer", hint: "WhatsApp, Messenger, Telegram (floating icons) + Facebook/Instagram/etc (footer icons)." },
 ];
+
