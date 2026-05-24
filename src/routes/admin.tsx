@@ -1492,3 +1492,208 @@ function MediaGalleryPanel({ sectionKey, title }: { sectionKey: string; title: s
   );
 }
 
+/* ---------------- Account & Theme Panel ---------------- */
+function AccountThemePanel({
+  email,
+  adminTheme,
+  setAdminTheme,
+}: {
+  email: string;
+  adminTheme: AdminThemeId;
+  setAdminTheme: (t: AdminThemeId) => void;
+}) {
+  const [newEmail, setNewEmail] = useState(email);
+  const [emailBusy, setEmailBusy] = useState(false);
+  const [emailMsg, setEmailMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const [currentPw, setCurrentPw] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [pwBusy, setPwBusy] = useState(false);
+  const [pwMsg, setPwMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  async function changeEmail(e: React.FormEvent) {
+    e.preventDefault();
+    setEmailMsg(null);
+    if (!newEmail || newEmail === email) {
+      setEmailMsg({ ok: false, text: "Please enter a new email address." });
+      return;
+    }
+    setEmailBusy(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ email: newEmail });
+      if (error) throw error;
+      setEmailMsg({
+        ok: true,
+        text: "Confirmation link sent to the new email. Click it to complete the change.",
+      });
+    } catch (err) {
+      setEmailMsg({ ok: false, text: (err as Error).message });
+    } finally {
+      setEmailBusy(false);
+    }
+  }
+
+  async function changePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setPwMsg(null);
+    if (newPw.length < 6) {
+      setPwMsg({ ok: false, text: "Password must be at least 6 characters." });
+      return;
+    }
+    if (newPw !== confirmPw) {
+      setPwMsg({ ok: false, text: "Passwords do not match." });
+      return;
+    }
+    setPwBusy(true);
+    try {
+      // Re-authenticate to confirm current password
+      const { error: signInErr } = await supabase.auth.signInWithPassword({
+        email,
+        password: currentPw,
+      });
+      if (signInErr) throw new Error("Current password is incorrect.");
+
+      const { error } = await supabase.auth.updateUser({ password: newPw });
+      if (error) throw error;
+      setPwMsg({ ok: true, text: "Password updated successfully." });
+      setCurrentPw(""); setNewPw(""); setConfirmPw("");
+    } catch (err) {
+      setPwMsg({ ok: false, text: (err as Error).message });
+    } finally {
+      setPwBusy(false);
+    }
+  }
+
+  return (
+    <div className="mx-auto max-w-3xl space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground" style={{ fontFamily: "var(--font-heading)" }}>
+          Account & Theme
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Update your admin email, password and dashboard appearance.
+        </p>
+      </div>
+
+      {/* Theme picker */}
+      <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <h3 className="text-base font-semibold text-foreground">Dashboard Theme</h3>
+        <p className="mt-1 text-xs text-muted-foreground">
+          This only changes the admin dashboard. The public website is not affected.
+        </p>
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {ADMIN_THEMES.map((t) => {
+            const active = adminTheme === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setAdminTheme(t.id)}
+                className={`group relative flex items-center gap-3 rounded-xl border p-3 text-left transition ${
+                  active
+                    ? "border-primary ring-2 ring-primary/40"
+                    : "border-border hover:border-primary/40"
+                }`}
+              >
+                <div
+                  className="h-10 w-10 flex-shrink-0 rounded-lg border border-border"
+                  style={{ background: `linear-gradient(135deg, ${t.bg} 50%, ${t.swatch} 50%)` }}
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-foreground">{t.label}</p>
+                  <p className="truncate text-[11px] text-muted-foreground">{t.id}</p>
+                </div>
+                {active && <CheckCircle2 className="h-5 w-5 text-primary" />}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Change email */}
+      <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <h3 className="text-base font-semibold text-foreground">Change Email</h3>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Current: <span className="text-foreground">{email}</span>
+        </p>
+        <form onSubmit={changeEmail} className="mt-4 space-y-3">
+          <input
+            type="email"
+            required
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            placeholder="new@email.com"
+            className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
+          />
+          {emailMsg && (
+            <p className={`text-xs ${emailMsg.ok ? "text-primary" : "text-destructive"}`}>
+              {emailMsg.text}
+            </p>
+          )}
+          <button
+            type="submit"
+            disabled={emailBusy}
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
+          >
+            {emailBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            Update email
+          </button>
+        </form>
+      </section>
+
+      {/* Change password */}
+      <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <h3 className="text-base font-semibold text-foreground">Change Password</h3>
+        <form onSubmit={changePassword} className="mt-4 space-y-3">
+          <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/30">
+            <input
+              type={showPw ? "text" : "password"}
+              required
+              placeholder="Current password"
+              value={currentPw}
+              onChange={(e) => setCurrentPw(e.target.value)}
+              className="w-full bg-transparent text-sm text-foreground outline-none"
+            />
+            <button type="button" onClick={() => setShowPw((v) => !v)} className="text-muted-foreground hover:text-foreground">
+              {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+          <input
+            type={showPw ? "text" : "password"}
+            required
+            minLength={6}
+            placeholder="New password (min 6 characters)"
+            value={newPw}
+            onChange={(e) => setNewPw(e.target.value)}
+            className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
+          />
+          <input
+            type={showPw ? "text" : "password"}
+            required
+            minLength={6}
+            placeholder="Confirm new password"
+            value={confirmPw}
+            onChange={(e) => setConfirmPw(e.target.value)}
+            className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"
+          />
+          {pwMsg && (
+            <p className={`text-xs ${pwMsg.ok ? "text-primary" : "text-destructive"}`}>
+              {pwMsg.text}
+            </p>
+          )}
+          <button
+            type="submit"
+            disabled={pwBusy}
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
+          >
+            {pwBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            Update password
+          </button>
+        </form>
+      </section>
+    </div>
+  );
+}
+
