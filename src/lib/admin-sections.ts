@@ -29,6 +29,8 @@ export const SECTIONS: SectionConfig[] = [
   // Header group
   { key: "topbar", label: "Top Bar", type: "single", group: "Header", fields: ["title", "subtitle", "description"], hint: "Company name, office hours, contact info shown above the navbar." },
   { key: "navbar", label: "Navbar / Logo", type: "single", group: "Header", fields: ["title", "subtitle", "image"], hint: "Logo image, company name, tagline." },
+  { key: "hero_slides", label: "🖼️ Hero Slideshow Images", type: "list", group: "Header", hint: "Big homepage background slideshow. Add, replace or delete slide images here." },
+
 
   // Main sections
   { key: "hero", label: "Hero Banner", type: "single", group: "Main Sections", fields: ["title", "subtitle", "description", "image", "video"], hint: "Big homepage banner with title and CTAs." },
