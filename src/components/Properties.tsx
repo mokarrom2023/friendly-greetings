@@ -151,7 +151,7 @@ export function Properties() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => (
-            <PropertyCard key={p.id} p={p} t={t} />
+            <PropertyCard key={p.id} p={p} />
           ))}
           {filtered.length === 0 && (
             <p className="col-span-full py-10 text-center text-sm text-muted-foreground">
@@ -164,13 +164,9 @@ export function Properties() {
   );
 }
 
-export function PropertyCard({
-  p,
-  t,
-}: {
-  p: (typeof PROPERTIES)[number];
-  t: (key: string) => string;
-}) {
+export function PropertyCard({ p }: { p: (typeof PROPERTIES)[number] }) {
+  const { t } = useLanguage();
+
   return (
     <Link
       to="/properties/$id"
