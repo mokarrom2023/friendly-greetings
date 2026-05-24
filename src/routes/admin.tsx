@@ -1182,6 +1182,50 @@ function MemberModal({ member, onClose, onSave }: { member: Member; onClose: () 
   );
 }
 
+/* ---------------- Row Image Cell (thumbnail + inline replace) ---------------- */
+function RowImageCell({
+  src, folder, onReplaced, isVideo = false,
+}: {
+  src: string | null;
+  folder: string;
+  onReplaced: (url: string) => void | Promise<void>;
+  isVideo?: boolean;
+}) {
+  const [busy, setBusy] = useState(false);
+  async function handleFile(file: File) {
+    setBusy(true);
+    try {
+      const ext = file.name.split(".").pop() || "bin";
+      const path = `${folder}/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from("site-media").upload(path, file, { upsert: false, contentType: file.type });
+      if (error) throw error;
+      const { data } = supabase.storage.from("site-media").getPublicUrl(path);
+      await onReplaced(data.publicUrl);
+    } catch (e) {
+      alert((e as Error).message);
+    } finally { setBusy(false); }
+  }
+  return (
+    <div className="group relative h-12 w-12 overflow-hidden rounded-md border border-border bg-muted">
+      {src ? (
+        isVideo ? <video src={src} className="h-full w-full object-cover" muted />
+                : <img src={src} alt="" className="h-full w-full object-cover" />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+          <ImageIcon className="h-4 w-4" />
+        </div>
+      )}
+      <label className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/60 opacity-0 transition group-hover:opacity-100" title="Replace image">
+        {busy ? <Loader2 className="h-4 w-4 animate-spin text-white" /> : <Upload className="h-4 w-4 text-white" />}
+        <input
+          type="file" accept={isVideo ? "video/*" : "image/*"} className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }}
+        />
+      </label>
+    </div>
+  );
+}
+
 /* ---------------- Properties Panel (custom structured list) ---------------- */
 type PropertyRow = {
   id: string;
