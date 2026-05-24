@@ -43,7 +43,7 @@ export function Properties() {
   }
 
   return (
-    <section id="properties" className="py-24">
+    <section id="properties" className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[4px] text-brand">
