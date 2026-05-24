@@ -13,6 +13,7 @@ export interface SectionConfig {
 }
 
 export const SECTION_GROUPS = [
+  "Inbox",
   "Header",
   "Main Sections",
   "Extra Sections",
@@ -21,6 +22,10 @@ export const SECTION_GROUPS = [
 ] as const;
 
 export const SECTIONS: SectionConfig[] = [
+  // Inbox group
+  { key: "messages", label: "📨 Contact Messages", type: "custom", group: "Inbox", hint: "Messages submitted via the website contact form." },
+
+
   // Header group
   { key: "topbar", label: "Top Bar", type: "single", group: "Header", fields: ["title", "subtitle", "description"], hint: "Company name, office hours, contact info shown above the navbar." },
   { key: "navbar", label: "Navbar / Logo", type: "single", group: "Header", fields: ["title", "subtitle", "image"], hint: "Logo image, company name, tagline." },
