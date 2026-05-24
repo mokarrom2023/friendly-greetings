@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { TopBar } from "@/components/TopBar";
+import { SplashLoader } from "@/components/SplashLoader";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { Properties } from "@/components/Properties";
@@ -41,6 +42,7 @@ function Index() {
   return (
     <ThemeProvider>
       <LanguageProvider>
+        <SplashLoader />
         <div className="min-h-screen bg-background text-foreground">
           <TopBar />
           <Navbar />
