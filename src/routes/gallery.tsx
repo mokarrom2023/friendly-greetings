@@ -56,31 +56,40 @@ function GalleryRoute() {
 
 function GalleryPage() {
   const { t } = useLanguage();
+
+  const { data: dbItems } = useQuery({
+    queryKey: ["gallery-items"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("section_items")
+        .select("id,title,image_url")
+        .eq("section_key", "gallery")
+        .order("sort_order");
+      return (data ?? []).filter((r) => r.image_url) as Array<{ id: string; title: string | null; image_url: string }>;
+    },
+  });
+
+  const images: Array<{ src: string; alt: string }> =
+    dbItems && dbItems.length > 0
+      ? dbItems.map((r, i) => ({ src: r.image_url, alt: r.title || `Gallery ${i + 1}` }))
+      : PLACEHOLDER_IMAGES.map((src, i) => ({ src, alt: `Gallery ${i + 1}` }));
+
   return (
     <div className="min-h-screen bg-background">
       <TopBar />
       <Navbar />
       <main className="pt-32 pb-20">
         <div className="container mx-auto max-w-7xl px-4">
-          <Link
-            to="/"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand"
-          >
+          <Link to="/" className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand">
             <ArrowLeft className="h-4 w-4" />
             Home
           </Link>
 
           <div className="mb-10 text-center">
-            <span
-              className="text-xs font-semibold uppercase tracking-[3px]"
-              style={{ color: "var(--brand)" }}
-            >
+            <span className="text-xs font-semibold uppercase tracking-[3px]" style={{ color: "var(--brand)" }}>
               {t("galleryTag")}
             </span>
-            <h1
-              className="mt-2 text-3xl font-bold sm:text-4xl"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
+            <h1 className="mt-2 text-3xl font-bold sm:text-4xl" style={{ fontFamily: "var(--font-heading)" }}>
               {t("galleryTitle")}
             </h1>
             <p className="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground">
@@ -89,14 +98,14 @@ function GalleryPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
-            {PLACEHOLDER_IMAGES.map((src, i) => (
+            {images.map((img, i) => (
               <figure
                 key={i}
                 className="group relative aspect-square overflow-hidden rounded-xl bg-muted shadow-sm ring-1 ring-border transition-all hover:shadow-lg"
               >
                 <img
-                  src={src}
-                  alt={`Gallery ${i + 1}`}
+                  src={img.src}
+                  alt={img.alt}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
@@ -105,16 +114,16 @@ function GalleryPage() {
             ))}
           </div>
 
-          <div className="mt-10 flex items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-6 text-center text-xs text-muted-foreground">
-            <ImageIcon className="h-4 w-4" />
-            <span>
-              Admin image upload coming soon — you'll be able to manage these
-              photos from the dashboard.
-            </span>
-          </div>
+          {(!dbItems || dbItems.length === 0) && (
+            <div className="mt-10 flex items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-muted/30 px-4 py-6 text-center text-xs text-muted-foreground">
+              <ImageIcon className="h-4 w-4" />
+              <span>Showing placeholder images. Upload your own from Admin → Gallery Items.</span>
+            </div>
+          )}
         </div>
       </main>
       <Footer />
     </div>
   );
 }
+
