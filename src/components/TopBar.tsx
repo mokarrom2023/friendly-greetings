@@ -14,11 +14,12 @@ function useNow() {
   return now;
 }
 
-function isOfficeOpen(d: Date) {
-  const day = d.getDay();
-  if (day === 5) return false;
+function getOfficeStatus(d: Date): { open: boolean; text: string } {
+  const day = d.getDay(); // 0 = Sun ... 5 = Fri
+  if (day === 5) return { open: false, text: "Friday Office Closed" };
   const h = d.getHours();
-  return h >= 10 && h < 18;
+  if (h >= 10 && h < 18) return { open: true, text: "Office Open · 10:00 AM – 6:00 PM" };
+  return { open: false, text: "Office Open Next Day 10 AM" };
 }
 
 export function TopBar() {
@@ -44,7 +45,8 @@ export function TopBar() {
       })
     : "";
 
-  const open = now ? isOfficeOpen(now) : false;
+  const status = now ? getOfficeStatus(now) : { open: false, text: "" };
+  const open = status.open;
 
   return (
     <div
@@ -89,8 +91,8 @@ export function TopBar() {
                 open ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" : "bg-red-400",
               )}
             />
-            <span className="text-white/85" suppressHydrationWarning>
-              {now ? (open ? t("officeOpen") : t("officeClosed")) : "\u00A0"}
+            <span className="font-medium text-white/90" suppressHydrationWarning>
+              {now ? status.text : "\u00A0"}
             </span>
           </div>
           <div className="hidden h-3 w-px bg-white/20 lg:block" />
