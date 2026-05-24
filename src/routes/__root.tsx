@@ -73,14 +73,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Starkine Builders Ltd." },
+      { name: "description", content: "Starline Builders Ltd. - Premium real estate developer in Bangladesh. Discover luxury apartments, modern architecture & smart investment opportunities." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Starkine Builders Ltd." },
+      { property: "og:description", content: "Starline Builders Ltd. - Premium real estate developer in Bangladesh. Discover luxury apartments, modern architecture & smart investment opportunities." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Starkine Builders Ltd." },
+      { name: "twitter:description", content: "Starline Builders Ltd. - Premium real estate developer in Bangladesh. Discover luxury apartments, modern architecture & smart investment opportunities." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/HvQzzMv9bkYkk86ggC6qm1FD5Vp1/social-images/social-1779623297980-company_.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/HvQzzMv9bkYkk86ggC6qm1FD5Vp1/social-images/social-1779623297980-company_.webp" },
     ],
     links: [
       {
