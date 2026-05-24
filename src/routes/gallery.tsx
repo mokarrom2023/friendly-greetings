@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Image as ImageIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { TopBar } from "@/components/TopBar";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/lib/theme";
 import { LanguageProvider, useLanguage } from "@/lib/language";
+import { supabase } from "@/integrations/supabase/client";
+
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
