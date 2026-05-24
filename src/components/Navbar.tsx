@@ -14,44 +14,44 @@ export function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const items: NavItem[] = [
-    { key: "home", label: t("home"), href: "#home" },
-    { key: "about", label: t("about"), href: "#about" },
-    { key: "contact", label: t("contact"), href: "#contact" },
+    { key: "home", label: t("home"), href: "/#home" },
+    { key: "about", label: t("about"), href: "/#about" },
+    { key: "contact", label: t("contact"), href: "/#contact" },
     {
       key: "property",
       label: t("property"),
       dropdown: [
-        { label: t("ongoing"), href: "#properties" },
-        { label: t("handover"), href: "#properties" },
-        { label: t("processing"), href: "#properties" },
-        { label: t("upcoming"), href: "#properties" },
-        { label: t("featured"), href: "#properties" },
+        { label: t("ongoing"), href: "/projects/ongoing" },
+        { label: t("handover"), href: "/projects/handover" },
+        { label: t("processing"), href: "/projects/ongoing" },
+        { label: t("upcoming"), href: "/projects/upcoming" },
+        { label: t("featured"), href: "/projects/featured" },
       ],
     },
     {
       key: "location",
       label: t("location"),
       dropdown: [
-        { label: "Gulshan", href: "#properties" },
-        { label: "Banani", href: "#properties" },
-        { label: "Bashundhara", href: "#properties" },
-        { label: "Dhanmondi", href: "#properties" },
-        { label: "Uttara", href: "#properties" },
-        { label: "Mirpur", href: "#properties" },
-        { label: "Purbachal", href: "#properties" },
+        { label: "Gulshan", href: "/#properties" },
+        { label: "Banani", href: "/#properties" },
+        { label: "Bashundhara", href: "/#properties" },
+        { label: "Dhanmondi", href: "/#properties" },
+        { label: "Uttara", href: "/#properties" },
+        { label: "Mirpur", href: "/#properties" },
+        { label: "Purbachal", href: "/#properties" },
       ],
     },
     {
       key: "size",
       label: t("size"),
       dropdown: [
-        { label: "1285 sqft", href: "#properties" },
-        { label: "1300 sqft", href: "#properties" },
-        { label: "1000 sqft", href: "#properties" },
-        { label: "900 sqft", href: "#properties" },
-        { label: t("duplex"), href: "#properties" },
-        { label: t("commercial"), href: "#properties" },
-        { label: t("studioApartment"), href: "#properties" },
+        { label: "1285 sqft", href: "/#properties" },
+        { label: "1300 sqft", href: "/#properties" },
+        { label: "1000 sqft", href: "/#properties" },
+        { label: "900 sqft", href: "/#properties" },
+        { label: t("duplex"), href: "/#properties" },
+        { label: t("commercial"), href: "/#properties" },
+        { label: t("studioApartment"), href: "/#properties" },
       ],
     },
     {
@@ -71,7 +71,7 @@ export function Navbar() {
   return (
     <nav className="fixed left-0 right-0 top-9 z-50 border-b border-border bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 lg:px-8">
-        <a href="#home" className="flex items-center gap-3">
+        <a href="/#home" className="flex items-center gap-3">
           <img src={logo} alt="Starline Builders" className="h-11 w-11 object-contain" />
           <div className="hidden flex-col leading-tight sm:flex">
             <span

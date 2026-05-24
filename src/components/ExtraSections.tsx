@@ -82,42 +82,69 @@ export function VideoTour() {
 export function EmiCalculator() {
   const [price, setPrice] = useState(5000000);
   const [down, setDown] = useState(1000000);
-  const [years, setYears] = useState(15);
+  const [months, setMonths] = useState(180);
   const [rate, setRate] = useState(9);
-  const principal = price - down;
+  const principal = Math.max(0, price - down);
   const r = rate / 12 / 100;
-  const n = years * 12;
-  const emi = principal > 0 ? Math.round((principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1)) : 0;
+  const n = months;
+  const emi =
+    principal > 0 && r > 0
+      ? Math.round((principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1))
+      : principal > 0
+      ? Math.round(principal / n)
+      : 0;
   const total = emi * n;
   const interest = total - principal;
+
+  const GREEN = "#16a34a";
+  const fields = [
+    { label: "Property Price (৳)", val: price, set: setPrice, min: 100000, max: 50000000, step: 10000, fmt: (v: number) => v.toLocaleString() },
+    { label: "Down Payment (৳)", val: down, set: setDown, min: 0, max: price, step: 50000, fmt: (v: number) => v.toLocaleString() },
+    { label: "Loan Tenure (Months)", val: months, set: setMonths, min: 6, max: 360, step: 1, fmt: (v: number) => `${v} mo` },
+    { label: "Interest Rate (%)", val: rate, set: setRate, min: 0.5, max: 18, step: 0.5, fmt: (v: number) => `${v}%` },
+  ];
 
   return (
     <section className="py-24 bg-card/30">
       <div className="container mx-auto max-w-6xl px-4">
         <SectionHeader tag="EMI Calculator" title="Plan Your Investment" subtitle="Calculate your monthly installment instantly" />
-        <div className="grid gap-8 lg:grid-cols-2 rounded-2xl border border-border bg-card p-8">
+        <div
+          className="grid gap-8 lg:grid-cols-2 rounded-2xl border bg-card p-8"
+          style={{ borderColor: `${GREEN}33` }}
+        >
           <div className="space-y-6">
-            {[
-              { label: "Property Price (৳)", val: price, set: setPrice, min: 1000000, max: 50000000, step: 100000 },
-              { label: "Down Payment (৳)", val: down, set: setDown, min: 0, max: price, step: 50000 },
-              { label: "Loan Tenure (Years)", val: years, set: setYears, min: 1, max: 25, step: 1 },
-              { label: "Interest Rate (%)", val: rate, set: setRate, min: 5, max: 18, step: 0.5 },
-            ].map((f) => (
+            {fields.map((f) => (
               <div key={f.label}>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-muted-foreground">{f.label}</span>
-                  <span className="font-semibold text-brand">{f.val.toLocaleString()}</span>
+                  <span className="font-semibold" style={{ color: GREEN }}>{f.fmt(f.val)}</span>
                 </div>
-                <input type="range" min={f.min} max={f.max} step={f.step} value={f.val}
+                <input
+                  type="range"
+                  min={f.min}
+                  max={f.max}
+                  step={f.step}
+                  value={f.val}
                   onChange={(e) => f.set(Number(e.target.value))}
-                  className="w-full accent-brand" />
+                  className="w-full"
+                  style={{ accentColor: GREEN }}
+                />
+                <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+                  <span>{f.fmt(f.min)}</span>
+                  <span>{f.fmt(f.max)}</span>
+                </div>
               </div>
             ))}
           </div>
-          <div className="flex flex-col justify-center rounded-xl bg-gradient-to-br from-brand/20 to-brand/5 p-8 text-center">
-            <Calculator className="mx-auto h-10 w-10 text-brand mb-3" />
+          <div
+            className="flex flex-col justify-center rounded-xl p-8 text-center"
+            style={{ background: `linear-gradient(135deg, ${GREEN}22, ${GREEN}08)` }}
+          >
+            <Calculator className="mx-auto h-10 w-10 mb-3" style={{ color: GREEN }} />
             <div className="text-sm text-muted-foreground">Monthly EMI</div>
-            <div className="text-4xl font-bold text-brand my-2">৳ {emi.toLocaleString()}</div>
+            <div className="text-4xl font-bold my-2" style={{ color: GREEN }}>
+              ৳ {emi.toLocaleString()}
+            </div>
             <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
               <div className="rounded-lg bg-background/50 p-3">
                 <div className="text-muted-foreground text-xs">Principal</div>
