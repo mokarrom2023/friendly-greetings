@@ -90,17 +90,21 @@ export function Navbar() {
   return (
     <nav className="fixed left-0 right-0 top-9 z-50 border-b border-border bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 lg:px-8">
-        <a href="/#home" className="flex items-center gap-3">
-          <img src={logo} alt="Starline Builders" className="h-11 w-11 object-contain" />
-          <div className="hidden flex-col leading-tight sm:flex">
+        <a href="/#home" className="flex items-center gap-2 sm:gap-3 -ml-1 sm:ml-0">
+          <img
+            src={logo}
+            alt="Starline Builders"
+            className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11"
+          />
+          <div className="flex min-w-0 flex-col leading-tight">
             <span
-              className="whitespace-nowrap text-base font-bold tracking-wide text-primary"
+              className="truncate text-[13px] font-bold tracking-wide text-primary sm:text-base sm:whitespace-nowrap"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               {t("company")}
             </span>
             <span
-              className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[2px] leading-tight"
+              className="truncate text-[8px] font-semibold uppercase tracking-[1.5px] leading-tight sm:text-[10px] sm:tracking-[2px] sm:whitespace-nowrap"
               style={{
                 background: "linear-gradient(90deg, #d4a017, #f4cf5b, #b8860b)",
                 WebkitBackgroundClip: "text",
