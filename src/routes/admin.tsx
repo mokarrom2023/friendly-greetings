@@ -43,9 +43,17 @@ function AdminPage() {
   }, []);
 
   if (loading)
-    return <div className="flex min-h-screen items-center justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
+    return (
+      <div className="admin-theme flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
 
-  return session ? <Dashboard email={session.email} /> : <AdminAuthForm />;
+  return (
+    <div className="admin-theme min-h-screen bg-background text-foreground">
+      {session ? <Dashboard email={session.email} /> : <AdminAuthForm />}
+    </div>
+  );
 }
 
 /* ---------------- Admin Auth ---------------- */
