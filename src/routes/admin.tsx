@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Loader2, Plus, Pencil, Trash2, LogOut, Upload, Save, CheckCircle2,
   ArrowLeft, LayoutDashboard, Image as ImageIcon, Video, Shield, Eye, EyeOff,
-  Mail, MailOpen, Users, Inbox, Link as LinkIcon,
+  Mail, MailOpen, Users, Inbox, Link as LinkIcon, Phone, MessageCircle,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -14,6 +14,7 @@ import {
   saveSiteSection, saveSectionItem, deleteSectionItem,
   listContactMessages, markMessageRead, deleteContactMessage,
   getAdminStats, saveSocialLinks,
+  listNewsletterSubscribers, deleteNewsletterSubscriber, listAuthUsers,
 } from "@/lib/admin.functions";
 import { SECTIONS, SECTION_GROUPS, type SectionConfig } from "@/lib/admin-sections";
 import logo from "@/assets/logo.png";
