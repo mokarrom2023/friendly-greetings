@@ -6,6 +6,7 @@ import {
   Quote, ChevronRight, Phone
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/lib/language";
 
 const SectionHeader = ({ tag, title, subtitle }: { tag: string; title: string; subtitle?: string }) => (
   <div className="mx-auto mb-8 md:mb-12 max-w-2xl text-center">
@@ -19,6 +20,7 @@ const SectionHeader = ({ tag, title, subtitle }: { tag: string; title: string; s
 
 /* 1. Testimonials */
 export function Testimonials() {
+  const { t } = useLanguage();
   const defaults = [
     { name: "Rahim Ahmed", role: "Homeowner, Gulshan", rating: 5, text: "Starline delivered exactly what they promised. Quality construction, on-time handover, and excellent after-sales service.", img: "https://i.pravatar.cc/100?img=12" },
     { name: "Fatema Begum", role: "Investor, Banani", rating: 5, text: "Best investment decision. My property value has appreciated significantly within just 2 years.", img: "https://i.pravatar.cc/100?img=45" },
@@ -47,7 +49,7 @@ export function Testimonials() {
   return (
     <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Testimonials" title="What Our Clients Say" subtitle="Trusted by 5000+ happy families across Bangladesh" />
+        <SectionHeader tag={t("testimonialsTag")} title={t("testimonialsTitle")} subtitle={t("testimonialsSubtitle")} />
         <div className="grid gap-6 md:grid-cols-3">
           {reviews.map((r) => (
             <div key={r.name} className="rounded-xl border border-border bg-card p-7 transition-all hover:-translate-y-1 hover:shadow-lg">
@@ -74,16 +76,18 @@ export function Testimonials() {
 
 /* 2. Video / Virtual Tour */
 export function VideoTour() {
+  const { t } = useLanguage();
+  const videos = [
+    { t: t("videoAerial"), img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800" },
+    { t: t("videoApartment"), img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800" },
+    { t: t("video360"), img: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800" },
+  ];
   return (
     <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Virtual Tour" title="Experience Our Projects in 360°" subtitle="Drone footage, walkthroughs, and immersive virtual tours" />
+        <SectionHeader tag={t("virtualTourTag")} title={t("virtualTourTitle")} subtitle={t("virtualTourSubtitle")} />
         <div className="grid gap-6 md:grid-cols-3">
-          {[
-            { t: "Aerial Drone Tour", img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800" },
-            { t: "Apartment Walkthrough", img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800" },
-            { t: "360° Virtual Reality", img: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800" },
-          ].map((v) => (
+          {videos.map((v) => (
             <div key={v.t} className="group relative aspect-video overflow-hidden rounded-xl">
               <img src={v.img} alt={v.t} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -103,6 +107,7 @@ export function VideoTour() {
 
 /* 3. Payment Calculator */
 export function EmiCalculator() {
+  const { t } = useLanguage();
   const [price, setPrice] = useState(1500000);
   const [downPct, setDownPct] = useState(20);
   const [months, setMonths] = useState(36);
@@ -125,15 +130,15 @@ export function EmiCalculator() {
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[3px]" style={{ color: ORANGE }}>
               <Calculator className="h-4 w-4" />
-              Payment Calculator
+              {t("emiPaymentCalc")}
             </div>
             <h3 className="mt-2 text-2xl sm:text-3xl font-bold text-foreground">
-              See your monthly payment instantly
+              {t("emiHeadline")}
             </h3>
 
             <div className="mt-6">
               <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Apartment Price (BDT)
+                {t("emiApartmentPrice")}
               </label>
               <input
                 type="number"
@@ -147,7 +152,7 @@ export function EmiCalculator() {
 
             <div className="mt-6">
               <div className="flex justify-between text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                <span>Down Payment</span>
+                <span>{t("emiDownPayment")}</span>
                 <span className="text-foreground">{downPct}%</span>
               </div>
               <input
@@ -167,8 +172,8 @@ export function EmiCalculator() {
 
             <div className="mt-6">
               <div className="flex justify-between text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                <span>Tenure</span>
-                <span className="text-foreground">{months} months</span>
+                <span>{t("emiTenure")}</span>
+                <span className="text-foreground">{months} {t("emiMonths")}</span>
               </div>
               <input
                 type="range"
@@ -189,29 +194,29 @@ export function EmiCalculator() {
           {/* RIGHT: Summary */}
           <div className="flex flex-col">
             <div className="text-xs font-semibold uppercase tracking-[3px] text-muted-foreground">
-              Your Estimated Plan
+              {t("emiEstimatedPlan")}
             </div>
 
             <div className="mt-4 divide-y divide-border">
-              <Row label="Apartment Price" value={`৳${fmt(safePrice)}`} />
-              <Row label={`Down Payment (${downPct}%)`} value={`৳${fmt(downAmt)}`} />
-              <Row label="Remaining Balance" value={`৳${fmt(remaining)}`} />
-              <Row label="Tenure" value={`${months} months`} />
+              <Row label={t("emiPriceRow")} value={`৳${fmt(safePrice)}`} />
+              <Row label={`${t("emiDownPaymentRow")} (${downPct}%)`} value={`৳${fmt(downAmt)}`} />
+              <Row label={t("emiRemaining")} value={`৳${fmt(remaining)}`} />
+              <Row label={t("emiTenure")} value={`${months} ${t("emiMonths")}`} />
             </div>
 
             <div className="mt-4 rounded-xl p-5 text-white" style={{ background: NAVY }}>
               <div className="text-[11px] font-semibold uppercase tracking-[3px]" style={{ color: ORANGE }}>
-                Monthly Installment
+                {t("emiMonthly")}
               </div>
               <div className="mt-1 text-4xl font-bold">৳{fmt(baseEmi)}</div>
               <div className="mt-2 text-xs text-white/70">
-                Remaining ৳{fmt(remaining)} ÷ {months} months · {downPct}% down paid upfront
+                {t("emiRemainingNote")} ৳{fmt(remaining)} ÷ {months} {t("emiMonths")} · {downPct}% {t("emiPaidUpfront")}
               </div>
             </div>
 
             {lastEmi !== baseEmi && months > 0 && (
               <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/40 dark:text-amber-200">
-                ※ Last installment will be <strong>৳{fmt(lastEmi)}</strong> to settle the balance exactly.
+                ※ {t("emiLastNote")} <strong>৳{fmt(lastEmi)}</strong> {t("emiLastNoteEnd")}
               </div>
             )}
 
@@ -220,11 +225,11 @@ export function EmiCalculator() {
               className="mt-3 inline-flex items-center justify-center rounded-lg px-6 py-3 text-white font-semibold transition hover:opacity-90"
               style={{ background: ORANGE }}
             >
-              Book a Free Consultation
+              {t("emiBookConsult")}
             </a>
 
             <p className="mt-3 text-center text-[11px] text-muted-foreground">
-              * Indicative figures only. Final plan and tenure depend on the selected project.
+              {t("emiDisclaimer")}
             </p>
           </div>
         </div>
@@ -244,6 +249,7 @@ function Row({ label, value }: { label: string; value: string }) {
 
 /* 4. Project Location Map */
 export function LocationMap() {
+  const { t } = useLanguage();
   const defaults = [
     { id: "d1", title: "Gulshan-2", description: "Gulshan-2, Dhaka, Bangladesh", link_url: null as string | null },
     { id: "d2", title: "Banani DOHS", description: "Banani DOHS, Dhaka, Bangladesh", link_url: null },
@@ -282,7 +288,7 @@ export function LocationMap() {
   return (
     <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Locations" title="Find Our Projects" subtitle="Strategic locations across Dhaka's most prestigious neighborhoods" />
+        <SectionHeader tag={t("locationsTag")} title={t("findProjects")} subtitle={t("findProjectsSub")} />
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 overflow-hidden rounded-2xl border border-border h-[420px]">
             <iframe
@@ -331,16 +337,17 @@ export function LocationMap() {
 
 /* 5. Awards & Certifications */
 export function Awards() {
+  const { t } = useLanguage();
   const awards = [
-    { t: "REHAB Member", d: "Since 2010", icon: Award },
-    { t: "ISO 9001:2015", d: "Quality Certified", icon: FileCheck },
-    { t: "Best Developer 2023", d: "Bangladesh Property Awards", icon: Star },
-    { t: "Green Building Award", d: "Sustainable Design", icon: Award },
+    { t: t("rehabMember"), d: t("awardRehabSince"), icon: Award },
+    { t: t("isoCertified"), d: t("awardIsoQuality"), icon: FileCheck },
+    { t: t("awardBestDev"), d: t("awardBestDevSub"), icon: Star },
+    { t: t("awardGreen"), d: t("awardGreenSub"), icon: Award },
   ];
   return (
     <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Recognition" title="Awards & Certifications" />
+        <SectionHeader tag={t("recognitionTag")} title={t("awardsCertTitle")} />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {awards.map((a) => (
             <div key={a.t} className="text-center rounded-xl border border-border bg-card p-7 hover:border-brand transition">
@@ -359,6 +366,7 @@ export function Awards() {
 
 /* 6. Construction Progress */
 export function Progress() {
+  const { t } = useLanguage();
   const items = [
     { t: "Starline Heights", p: 75, img: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=600" },
     { t: "Starline Residence", p: 40, img: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600" },
@@ -367,14 +375,14 @@ export function Progress() {
   return (
     <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Live Updates" title="Construction Progress" subtitle="Real-time updates from our ongoing project sites" />
+        <SectionHeader tag={t("liveUpdatesTag")} title={t("constructionProgress")} subtitle={t("constructionSub")} />
         <div className="grid gap-6 md:grid-cols-3">
           {items.map((i) => (
             <div key={i.t} className="overflow-hidden rounded-xl border border-border bg-card">
               <div className="relative aspect-video">
                 <img src={i.img} alt={i.t} className="h-full w-full object-cover" />
                 <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-black/70 backdrop-blur px-3 py-1 text-xs text-white">
-                  <HardHat className="h-3 w-3" /> Live
+                  <HardHat className="h-3 w-3" /> {t("liveLabel")}
                 </div>
               </div>
               <div className="p-5">
@@ -396,15 +404,16 @@ export function Progress() {
 
 /* 7. Blog */
 export function Blog() {
+  const { t } = useLanguage();
   const posts = [
-    { t: "Top 5 Investment Areas in Dhaka 2026", c: "Investment Guide", img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600" },
-    { t: "How to Choose Your Dream Apartment", c: "Buyer Tips", img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600" },
-    { t: "Bangladesh Real Estate Market Trends", c: "Market Report", img: "https://images.unsplash.com/photo-1554469384-e58fac16e23a?w=600" },
+    { t: t("blogPost1"), c: t("blogPost1Cat"), img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600" },
+    { t: t("blogPost2"), c: t("blogPost2Cat"), img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600" },
+    { t: t("blogPost3"), c: t("blogPost3Cat"), img: "https://images.unsplash.com/photo-1554469384-e58fac16e23a?w=600" },
   ];
   return (
     <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Blog" title="Real Estate Insights" subtitle="Expert advice, market trends, and buying guides" />
+        <SectionHeader tag={t("blogTag")} title={t("blogTitle")} subtitle={t("blogSubtitle")} />
         <div className="grid gap-6 md:grid-cols-3">
           {posts.map((p) => (
             <article key={p.t} className="group overflow-hidden rounded-xl border border-border bg-card hover:-translate-y-1 transition-all">
@@ -415,7 +424,7 @@ export function Blog() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-brand">{p.c}</span>
                 <h3 className="mt-2 font-bold leading-snug group-hover:text-brand transition">{p.t}</h3>
                 <div className="mt-3 flex items-center text-sm text-muted-foreground gap-1">
-                  Read More <ChevronRight className="h-4 w-4" />
+                  {t("readMore")} <ChevronRight className="h-4 w-4" />
                 </div>
               </div>
             </article>
@@ -428,11 +437,12 @@ export function Blog() {
 
 /* 8. Partners */
 export function Partners() {
+  const { t } = useLanguage();
   const partners = ["DBBL", "BRAC Bank", "City Bank", "IDLC", "EBL", "HSBC", "Standard Chartered", "Prime Bank"];
   return (
     <section className="py-12 md:py-20">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Partners" title="Our Trusted Partners" subtitle="Leading banks, architects & contractors who work with us" />
+        <SectionHeader tag={t("partnersTag")} title={t("partnersTitle")} subtitle={t("partnersSubtitle")} />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {partners.map((p) => (
             <div key={p} className="flex items-center justify-center h-20 rounded-lg border border-border bg-card hover:border-brand transition">
@@ -450,16 +460,17 @@ export function Partners() {
 
 /* 9. Legal / NOC */
 export function LegalDocs() {
+  const { t } = useLanguage();
   const docs = [
-    { t: "RAJUK Approval", d: "All projects approved" },
-    { t: "NOC Certificate", d: "Environmental clearance" },
-    { t: "Land Mutation", d: "Verified title deed" },
-    { t: "Fire Safety Cert.", d: "Bangladesh Fire Service" },
+    { t: t("docRajuk"), d: t("docRajukSub") },
+    { t: t("docNoc"), d: t("docNocSub") },
+    { t: t("docLandMut"), d: t("docLandMutSub") },
+    { t: t("docFire"), d: t("docFireSub") },
   ];
   return (
     <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Transparency" title="Legal & Compliance" subtitle="Full transparency — all our documents are publicly verifiable" />
+        <SectionHeader tag={t("transparencyTag")} title={t("legalTitle")} subtitle={t("legalSubtitle")} />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {docs.map((d) => (
             <div key={d.t} className="rounded-xl border border-border bg-card p-6 hover:border-brand transition">
@@ -476,16 +487,17 @@ export function LegalDocs() {
 
 /* 10. Floor Plan Viewer */
 export function FloorPlan() {
+  const { t } = useLanguage();
   const [active, setActive] = useState(0);
   const plans = [
-    { t: "1285 sqft - 3 Bed", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900" },
-    { t: "1500 sqft - 4 Bed", img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900" },
-    { t: "2200 sqft - Duplex", img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900" },
+    { t: t("plan1"), img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900" },
+    { t: t("plan2"), img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900" },
+    { t: t("plan3"), img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900" },
   ];
   return (
     <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Floor Plans" title="Interactive Floor Plans" subtitle="Explore detailed 2D & 3D layouts of our apartments" />
+        <SectionHeader tag={t("floorPlansTag")} title={t("floorPlansTitle")} subtitle={t("floorPlansSub")} />
         <div className="rounded-2xl border border-border bg-card overflow-hidden">
           <div className="flex flex-wrap gap-2 p-4 border-b border-border">
             {plans.map((p, i) => (
@@ -506,19 +518,20 @@ export function FloorPlan() {
 
 /* 11. Live Chat / WhatsApp */
 export function LiveChat() {
+  const { t } = useLanguage();
   return (
     <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-5xl px-4">
         <div className="rounded-2xl border border-border bg-gradient-to-br from-brand/15 to-brand/5 p-10 text-center">
           <MessageCircle className="mx-auto h-12 w-12 text-brand mb-4" />
-          <h2 className="text-3xl font-bold mb-3" style={{ fontFamily: "var(--font-heading)" }}>Talk to Us Instantly</h2>
-          <p className="text-muted-foreground mb-6 max-w-xl mx-auto">Our property experts are available 24/7 on WhatsApp, Messenger & Telegram. Get instant answers to all your queries.</p>
+          <h2 className="text-3xl font-bold mb-3" style={{ fontFamily: "var(--font-heading)" }}>{t("chatTitle")}</h2>
+          <p className="text-muted-foreground mb-6 max-w-xl mx-auto">{t("chatSubtitle")}</p>
           <div className="flex flex-wrap justify-center gap-3">
             <a href="https://wa.me/8801700000000" className="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 text-white font-semibold hover:opacity-90">
-              <MessageCircle className="h-5 w-5" /> WhatsApp
+              <MessageCircle className="h-5 w-5" /> {t("chatWhatsapp")}
             </a>
             <a href="tel:+8801700000000" className="inline-flex items-center gap-2 rounded-lg bg-brand px-6 py-3 text-black font-semibold hover:opacity-90">
-              <Phone className="h-5 w-5" /> Call Now
+              <Phone className="h-5 w-5" /> {t("chatCallNow")}
             </a>
           </div>
         </div>
@@ -529,15 +542,16 @@ export function LiveChat() {
 
 /* 12. Careers */
 export function Careers() {
+  const { t } = useLanguage();
   const jobs = [
-    { t: "Senior Civil Engineer", l: "Dhaka HQ", type: "Full-time" },
-    { t: "Sales Manager", l: "Gulshan Office", type: "Full-time" },
-    { t: "Marketing Executive", l: "Dhaka", type: "Full-time" },
+    { t: t("jobCivil"), l: t("jobLocDhakaHQ"), type: t("jobFullTime") },
+    { t: t("jobSales"), l: t("jobLocGulshan"), type: t("jobFullTime") },
+    { t: t("jobMkt"), l: t("jobLocDhaka"), type: t("jobFullTime") },
   ];
   return (
     <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
-        <SectionHeader tag="Careers" title="Join Our Team" subtitle="Build your career with Bangladesh's leading real estate developer" />
+        <SectionHeader tag={t("careersTag")} title={t("joinTeam")} subtitle={t("joinTeamSub")} />
         <div className="grid gap-4 md:grid-cols-3">
           {jobs.map((j) => (
             <div key={j.t} className="rounded-xl border border-border bg-card p-6 hover:border-brand transition">
@@ -545,13 +559,13 @@ export function Careers() {
               <h3 className="font-bold">{j.t}</h3>
               <div className="mt-2 text-sm text-muted-foreground">{j.l} • {j.type}</div>
               <button className="mt-4 text-sm font-semibold text-brand hover:underline inline-flex items-center gap-1">
-                Apply Now <ChevronRight className="h-4 w-4" />
+                {t("applyNow")} <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           ))}
         </div>
         <div className="mt-8 text-center">
-          <a href="#" className="text-sm font-semibold text-brand hover:underline">View All Openings →</a>
+          <a href="#" className="text-sm font-semibold text-brand hover:underline">{t("viewAllOpenings")}</a>
         </div>
       </div>
     </section>
@@ -560,6 +574,7 @@ export function Careers() {
 
 /* 13. ROI Calculator */
 export function RoiCalculator() {
+  const { t } = useLanguage();
   const [invest, setInvest] = useState(5000000);
   const [years, setYears] = useState(5);
   const [rate, setRate] = useState(12);
@@ -568,13 +583,13 @@ export function RoiCalculator() {
   return (
     <section className="py-14 md:py-24 bg-card/30">
       <div className="container mx-auto max-w-6xl px-4">
-        <SectionHeader tag="Investment" title="ROI Calculator" subtitle="Estimate your return on commercial property investment" />
+        <SectionHeader tag={t("investmentTag")} title={t("roiTitle")} subtitle={t("roiSub")} />
         <div className="grid gap-8 lg:grid-cols-2 rounded-2xl border border-border bg-card p-5 sm:p-8">
           <div className="space-y-6">
             {[
-              { label: "Investment Amount (৳)", val: invest, set: setInvest, min: 500000, max: 100000000, step: 100000 },
-              { label: "Holding Period (Years)", val: years, set: setYears, min: 1, max: 20, step: 1 },
-              { label: "Expected Annual Appreciation (%)", val: rate, set: setRate, min: 5, max: 25, step: 0.5 },
+              { label: t("roiInvestAmt"), val: invest, set: setInvest, min: 500000, max: 100000000, step: 100000 },
+              { label: t("roiHolding"), val: years, set: setYears, min: 1, max: 20, step: 1 },
+              { label: t("roiAppreciation"), val: rate, set: setRate, min: 5, max: 25, step: 0.5 },
             ].map((f) => (
               <div key={f.label}>
                 <div className="flex justify-between text-sm mb-2">
@@ -588,10 +603,10 @@ export function RoiCalculator() {
           </div>
           <div className="flex flex-col justify-center rounded-xl bg-gradient-to-br from-brand/20 to-brand/5 p-6 sm:p-8 text-center">
             <TrendingUp className="mx-auto h-10 w-10 text-brand mb-3" />
-            <div className="text-sm text-muted-foreground">Estimated Future Value</div>
+            <div className="text-sm text-muted-foreground">{t("roiFutureValue")}</div>
             <div className="text-4xl font-bold text-brand my-2">৳ {future.toLocaleString()}</div>
-            <div className="mt-2 text-sm text-green-500 font-semibold">+ ৳ {profit.toLocaleString()} profit</div>
-            <div className="mt-6 text-xs text-muted-foreground">*Indicative figures based on historical Dhaka market trends</div>
+            <div className="mt-2 text-sm text-green-500 font-semibold">+ ৳ {profit.toLocaleString()} {t("roiProfit")}</div>
+            <div className="mt-6 text-xs text-muted-foreground">{t("roiDisclaimer")}</div>
           </div>
         </div>
       </div>

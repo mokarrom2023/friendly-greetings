@@ -203,6 +203,127 @@ export const translations = {
     incorporationNo: "RJSC Reg: C-72345/2008",
     isoCertified: "ISO 9001:2015",
     isoCertifiedDesc: "Certified Quality Management System.",
+
+    // Testimonials
+    testimonialsTag: "Testimonials",
+    testimonialsTitle: "What Our Clients Say",
+    testimonialsSubtitle: "Trusted by 5000+ happy families across Bangladesh",
+
+    // Virtual Tour
+    virtualTourTag: "Virtual Tour",
+    virtualTourTitle: "Experience Our Projects in 360°",
+    virtualTourSubtitle: "Drone footage, walkthroughs, and immersive virtual tours",
+    videoAerial: "Aerial Drone Tour",
+    videoApartment: "Apartment Walkthrough",
+    video360: "360° Virtual Reality",
+
+    // EMI Calculator
+    emiPaymentCalc: "Payment Calculator",
+    emiHeadline: "See your monthly payment instantly",
+    emiApartmentPrice: "Apartment Price (BDT)",
+    emiDownPayment: "Down Payment",
+    emiTenure: "Tenure",
+    emiMonths: "months",
+    emiEstimatedPlan: "Your Estimated Plan",
+    emiPriceRow: "Apartment Price",
+    emiDownPaymentRow: "Down Payment",
+    emiRemaining: "Remaining Balance",
+    emiMonthly: "Monthly Installment",
+    emiRemainingNote: "Remaining",
+    emiPaidUpfront: "down paid upfront",
+    emiLastNote: "Last installment will be",
+    emiLastNoteEnd: "to settle the balance exactly.",
+    emiBookConsult: "Book a Free Consultation",
+    emiDisclaimer: "* Indicative figures only. Final plan and tenure depend on the selected project.",
+
+    // Locations
+    locationsTag: "Locations",
+    findProjects: "Find Our Projects",
+    findProjectsSub: "Strategic locations across Dhaka's most prestigious neighborhoods",
+
+    // Awards
+    recognitionTag: "Recognition",
+    awardsCertTitle: "Awards & Certifications",
+    awardRehabSince: "Since 2010",
+    awardIsoQuality: "Quality Certified",
+    awardBestDev: "Best Developer 2023",
+    awardBestDevSub: "Bangladesh Property Awards",
+    awardGreen: "Green Building Award",
+    awardGreenSub: "Sustainable Design",
+
+    // Progress
+    liveUpdatesTag: "Live Updates",
+    constructionProgress: "Construction Progress",
+    constructionSub: "Real-time updates from our ongoing project sites",
+    liveLabel: "Live",
+
+    // Blog
+    blogTag: "Blog",
+    blogTitle: "Real Estate Insights",
+    blogSubtitle: "Expert advice, market trends, and buying guides",
+    blogPost1: "Top 5 Investment Areas in Dhaka 2026",
+    blogPost1Cat: "Investment Guide",
+    blogPost2: "How to Choose Your Dream Apartment",
+    blogPost2Cat: "Buyer Tips",
+    blogPost3: "Bangladesh Real Estate Market Trends",
+    blogPost3Cat: "Market Report",
+
+    // Partners
+    partnersTag: "Partners",
+    partnersTitle: "Our Trusted Partners",
+    partnersSubtitle: "Leading banks, architects & contractors who work with us",
+
+    // Legal
+    transparencyTag: "Transparency",
+    legalTitle: "Legal & Compliance",
+    legalSubtitle: "Full transparency — all our documents are publicly verifiable",
+    docRajuk: "RAJUK Approval",
+    docRajukSub: "All projects approved",
+    docNoc: "NOC Certificate",
+    docNocSub: "Environmental clearance",
+    docLandMut: "Land Mutation",
+    docLandMutSub: "Verified title deed",
+    docFire: "Fire Safety Cert.",
+    docFireSub: "Bangladesh Fire Service",
+
+    // Floor Plan
+    floorPlansTag: "Floor Plans",
+    floorPlansTitle: "Interactive Floor Plans",
+    floorPlansSub: "Explore detailed 2D & 3D layouts of our apartments",
+    plan1: "1285 sqft - 3 Bed",
+    plan2: "1500 sqft - 4 Bed",
+    plan3: "2200 sqft - Duplex",
+
+    // Live Chat
+    chatTitle: "Talk to Us Instantly",
+    chatSubtitle: "Our property experts are available 24/7 on WhatsApp, Messenger & Telegram. Get instant answers to all your queries.",
+    chatWhatsapp: "WhatsApp",
+    chatCallNow: "Call Now",
+
+    // Careers section
+    careersTag: "Careers",
+    joinTeam: "Join Our Team",
+    joinTeamSub: "Build your career with Bangladesh's leading real estate developer",
+    jobCivil: "Senior Civil Engineer",
+    jobSales: "Sales Manager",
+    jobMkt: "Marketing Executive",
+    jobLocDhakaHQ: "Dhaka HQ",
+    jobLocGulshan: "Gulshan Office",
+    jobLocDhaka: "Dhaka",
+    jobFullTime: "Full-time",
+    applyNow: "Apply Now",
+    viewAllOpenings: "View All Openings →",
+
+    // ROI Calculator
+    investmentTag: "Investment",
+    roiTitle: "ROI Calculator",
+    roiSub: "Estimate your return on commercial property investment",
+    roiInvestAmt: "Investment Amount (৳)",
+    roiHolding: "Holding Period (Years)",
+    roiAppreciation: "Expected Annual Appreciation (%)",
+    roiFutureValue: "Estimated Future Value",
+    roiProfit: "profit",
+    roiDisclaimer: "*Indicative figures based on historical Dhaka market trends",
   },
   bn: {
     company: "স্টারলাইন বিল্ডার্স লিঃ",
@@ -388,6 +509,127 @@ export const translations = {
     incorporationNo: "RJSC নিবন্ধন: C-72345/2008",
     isoCertified: "আইএসও ৯০০১:২০১৫",
     isoCertifiedDesc: "সার্টিফাইড কোয়ালিটি ম্যানেজমেন্ট সিস্টেম।",
+
+    // Testimonials
+    testimonialsTag: "প্রশংসাপত্র",
+    testimonialsTitle: "আমাদের ক্লায়েন্টরা কী বলেন",
+    testimonialsSubtitle: "বাংলাদেশজুড়ে ৫০০০+ সুখী পরিবারের আস্থা",
+
+    // Virtual Tour
+    virtualTourTag: "ভার্চুয়াল ট্যুর",
+    virtualTourTitle: "৩৬০° এ আমাদের প্রকল্প দেখুন",
+    virtualTourSubtitle: "ড্রোন ফুটেজ, ওয়াকথ্রু এবং নিমগ্ন ভার্চুয়াল ট্যুর",
+    videoAerial: "এরিয়াল ড্রোন ট্যুর",
+    videoApartment: "অ্যাপার্টমেন্ট ওয়াকথ্রু",
+    video360: "৩৬০° ভার্চুয়াল রিয়েলিটি",
+
+    // EMI Calculator
+    emiPaymentCalc: "পেমেন্ট ক্যালকুলেটর",
+    emiHeadline: "তাৎক্ষণিকভাবে আপনার মাসিক কিস্তি দেখুন",
+    emiApartmentPrice: "অ্যাপার্টমেন্টের মূল্য (টাকা)",
+    emiDownPayment: "ডাউন পেমেন্ট",
+    emiTenure: "মেয়াদ",
+    emiMonths: "মাস",
+    emiEstimatedPlan: "আপনার অনুমিত প্ল্যান",
+    emiPriceRow: "অ্যাপার্টমেন্টের মূল্য",
+    emiDownPaymentRow: "ডাউন পেমেন্ট",
+    emiRemaining: "বাকি ব্যালেন্স",
+    emiMonthly: "মাসিক কিস্তি",
+    emiRemainingNote: "বাকি",
+    emiPaidUpfront: "ডাউন আগেই পরিশোধিত",
+    emiLastNote: "শেষ কিস্তি হবে",
+    emiLastNoteEnd: "ব্যালেন্স সঠিকভাবে সমন্বয়ের জন্য।",
+    emiBookConsult: "বিনামূল্যে কনসাল্টেশন বুক করুন",
+    emiDisclaimer: "* এটি কেবল অনুমিত পরিসংখ্যান। চূড়ান্ত প্ল্যান ও মেয়াদ নির্বাচিত প্রকল্পের উপর নির্ভর করে।",
+
+    // Locations
+    locationsTag: "লোকেশন",
+    findProjects: "আমাদের প্রকল্প খুঁজুন",
+    findProjectsSub: "ঢাকার সবচেয়ে মর্যাদাপূর্ণ এলাকায় কৌশলগত অবস্থান",
+
+    // Awards
+    recognitionTag: "স্বীকৃতি",
+    awardsCertTitle: "পুরস্কার ও সার্টিফিকেশন",
+    awardRehabSince: "২০১০ সাল থেকে",
+    awardIsoQuality: "কোয়ালিটি সার্টিফায়েড",
+    awardBestDev: "সেরা ডেভেলপার ২০২৩",
+    awardBestDevSub: "বাংলাদেশ প্রপার্টি অ্যাওয়ার্ডস",
+    awardGreen: "গ্রিন বিল্ডিং অ্যাওয়ার্ড",
+    awardGreenSub: "টেকসই ডিজাইন",
+
+    // Progress
+    liveUpdatesTag: "লাইভ আপডেট",
+    constructionProgress: "নির্মাণ অগ্রগতি",
+    constructionSub: "চলমান প্রকল্পের সাইট থেকে রিয়েল-টাইম আপডেট",
+    liveLabel: "লাইভ",
+
+    // Blog
+    blogTag: "ব্লগ",
+    blogTitle: "রিয়েল এস্টেট ইনসাইট",
+    blogSubtitle: "বিশেষজ্ঞের পরামর্শ, মার্কেট ট্রেন্ড ও কেনার গাইড",
+    blogPost1: "ঢাকার শীর্ষ ৫টি বিনিয়োগ এলাকা ২০২৬",
+    blogPost1Cat: "ইনভেস্টমেন্ট গাইড",
+    blogPost2: "কীভাবে আপনার স্বপ্নের অ্যাপার্টমেন্ট বাছবেন",
+    blogPost2Cat: "ক্রেতার পরামর্শ",
+    blogPost3: "বাংলাদেশ রিয়েল এস্টেট মার্কেট ট্রেন্ড",
+    blogPost3Cat: "মার্কেট রিপোর্ট",
+
+    // Partners
+    partnersTag: "অংশীদার",
+    partnersTitle: "আমাদের বিশ্বস্ত অংশীদার",
+    partnersSubtitle: "নেতৃস্থানীয় ব্যাংক, স্থপতি ও কন্ট্রাক্টর যারা আমাদের সাথে কাজ করেন",
+
+    // Legal
+    transparencyTag: "স্বচ্ছতা",
+    legalTitle: "আইনি ও কমপ্লায়েন্স",
+    legalSubtitle: "সম্পূর্ণ স্বচ্ছতা — সব ডকুমেন্ট পাবলিক যাচাইযোগ্য",
+    docRajuk: "রাজউক অনুমোদন",
+    docRajukSub: "সব প্রকল্প অনুমোদিত",
+    docNoc: "এনওসি সার্টিফিকেট",
+    docNocSub: "পরিবেশগত ছাড়পত্র",
+    docLandMut: "জমির নামজারি",
+    docLandMutSub: "যাচাইকৃত দলিল",
+    docFire: "ফায়ার সেফটি সার্টিফিকেট",
+    docFireSub: "বাংলাদেশ ফায়ার সার্ভিস",
+
+    // Floor Plan
+    floorPlansTag: "ফ্লোর প্ল্যান",
+    floorPlansTitle: "ইন্টারঅ্যাকটিভ ফ্লোর প্ল্যান",
+    floorPlansSub: "আমাদের অ্যাপার্টমেন্টের বিস্তারিত 2D ও 3D লেআউট দেখুন",
+    plan1: "১২৮৫ বর্গফুট - ৩ বেড",
+    plan2: "১৫০০ বর্গফুট - ৪ বেড",
+    plan3: "২২০০ বর্গফুট - ডুপ্লেক্স",
+
+    // Live Chat
+    chatTitle: "এখনই আমাদের সাথে কথা বলুন",
+    chatSubtitle: "আমাদের প্রপার্টি এক্সপার্টরা WhatsApp, Messenger ও Telegram-এ ২৪/৭ উপলব্ধ। যেকোনো প্রশ্নের তাৎক্ষণিক উত্তর পান।",
+    chatWhatsapp: "হোয়াটসঅ্যাপ",
+    chatCallNow: "এখনই কল করুন",
+
+    // Careers section
+    careersTag: "ক্যারিয়ার",
+    joinTeam: "আমাদের টিমে যোগ দিন",
+    joinTeamSub: "বাংলাদেশের শীর্ষস্থানীয় রিয়েল এস্টেট ডেভেলপারের সাথে আপনার ক্যারিয়ার গড়ুন",
+    jobCivil: "সিনিয়র সিভিল ইঞ্জিনিয়ার",
+    jobSales: "সেলস ম্যানেজার",
+    jobMkt: "মার্কেটিং এক্সিকিউটিভ",
+    jobLocDhakaHQ: "ঢাকা প্রধান কার্যালয়",
+    jobLocGulshan: "গুলশান অফিস",
+    jobLocDhaka: "ঢাকা",
+    jobFullTime: "ফুল-টাইম",
+    applyNow: "এখনই আবেদন করুন",
+    viewAllOpenings: "সব পদ দেখুন →",
+
+    // ROI Calculator
+    investmentTag: "বিনিয়োগ",
+    roiTitle: "ROI ক্যালকুলেটর",
+    roiSub: "বাণিজ্যিক প্রপার্টি বিনিয়োগে আপনার রিটার্ন অনুমান করুন",
+    roiInvestAmt: "বিনিয়োগের পরিমাণ (৳)",
+    roiHolding: "ধারণের মেয়াদ (বছর)",
+    roiAppreciation: "প্রত্যাশিত বার্ষিক মূল্যবৃদ্ধি (%)",
+    roiFutureValue: "অনুমিত ভবিষ্যত মূল্য",
+    roiProfit: "মুনাফা",
+    roiDisclaimer: "*ঢাকার ঐতিহাসিক মার্কেট ট্রেন্ডের ভিত্তিতে অনুমিত পরিসংখ্যান",
   },
 } as const;
 
