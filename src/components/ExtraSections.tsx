@@ -244,6 +244,41 @@ function Row({ label, value }: { label: string; value: string }) {
 
 /* 4. Project Location Map */
 export function LocationMap() {
+  const defaults = [
+    { id: "d1", title: "Gulshan-2", description: "Gulshan-2, Dhaka, Bangladesh", link_url: null as string | null },
+    { id: "d2", title: "Banani DOHS", description: "Banani DOHS, Dhaka, Bangladesh", link_url: null },
+    { id: "d3", title: "Bashundhara R/A", description: "Bashundhara R/A, Dhaka, Bangladesh", link_url: null },
+    { id: "d4", title: "Dhanmondi-27", description: "Dhanmondi 27, Dhaka, Bangladesh", link_url: null },
+    { id: "d5", title: "Uttara Sector-7", description: "Uttara Sector 7, Dhaka, Bangladesh", link_url: null },
+    { id: "d6", title: "Purbachal", description: "Purbachal, Dhaka, Bangladesh", link_url: null },
+  ];
+
+  const { data: dbLocs } = useQuery({
+    queryKey: ["project-locations"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("section_items")
+        .select("id,title,description,link_url,sort_order")
+        .eq("section_key", "project_locations")
+        .order("sort_order");
+      return data ?? [];
+    },
+  });
+
+  const locs = dbLocs && dbLocs.length > 0
+    ? dbLocs.map((d) => ({
+        id: d.id,
+        title: d.title || "Location",
+        description: d.description || d.title || "",
+        link_url: d.link_url,
+      }))
+    : defaults;
+
+  const [activeId, setActiveId] = useState<string>(locs[0]?.id ?? "");
+  const active = locs.find((l) => l.id === activeId) ?? locs[0];
+  const query = active?.description || active?.title || "Dhaka";
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
+
   return (
     <section className="py-14 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
@@ -251,18 +286,42 @@ export function LocationMap() {
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 overflow-hidden rounded-2xl border border-border h-[420px]">
             <iframe
+              key={mapSrc}
               title="Project Locations"
-              src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d29215.158!2d90.4125!3d23.7937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1700000000000"
+              src={mapSrc}
               width="100%" height="100%" loading="lazy" style={{ border: 0 }} />
           </div>
           <div className="space-y-3">
-            {["Gulshan-2", "Banani DOHS", "Bashundhara R/A", "Dhanmondi-27", "Uttara Sector-7", "Purbachal"].map((loc) => (
-              <div key={loc} className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 hover:border-brand transition">
-                <MapPin className="h-5 w-5 text-brand" />
-                <span className="font-medium text-sm">{loc}</span>
-                <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" />
-              </div>
-            ))}
+            {locs.map((loc) => {
+              const isActive = loc.id === active?.id;
+              const href =
+                loc.link_url && loc.link_url.trim().length > 0
+                  ? loc.link_url
+                  : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.description || loc.title)}`;
+              return (
+                <div
+                  key={loc.id}
+                  onClick={() => setActiveId(loc.id)}
+                  className={`flex items-center gap-3 rounded-lg border bg-card p-4 transition cursor-pointer ${
+                    isActive ? "border-brand ring-1 ring-brand/30" : "border-border hover:border-brand"
+                  }`}
+                >
+                  <MapPin className={`h-5 w-5 ${isActive ? "text-brand" : "text-brand/70"}`} />
+                  <span className="font-medium text-sm">{loc.title}</span>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="ml-auto inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:text-brand"
+                    aria-label={`Open ${loc.title} in Google Maps`}
+                    title="Open in Google Maps"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </a>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
