@@ -46,7 +46,9 @@ export const SECTIONS: SectionConfig[] = [
   { key: "hero", label: "Hero Banner", type: "single", group: "Main Sections", fields: ["title", "subtitle", "description", "image", "video"], hint: "Big homepage banner with title and CTAs." },
   { key: "about", label: "About Us", type: "single", group: "Main Sections", fields: ["title", "subtitle", "description", "image"] },
   { key: "why_choose", label: "Why Choose Us (header)", type: "single", group: "Main Sections", fields: ["title", "subtitle", "description"] },
-  { key: "contact", label: "Contact Info", type: "single", group: "Main Sections", fields: ["title", "subtitle", "description"], hint: "Address, phone, email shown in Contact section." },
+  { key: "contact", label: "Contact (Heading)", type: "single", group: "Main Sections", fields: ["title", "subtitle", "description"], hint: "Heading + subtitle shown above the Get In Touch section." },
+  { key: "contact_info", label: "📍 Contact Cards (Address / Phone / Email …)", type: "list", group: "Main Sections", hint: "Each item is one card. Title = Label (e.g. 'Our Address'). Subtitle = Icon name (MapPin, Phone, Mail, Clock, Globe, MessageCircle, Navigation, Building, Send). Description = Value (e.g. the address or phone number). Link URL (optional) = tel:..., mailto:..., or a Google Maps link to make the card clickable." },
+  { key: "contact_map", label: "🗺️ Office Map Location", type: "single", group: "Main Sections", fields: ["title", "description"], hint: "Title = label shown above the map. Description = address used by Google Maps (e.g. 'Banani, Dhaka-1213, Bangladesh'). Leave empty to hide the map." },
 
   // Extra sections (13) — each also supports multiple images/videos via the Media gallery panel rendered below the editor.
   { key: "extra_stats", label: "1. Stats / Numbers", type: "single", group: "Extra Sections", fields: ["title", "subtitle", "description"], hint: "Multiple images/videos can be uploaded from your device below." },

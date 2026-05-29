@@ -1,5 +1,8 @@
-import { useState, type FormEvent } from "react";
-import { MapPin, Phone, Mail, Send, Check, Clock, Navigation, Loader2 } from "lucide-react";
+import { useEffect, useState, type FormEvent } from "react";
+import {
+  MapPin, Phone, Mail, Send, Check, Clock, Navigation, Loader2,
+  Globe, MessageCircle, Building, type LucideIcon,
+} from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -16,11 +19,55 @@ const PROPERTY_OPTIONS = [
   "Studio Apartment",
 ];
 
+const ICONS: Record<string, LucideIcon> = {
+  MapPin, Phone, Mail, Clock, Navigation, Globe, MessageCircle, Building, Send,
+};
+
+type InfoCard = { id: string; title: string; subtitle: string | null; description: string; link_url: string | null };
+
 export function Contact() {
   const { t } = useLanguage();
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  const [cards, setCards] = useState<InfoCard[] | null>(null);
+  const [mapAddress, setMapAddress] = useState<string>("Banani, Dhaka-1213, Bangladesh");
+  const [mapLabel, setMapLabel] = useState<string>("");
+
+  useEffect(() => {
+    (async () => {
+      const [{ data: items }, { data: map }] = await Promise.all([
+        supabase
+          .from("section_items")
+          .select("id,title,subtitle,description,link_url,sort_order")
+          .eq("section_key", "contact_info")
+          .order("sort_order"),
+        supabase
+          .from("site_sections")
+          .select("title,description")
+          .eq("section_key", "contact_map")
+          .maybeSingle(),
+      ]);
+      if (items && items.length > 0) {
+        setCards(
+          items
+            .filter((i) => i.description)
+            .map((i) => ({
+              id: i.id,
+              title: i.title || "",
+              subtitle: i.subtitle,
+              description: i.description!,
+              link_url: i.link_url,
+            })),
+        );
+      } else {
+        setCards([]);
+      }
+      if (map?.description) setMapAddress(map.description);
+      if (map?.title) setMapLabel(map.title);
+    })();
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,18 +94,16 @@ export function Contact() {
     }
   };
 
-
-  const cards = [
-    { icon: MapPin, title: t("contactAddress"), value: t("contactAddressVal") },
-    { icon: Phone, title: t("contactCall"), value: "+880 1700-000000" },
-    { icon: Mail, title: t("contactEmailUs"), value: "info@starlinebuilders.com" },
-    { icon: Clock, title: t("contactOfficeHours"), value: t("contactOfficeHoursVal") },
+  const fallbackCards: InfoCard[] = [
+    { id: "f1", title: t("contactAddress"), subtitle: "MapPin", description: t("contactAddressVal"), link_url: null },
+    { id: "f2", title: t("contactCall"), subtitle: "Phone", description: "+880 1700-000000", link_url: "tel:+8801700000000" },
+    { id: "f3", title: t("contactEmailUs"), subtitle: "Mail", description: "info@starlinebuilders.com", link_url: "mailto:info@starlinebuilders.com" },
+    { id: "f4", title: t("contactOfficeHours"), subtitle: "Clock", description: t("contactOfficeHoursVal"), link_url: null },
   ];
+  const renderCards = cards && cards.length > 0 ? cards : fallbackCards;
 
-  const mapsUrl =
-    "https://www.google.com/maps?q=Banani,+Dhaka-1213,+Bangladesh&output=embed";
-  const directionsUrl =
-    "https://www.google.com/maps/dir/?api=1&destination=Banani,+Dhaka-1213,+Bangladesh";
+  const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapAddress)}&output=embed`;
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mapAddress)}`;
 
   return (
     <section id="contact" className="bg-secondary/40 py-14 md:py-24">
@@ -79,55 +124,65 @@ export function Contact() {
         <div className="grid gap-8 lg:grid-cols-5">
           {/* Info cards + map */}
           <div className="space-y-4 lg:col-span-2">
-            {cards.map((c) => (
-              <div
-                key={c.title}
-                className="flex items-start gap-4 rounded-xl border border-border bg-card p-5 transition-all hover:border-brand"
-              >
-                <div
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
-                  style={{
-                    background: "color-mix(in oklab, var(--brand) 15%, transparent)",
-                    color: "var(--brand)",
-                  }}
-                >
-                  <c.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    {c.title}
+            {renderCards.map((c) => {
+              const Icon = ICONS[c.subtitle || ""] || MapPin;
+              const inner = (
+                <>
+                  <div
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
+                    style={{
+                      background: "color-mix(in oklab, var(--brand) 15%, transparent)",
+                      color: "var(--brand)",
+                    }}
+                  >
+                    <Icon className="h-5 w-5" />
                   </div>
-                  <div className="mt-1 text-sm font-medium text-foreground">{c.value}</div>
-                </div>
-              </div>
-            ))}
+                  <div>
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      {c.title}
+                    </div>
+                    <div className="mt-1 text-sm font-medium text-foreground whitespace-pre-line">{c.description}</div>
+                  </div>
+                </>
+              );
+              const baseClass = "flex items-start gap-4 rounded-xl border border-border bg-card p-5 transition-all hover:border-brand";
+              return c.link_url ? (
+                <a key={c.id} href={c.link_url} target={c.link_url.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className={baseClass}>
+                  {inner}
+                </a>
+              ) : (
+                <div key={c.id} className={baseClass}>{inner}</div>
+              );
+            })}
 
             {/* Live location map */}
-            <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-              <div className="flex items-center justify-between gap-3 px-5 py-3.5 border-b border-border">
-                <div className="flex items-center gap-2.5">
-                  <Navigation className="h-4 w-4" style={{ color: "var(--brand)" }} />
-                  <span className="text-xs font-semibold uppercase tracking-wider">
-                    {t("contactLocation")}
-                  </span>
+            {mapAddress && (
+              <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+                <div className="flex items-center justify-between gap-3 px-5 py-3.5 border-b border-border">
+                  <div className="flex items-center gap-2.5">
+                    <Navigation className="h-4 w-4" style={{ color: "var(--brand)" }} />
+                    <span className="text-xs font-semibold uppercase tracking-wider">
+                      {mapLabel || t("contactLocation")}
+                    </span>
+                  </div>
+                  <a
+                    href={directionsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs font-semibold uppercase tracking-wider text-brand hover:underline"
+                  >
+                    {t("viewDetails")}
+                  </a>
                 </div>
-                <a
-                  href={directionsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs font-semibold uppercase tracking-wider text-brand hover:underline"
-                >
-                  {t("viewDetails")}
-                </a>
+                <iframe
+                  title="Office location"
+                  src={mapsUrl}
+                  className="h-56 w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
-              <iframe
-                title="Starline Builders location"
-                src={mapsUrl}
-                className="h-56 w-full border-0"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
+            )}
           </div>
 
           {/* Form */}
