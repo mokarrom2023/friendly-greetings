@@ -68,18 +68,32 @@ export function Footer() {
             </div>
             <p className="mt-5 text-sm leading-relaxed text-white/75">{t("footerTagline")}</p>
             <div className="mt-5 flex flex-wrap gap-2">
-              {socials.map(({ Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 transition-all hover:border-white hover:bg-white/10"
-                >
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
+              {socials.map(({ Icon, href, label }) => {
+                const hasLink = !!(href && href.trim().length > 0);
+                const base = "flex h-9 w-9 items-center justify-center rounded-full border transition-all";
+                return hasLink ? (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    title={label}
+                    className={`${base} border-white/20 hover:border-white hover:bg-white/10`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ) : (
+                  <span
+                    key={label}
+                    aria-label={`${label} (no link configured)`}
+                    title={`${label} — add a link in the admin dashboard`}
+                    className={`${base} cursor-not-allowed border-white/10 text-white/40`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
+                );
+              })}
             </div>
           </div>
 
