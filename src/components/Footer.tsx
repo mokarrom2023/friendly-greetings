@@ -1,6 +1,9 @@
-import { Facebook, Instagram, Linkedin, Youtube, MapPin, Phone, Mail, Clock } from "lucide-react";
+import { useState } from "react";
+import { Facebook, Instagram, Linkedin, Youtube, MapPin, Phone, Mail, Clock, Loader2, CheckCircle2 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import { useLanguage } from "@/lib/language";
 import { useSocialLinks } from "@/lib/social-links";
+import { subscribeNewsletter } from "@/lib/admin.functions";
 import logo from "@/assets/logo.png";
 
 // X (Twitter) icon — lucide doesn't ship a current X glyph, inline SVG
@@ -25,6 +28,26 @@ export function Footer() {
   const { t } = useLanguage();
   const { data: links } = useSocialLinks();
   const year = new Date().getFullYear();
+  const subscribeFn = useServerFn(subscribeNewsletter);
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [msg, setMsg] = useState("");
+
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed) return;
+    setStatus("loading"); setMsg("");
+    try {
+      const res = await subscribeFn({ data: { email: trimmed } });
+      setStatus("ok");
+      setMsg(res.already ? "You're already subscribed — thank you!" : "Thanks for subscribing!");
+      setEmail("");
+    } catch (err) {
+      setStatus("error");
+      setMsg(err instanceof Error ? err.message : "Could not subscribe");
+    }
+  }
 
   const socials = [
     { Icon: Facebook, href: links?.facebook, label: "Facebook" },
@@ -170,22 +193,31 @@ export function Footer() {
               {t("newsletter")}
             </h4>
             <p className="mb-4 text-sm text-white/75">{t("newsletterDesc")}</p>
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="flex flex-col gap-2"
-            >
+            <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
               <input
                 type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder={t("yourEmail")}
-                className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-white/50 outline-none focus:border-amber-300"
+                disabled={status === "loading"}
+                className="w-full rounded-md border border-white/20 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-white/50 outline-none focus:border-amber-300 disabled:opacity-60"
               />
               <button
                 type="submit"
-                className="w-full rounded-md px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-primary transition-all hover:scale-[1.02]"
+                disabled={status === "loading"}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-md px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-primary transition-all hover:scale-[1.02] disabled:opacity-60"
                 style={{ background: "#f4cf5b" }}
               >
+                {status === "loading" && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                {status === "ok" && <CheckCircle2 className="h-3.5 w-3.5" />}
                 {t("subscribe")}
               </button>
+              {msg && (
+                <p className={`text-xs ${status === "error" ? "text-red-300" : "text-emerald-200"}`}>
+                  {msg}
+                </p>
+              )}
             </form>
           </div>
         </div>
