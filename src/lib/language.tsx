@@ -203,6 +203,127 @@ export const translations = {
     incorporationNo: "RJSC Reg: C-72345/2008",
     isoCertified: "ISO 9001:2015",
     isoCertifiedDesc: "Certified Quality Management System.",
+
+    // Testimonials
+    testimonialsTag: "Testimonials",
+    testimonialsTitle: "What Our Clients Say",
+    testimonialsSubtitle: "Trusted by 5000+ happy families across Bangladesh",
+
+    // Virtual Tour
+    virtualTourTag: "Virtual Tour",
+    virtualTourTitle: "Experience Our Projects in 360°",
+    virtualTourSubtitle: "Drone footage, walkthroughs, and immersive virtual tours",
+    videoAerial: "Aerial Drone Tour",
+    videoApartment: "Apartment Walkthrough",
+    video360: "360° Virtual Reality",
+
+    // EMI Calculator
+    emiPaymentCalc: "Payment Calculator",
+    emiHeadline: "See your monthly payment instantly",
+    emiApartmentPrice: "Apartment Price (BDT)",
+    emiDownPayment: "Down Payment",
+    emiTenure: "Tenure",
+    emiMonths: "months",
+    emiEstimatedPlan: "Your Estimated Plan",
+    emiPriceRow: "Apartment Price",
+    emiDownPaymentRow: "Down Payment",
+    emiRemaining: "Remaining Balance",
+    emiMonthly: "Monthly Installment",
+    emiRemainingNote: "Remaining",
+    emiPaidUpfront: "down paid upfront",
+    emiLastNote: "Last installment will be",
+    emiLastNoteEnd: "to settle the balance exactly.",
+    emiBookConsult: "Book a Free Consultation",
+    emiDisclaimer: "* Indicative figures only. Final plan and tenure depend on the selected project.",
+
+    // Locations
+    locationsTag: "Locations",
+    findProjects: "Find Our Projects",
+    findProjectsSub: "Strategic locations across Dhaka's most prestigious neighborhoods",
+
+    // Awards
+    recognitionTag: "Recognition",
+    awardsCertTitle: "Awards & Certifications",
+    awardRehabSince: "Since 2010",
+    awardIsoQuality: "Quality Certified",
+    awardBestDev: "Best Developer 2023",
+    awardBestDevSub: "Bangladesh Property Awards",
+    awardGreen: "Green Building Award",
+    awardGreenSub: "Sustainable Design",
+
+    // Progress
+    liveUpdatesTag: "Live Updates",
+    constructionProgress: "Construction Progress",
+    constructionSub: "Real-time updates from our ongoing project sites",
+    liveLabel: "Live",
+
+    // Blog
+    blogTag: "Blog",
+    blogTitle: "Real Estate Insights",
+    blogSubtitle: "Expert advice, market trends, and buying guides",
+    blogPost1: "Top 5 Investment Areas in Dhaka 2026",
+    blogPost1Cat: "Investment Guide",
+    blogPost2: "How to Choose Your Dream Apartment",
+    blogPost2Cat: "Buyer Tips",
+    blogPost3: "Bangladesh Real Estate Market Trends",
+    blogPost3Cat: "Market Report",
+
+    // Partners
+    partnersTag: "Partners",
+    partnersTitle: "Our Trusted Partners",
+    partnersSubtitle: "Leading banks, architects & contractors who work with us",
+
+    // Legal
+    transparencyTag: "Transparency",
+    legalTitle: "Legal & Compliance",
+    legalSubtitle: "Full transparency — all our documents are publicly verifiable",
+    docRajuk: "RAJUK Approval",
+    docRajukSub: "All projects approved",
+    docNoc: "NOC Certificate",
+    docNocSub: "Environmental clearance",
+    docLandMut: "Land Mutation",
+    docLandMutSub: "Verified title deed",
+    docFire: "Fire Safety Cert.",
+    docFireSub: "Bangladesh Fire Service",
+
+    // Floor Plan
+    floorPlansTag: "Floor Plans",
+    floorPlansTitle: "Interactive Floor Plans",
+    floorPlansSub: "Explore detailed 2D & 3D layouts of our apartments",
+    plan1: "1285 sqft - 3 Bed",
+    plan2: "1500 sqft - 4 Bed",
+    plan3: "2200 sqft - Duplex",
+
+    // Live Chat
+    chatTitle: "Talk to Us Instantly",
+    chatSubtitle: "Our property experts are available 24/7 on WhatsApp, Messenger & Telegram. Get instant answers to all your queries.",
+    chatWhatsapp: "WhatsApp",
+    chatCallNow: "Call Now",
+
+    // Careers section
+    careersTag: "Careers",
+    joinTeam: "Join Our Team",
+    joinTeamSub: "Build your career with Bangladesh's leading real estate developer",
+    jobCivil: "Senior Civil Engineer",
+    jobSales: "Sales Manager",
+    jobMkt: "Marketing Executive",
+    jobLocDhakaHQ: "Dhaka HQ",
+    jobLocGulshan: "Gulshan Office",
+    jobLocDhaka: "Dhaka",
+    jobFullTime: "Full-time",
+    applyNow: "Apply Now",
+    viewAllOpenings: "View All Openings →",
+
+    // ROI Calculator
+    investmentTag: "Investment",
+    roiTitle: "ROI Calculator",
+    roiSub: "Estimate your return on commercial property investment",
+    roiInvestAmt: "Investment Amount (৳)",
+    roiHolding: "Holding Period (Years)",
+    roiAppreciation: "Expected Annual Appreciation (%)",
+    roiFutureValue: "Estimated Future Value",
+    roiProfit: "profit",
+    roiDisclaimer: "*Indicative figures based on historical Dhaka market trends",
   },
   bn: {
     company: "স্টারলাইন বিল্ডার্স লিঃ",
