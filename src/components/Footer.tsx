@@ -1,6 +1,9 @@
-import { Facebook, Instagram, Linkedin, Youtube, MapPin, Phone, Mail, Clock } from "lucide-react";
+import { useState } from "react";
+import { Facebook, Instagram, Linkedin, Youtube, MapPin, Phone, Mail, Clock, Loader2, CheckCircle2 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import { useLanguage } from "@/lib/language";
 import { useSocialLinks } from "@/lib/social-links";
+import { subscribeNewsletter } from "@/lib/admin.functions";
 import logo from "@/assets/logo.png";
 
 // X (Twitter) icon — lucide doesn't ship a current X glyph, inline SVG
