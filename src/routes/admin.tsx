@@ -526,11 +526,12 @@ const SOCIAL_FIELDS: Array<{ key: keyof SocialForm; label: string; placeholder: 
   { key: "linkedin", label: "LinkedIn (footer)", placeholder: "https://linkedin.com/company/..." },
   { key: "twitter", label: "X / Twitter (footer)", placeholder: "https://x.com/yourpage" },
   { key: "youtube", label: "YouTube (footer)", placeholder: "https://youtube.com/@yourchannel" },
+  { key: "tiktok", label: "TikTok (footer)", placeholder: "https://www.tiktok.com/@yourhandle" },
 ];
 
 type SocialForm = {
   whatsapp: string; messenger: string; telegram: string;
-  facebook: string; instagram: string; linkedin: string; twitter: string; youtube: string;
+  facebook: string; instagram: string; linkedin: string; twitter: string; youtube: string; tiktok: string;
 };
 
 function SocialLinksPanel() {
