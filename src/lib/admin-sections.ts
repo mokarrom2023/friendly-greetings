@@ -30,7 +30,9 @@ export const SECTIONS: SectionConfig[] = [
   { key: "holidays", label: "🎉 Holidays / Office Closures", type: "custom", group: "Holidays", hint: "Add government holidays (Eid, etc). Top bar will auto-show the holiday and reopen date. Office auto-reopens with normal hours after the end date." },
 
   // Inbox group
-  { key: "messages", label: "📨 Contact Messages", type: "custom", group: "Inbox", hint: "Messages submitted via the website contact form." },
+  { key: "messages", label: "📨 Contact Messages", type: "custom", group: "Inbox", hint: "Messages submitted via the website contact form. Reply via WhatsApp / Call / Email." },
+  { key: "subscribers", label: "📬 Newsletter Subscribers", type: "custom", group: "Inbox", hint: "Everyone who subscribed via the footer newsletter form." },
+  { key: "auth_users", label: "👥 Registered Users", type: "custom", group: "Inbox", hint: "Everyone who signed up / logged in to the website (email, phone, last login)." },
 
 
   // Header group
