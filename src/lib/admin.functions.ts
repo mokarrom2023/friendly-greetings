@@ -292,6 +292,7 @@ const socialSchema = z.object({
   linkedin: z.string().max(500).optional().default(""),
   twitter: z.string().max(500).optional().default(""),
   youtube: z.string().max(500).optional().default(""),
+  tiktok: z.string().max(500).optional().default(""),
 });
 
 export const saveSocialLinks = createServerFn({ method: "POST" })

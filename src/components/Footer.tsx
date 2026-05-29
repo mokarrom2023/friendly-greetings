@@ -12,6 +12,15 @@ function XIcon({ className }: { className?: string }) {
   );
 }
 
+// TikTok icon — inline SVG (not shipped in lucide)
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.83a8.16 8.16 0 0 0 4.77 1.52V6.9a4.85 4.85 0 0 1-1.84-.21Z" />
+    </svg>
+  );
+}
+
 export function Footer() {
   const { t } = useLanguage();
   const { data: links } = useSocialLinks();
@@ -20,10 +29,12 @@ export function Footer() {
   const socials = [
     { Icon: Facebook, href: links?.facebook, label: "Facebook" },
     { Icon: Instagram, href: links?.instagram, label: "Instagram" },
+    { Icon: Youtube, href: links?.youtube, label: "YouTube" },
     { Icon: Linkedin, href: links?.linkedin, label: "LinkedIn" },
     { Icon: XIcon, href: links?.twitter, label: "X" },
-    { Icon: Youtube, href: links?.youtube, label: "YouTube" },
-  ].filter((s) => s.href && s.href.trim().length > 0);
+    { Icon: TikTokIcon, href: links?.tiktok, label: "TikTok" },
+  ];
+
 
 
   return (
@@ -57,18 +68,32 @@ export function Footer() {
             </div>
             <p className="mt-5 text-sm leading-relaxed text-white/75">{t("footerTagline")}</p>
             <div className="mt-5 flex flex-wrap gap-2">
-              {socials.map(({ Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 transition-all hover:border-white hover:bg-white/10"
-                >
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
+              {socials.map(({ Icon, href, label }) => {
+                const hasLink = !!(href && href.trim().length > 0);
+                const base = "flex h-9 w-9 items-center justify-center rounded-full border transition-all";
+                return hasLink ? (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    title={label}
+                    className={`${base} border-white/20 hover:border-white hover:bg-white/10`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ) : (
+                  <span
+                    key={label}
+                    aria-label={`${label} (no link configured)`}
+                    title={`${label} — add a link in the admin dashboard`}
+                    className={`${base} cursor-not-allowed border-white/10 text-white/40`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
+                );
+              })}
             </div>
           </div>
 

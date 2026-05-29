@@ -10,6 +10,7 @@ export type SocialLinks = {
   linkedin?: string;
   twitter?: string;
   youtube?: string;
+  tiktok?: string;
 };
 
 export const SOCIAL_DEFAULTS: SocialLinks = {
@@ -21,6 +22,7 @@ export const SOCIAL_DEFAULTS: SocialLinks = {
   linkedin: "",
   twitter: "",
   youtube: "",
+  tiktok: "",
 };
 
 export function useSocialLinks() {
