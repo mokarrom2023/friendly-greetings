@@ -512,6 +512,32 @@ function MessagesPanel() {
             <p className="mt-3 whitespace-pre-wrap rounded-md bg-background/60 p-3 text-sm leading-relaxed text-foreground/90">
               {m.message}
             </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {m.phone && (
+                <a
+                  href={`https://wa.me/${m.phone.replace(/[^\d]/g, "")}?text=${encodeURIComponent(`Hi ${m.name}, thanks for reaching out to Starline Builders. `)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/15 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/25"
+                >
+                  <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+                </a>
+              )}
+              {m.phone && (
+                <a
+                  href={`tel:${m.phone}`}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-blue-500/15 px-3 py-1.5 text-xs font-semibold text-blue-400 hover:bg-blue-500/25"
+                >
+                  <Phone className="h-3.5 w-3.5" /> Call
+                </a>
+              )}
+              <a
+                href={`mailto:${m.email}?subject=${encodeURIComponent("Re: Your message to Starline Builders")}&body=${encodeURIComponent(`Hi ${m.name},\n\nThank you for contacting us.\n\n--\nStarline Builders Ltd.`)}`}
+                className="inline-flex items-center gap-1.5 rounded-md bg-primary/15 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/25"
+              >
+                <Mail className="h-3.5 w-3.5" /> Reply via Email
+              </a>
+            </div>
           </div>
         ))}
       </div>
