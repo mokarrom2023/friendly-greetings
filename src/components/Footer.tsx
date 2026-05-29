@@ -28,6 +28,26 @@ export function Footer() {
   const { t } = useLanguage();
   const { data: links } = useSocialLinks();
   const year = new Date().getFullYear();
+  const subscribeFn = useServerFn(subscribeNewsletter);
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [msg, setMsg] = useState("");
+
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed) return;
+    setStatus("loading"); setMsg("");
+    try {
+      const res = await subscribeFn({ data: { email: trimmed } });
+      setStatus("ok");
+      setMsg(res.already ? "You're already subscribed — thank you!" : "Thanks for subscribing!");
+      setEmail("");
+    } catch (err) {
+      setStatus("error");
+      setMsg(err instanceof Error ? err.message : "Could not subscribe");
+    }
+  }
 
   const socials = [
     { Icon: Facebook, href: links?.facebook, label: "Facebook" },
