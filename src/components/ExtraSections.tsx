@@ -101,87 +101,144 @@ export function VideoTour() {
   );
 }
 
-/* 3. EMI Calculator */
+/* 3. Payment Calculator */
 export function EmiCalculator() {
-  const [price, setPrice] = useState(5000000);
-  const [down, setDown] = useState(1000000);
-  const [months, setMonths] = useState(180);
-  const [rate, setRate] = useState(9);
-  const principal = Math.max(0, price - down);
-  const r = rate / 12 / 100;
-  const n = months;
-  const emi =
-    principal > 0 && r > 0
-      ? Math.round((principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1))
-      : principal > 0
-      ? Math.round(principal / n)
-      : 0;
-  const total = emi * n;
-  const interest = total - principal;
+  const [price, setPrice] = useState(1500000);
+  const [downPct, setDownPct] = useState(20);
+  const [months, setMonths] = useState(36);
 
-  const GREEN = "#16a34a";
-  const fields = [
-    { label: "Property Price (৳)", val: price, set: setPrice, min: 100000, max: 50000000, step: 10000, fmt: (v: number) => v.toLocaleString() },
-    { label: "Down Payment (৳)", val: down, set: setDown, min: 0, max: price, step: 50000, fmt: (v: number) => v.toLocaleString() },
-    { label: "Loan Tenure (Months)", val: months, set: setMonths, min: 6, max: 360, step: 1, fmt: (v: number) => `${v} mo` },
-    { label: "Interest Rate (%)", val: rate, set: setRate, min: 0.5, max: 18, step: 0.5, fmt: (v: number) => `${v}%` },
-  ];
+  const ORANGE = "#ea580c";
+  const NAVY = "#0f1b3d";
+
+  const safePrice = Math.max(0, Number(price) || 0);
+  const downAmt = Math.round((safePrice * downPct) / 100);
+  const remaining = Math.max(0, safePrice - downAmt);
+  const baseEmi = months > 0 ? Math.floor(remaining / months) : 0;
+  const lastEmi = months > 0 ? remaining - baseEmi * (months - 1) : 0;
+  const fmt = (v: number) => v.toLocaleString();
 
   return (
-    <section className="py-14 md:py-24 bg-card/30">
+    <section className="py-14 md:py-24 bg-muted/30">
       <div className="container mx-auto max-w-6xl px-4">
-        <SectionHeader tag="EMI Calculator" title="Plan Your Investment" subtitle="Calculate your monthly installment instantly" />
-        <div
-          className="grid gap-8 lg:grid-cols-2 rounded-2xl border bg-card p-5 sm:p-8"
-          style={{ borderColor: `${GREEN}33` }}
-        >
-          <div className="space-y-6">
-            {fields.map((f) => (
-              <div key={f.label}>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">{f.label}</span>
-                  <span className="font-semibold" style={{ color: GREEN }}>{f.fmt(f.val)}</span>
-                </div>
-                <input
-                  type="range"
-                  min={f.min}
-                  max={f.max}
-                  step={f.step}
-                  value={f.val}
-                  onChange={(e) => f.set(Number(e.target.value))}
-                  className="w-full"
-                  style={{ accentColor: GREEN }}
-                />
-                <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
-                  <span>{f.fmt(f.min)}</span>
-                  <span>{f.fmt(f.max)}</span>
-                </div>
+        <div className="grid gap-6 lg:grid-cols-2 rounded-2xl border border-border bg-card p-5 sm:p-8 shadow-sm">
+          {/* LEFT: Inputs */}
+          <div>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[3px]" style={{ color: ORANGE }}>
+              <Calculator className="h-4 w-4" />
+              Payment Calculator
+            </div>
+            <h3 className="mt-2 text-2xl sm:text-3xl font-bold text-foreground">
+              See your monthly payment instantly
+            </h3>
+
+            <div className="mt-6">
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Apartment Price (BDT)
+              </label>
+              <input
+                type="number"
+                min={0}
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
+                className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-base font-medium text-foreground focus:outline-none focus:ring-2"
+                style={{ ['--tw-ring-color' as never]: ORANGE }}
+              />
+            </div>
+
+            <div className="mt-6">
+              <div className="flex justify-between text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <span>Down Payment</span>
+                <span className="text-foreground">{downPct}%</span>
               </div>
-            ))}
+              <input
+                type="range"
+                min={20}
+                max={40}
+                step={1}
+                value={downPct}
+                onChange={(e) => setDownPct(Number(e.target.value))}
+                className="mt-2 w-full"
+                style={{ accentColor: ORANGE }}
+              />
+              <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+                <span>20%</span><span>25%</span><span>30%</span><span>35%</span><span>40%</span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <div className="flex justify-between text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <span>Tenure</span>
+                <span className="text-foreground">{months} months</span>
+              </div>
+              <input
+                type="range"
+                min={24}
+                max={72}
+                step={1}
+                value={months}
+                onChange={(e) => setMonths(Number(e.target.value))}
+                className="mt-2 w-full"
+                style={{ accentColor: ORANGE }}
+              />
+              <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+                <span>24m</span><span>36m</span><span>48m</span><span>60m</span><span>72m</span>
+              </div>
+            </div>
           </div>
-          <div
-            className="flex flex-col justify-center rounded-xl p-6 sm:p-8 text-center"
-            style={{ background: `linear-gradient(135deg, ${GREEN}22, ${GREEN}08)` }}
-          >
-            <Calculator className="mx-auto h-10 w-10 mb-3" style={{ color: GREEN }} />
-            <div className="text-sm text-muted-foreground">Monthly EMI</div>
-            <div className="text-4xl font-bold my-2" style={{ color: GREEN }}>
-              ৳ {emi.toLocaleString()}
+
+          {/* RIGHT: Summary */}
+          <div className="flex flex-col">
+            <div className="text-xs font-semibold uppercase tracking-[3px] text-muted-foreground">
+              Your Estimated Plan
             </div>
-            <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
-              <div className="rounded-lg bg-background/50 p-3">
-                <div className="text-muted-foreground text-xs">Principal</div>
-                <div className="font-semibold">৳ {principal.toLocaleString()}</div>
+
+            <div className="mt-4 divide-y divide-border">
+              <Row label="Apartment Price" value={`৳${fmt(safePrice)}`} />
+              <Row label={`Down Payment (${downPct}%)`} value={`৳${fmt(downAmt)}`} />
+              <Row label="Remaining Balance" value={`৳${fmt(remaining)}`} />
+              <Row label="Tenure" value={`${months} months`} />
+            </div>
+
+            <div className="mt-4 rounded-xl p-5 text-white" style={{ background: NAVY }}>
+              <div className="text-[11px] font-semibold uppercase tracking-[3px]" style={{ color: ORANGE }}>
+                Monthly Installment
               </div>
-              <div className="rounded-lg bg-background/50 p-3">
-                <div className="text-muted-foreground text-xs">Total Interest</div>
-                <div className="font-semibold">৳ {interest.toLocaleString()}</div>
+              <div className="mt-1 text-4xl font-bold">৳{fmt(baseEmi)}</div>
+              <div className="mt-2 text-xs text-white/70">
+                Remaining ৳{fmt(remaining)} ÷ {months} months · {downPct}% down paid upfront
               </div>
             </div>
+
+            {lastEmi !== baseEmi && months > 0 && (
+              <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/40 dark:text-amber-200">
+                ※ Last installment will be <strong>৳{fmt(lastEmi)}</strong> to settle the balance exactly.
+              </div>
+            )}
+
+            <a
+              href="#contact"
+              className="mt-3 inline-flex items-center justify-center rounded-lg px-6 py-3 text-white font-semibold transition hover:opacity-90"
+              style={{ background: ORANGE }}
+            >
+              Book a Free Consultation
+            </a>
+
+            <p className="mt-3 text-center text-[11px] text-muted-foreground">
+              * Indicative figures only. Final plan and tenure depend on the selected project.
+            </p>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between py-3">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <span className="text-sm font-semibold text-foreground">{value}</span>
+    </div>
   );
 }
 
