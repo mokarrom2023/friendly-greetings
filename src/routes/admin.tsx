@@ -552,7 +552,7 @@ function SocialLinksPanel() {
 
   const [form, setForm] = useState<SocialForm>({
     whatsapp: "", messenger: "", telegram: "",
-    facebook: "", instagram: "", linkedin: "", twitter: "", youtube: "",
+    facebook: "", instagram: "", linkedin: "", twitter: "", youtube: "", tiktok: "",
   });
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
