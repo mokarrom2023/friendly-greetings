@@ -311,3 +311,83 @@ export const saveSocialLinks = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+
+/* ---------- Newsletter Subscribers ---------- */
+
+const emailSchema = z.object({
+  email: z.string().trim().email().max(255),
+});
+
+// Public — no auth required. Anyone can subscribe.
+export const subscribeNewsletter = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => emailSchema.parse(d))
+  .handler(async ({ data }) => {
+    const email = data.email.toLowerCase();
+    const { error } = await supabaseAdmin
+      .from("newsletter_subscribers")
+      .insert({ email });
+    if (error) {
+      // Treat unique violation as success (already subscribed)
+      if (error.code === "23505") return { ok: true, already: true };
+      throw new Error(error.message);
+    }
+    return { ok: true, already: false };
+  });
+
+export const listNewsletterSubscribers = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userId);
+    const { data, error } = await supabaseAdmin
+      .from("newsletter_subscribers")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(1000);
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
+
+export const deleteNewsletterSubscriber = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    const { error } = await supabaseAdmin
+      .from("newsletter_subscribers")
+      .delete()
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+/* ---------- Registered Auth Users ---------- */
+
+export const listAuthUsers = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userId);
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers({
+      page: 1,
+      perPage: 200,
+    });
+    if (error) throw new Error(error.message);
+    type AuthUser = {
+      id: string;
+      email: string | null;
+      phone: string | null;
+      created_at: string;
+      last_sign_in_at: string | null;
+      user_metadata?: Record<string, unknown>;
+    };
+    const users = (data.users ?? []) as AuthUser[];
+    return users.map((u) => ({
+      id: u.id,
+      email: u.email ?? "",
+      phone: u.phone ?? ((u.user_metadata?.phone as string | undefined) ?? ""),
+      name: (u.user_metadata?.full_name as string | undefined)
+        ?? (u.user_metadata?.name as string | undefined)
+        ?? "",
+      created_at: u.created_at,
+      last_sign_in_at: u.last_sign_in_at,
+    }));
+  });
