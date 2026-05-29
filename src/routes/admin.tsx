@@ -290,6 +290,8 @@ function AdminConsole({ email, adminTheme, setAdminTheme }: { email: string; adm
           {activeKey === "dashboard" && <DashboardHome onSelect={setActiveKey} />}
           {activeSection?.key === "holidays" && <HolidaysPanel />}
           {activeSection?.key === "messages" && <MessagesPanel />}
+          {activeSection?.key === "subscribers" && <SubscribersPanel />}
+          {activeSection?.key === "auth_users" && <AuthUsersPanel />}
           {activeSection?.key === "social_links" && <SocialLinksPanel />}
           {activeSection?.key === "team_members" && <TeamMembersPanel />}
           {activeSection?.key === "properties" && <PropertiesPanel />}
