@@ -8,9 +8,8 @@ export type SocialLinks = {
   facebook?: string;
   instagram?: string;
   linkedin?: string;
-  twitter?: string;
   youtube?: string;
-  tiktok?: string;
+  
 };
 
 export const SOCIAL_DEFAULTS: SocialLinks = {
